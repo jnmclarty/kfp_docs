@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.dsl._component &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.dsl._component</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.dsl._component</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
+<span class="kn">from</span> <span class="nn">._pipeline_param</span> <span class="kn">import</span> <span class="n">PipelineParam</span>
+<span class="kn">from</span> <span class="nn">.types</span> <span class="kn">import</span> <span class="n">check_types</span><span class="p">,</span> <span class="n">InconsistentTypeException</span>
+<span class="kn">from</span> <span class="nn">._ops_group</span> <span class="kn">import</span> <span class="n">Graph</span>
+<span class="kn">import</span> <span class="nn">kfp</span>
+
+
+<div class="viewcode-block" id="python_component"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.python_component">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span>
+  <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.2.6&#39;</span><span class="p">,</span>
+  <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;This decorator does not seem to be used, so we deprecate it. If you need this decorator, please create an issue at https://github.com/kubeflow/pipelines/issues&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">python_component</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_component_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Decorator for Python component functions.</span>
+<span class="sd">  This decorator adds the metadata to the function object itself.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">      name: Human-readable name of the component</span>
+<span class="sd">      description: Optional. Description of the component</span>
+<span class="sd">      base_image: Optional. Docker container image to use as the base of the component. Needs to have Python 3.5+ installed.</span>
+<span class="sd">      target_component_file: Optional. Local file to store the component definition. The file can then be used for sharing.</span>
+
+<span class="sd">  Returns:</span>
+<span class="sd">      The same function (with some metadata fields set).</span>
+
+<span class="sd">  Usage:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">     @dsl.python_component(</span>
+<span class="sd">         name=&#39;my awesome component&#39;,</span>
+<span class="sd">         description=&#39;Come, Let&#39;s play&#39;,</span>
+<span class="sd">         base_image=&#39;tensorflow/tensorflow:1.11.0-py3&#39;)</span>
+<span class="sd">     def my_component(a: str, b: int) -&gt; str:</span>
+<span class="sd">         ...</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">_python_component</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="n">func</span><span class="o">.</span><span class="n">_component_human_name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+      <span class="n">func</span><span class="o">.</span><span class="n">_component_description</span> <span class="o">=</span> <span class="n">description</span>
+    <span class="k">if</span> <span class="n">base_image</span><span class="p">:</span>
+      <span class="n">func</span><span class="o">.</span><span class="n">_component_base_image</span> <span class="o">=</span> <span class="n">base_image</span>
+    <span class="k">if</span> <span class="n">target_component_file</span><span class="p">:</span>
+      <span class="n">func</span><span class="o">.</span><span class="n">_component_target_component_file</span> <span class="o">=</span> <span class="n">target_component_file</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+  <span class="k">return</span> <span class="n">_python_component</span></div>
+
+<div class="viewcode-block" id="component"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.component">[docs]</a><span class="k">def</span> <span class="nf">component</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Decorator for component functions that returns a ContainerOp.</span>
+<span class="sd">  This is useful to enable type checking in the DSL compiler</span>
+
+<span class="sd">  Usage:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">     @dsl.component</span>
+<span class="sd">     def foobar(model: TFModel(), step: MLStep()):</span>
+<span class="sd">        return dsl.ContainerOp()</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+  <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">_component</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">..components._python_op</span> <span class="kn">import</span> <span class="n">_extract_component_interface</span>
+    <span class="n">component_meta</span> <span class="o">=</span> <span class="n">_extract_component_interface</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">kfp</span><span class="o">.</span><span class="n">TYPE_CHECK</span><span class="p">:</span>
+      <span class="n">arg_index</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">PipelineParam</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_types</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">param_type</span><span class="p">,</span> <span class="n">component_meta</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">arg_index</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
+          <span class="k">raise</span> <span class="n">InconsistentTypeException</span><span class="p">(</span><span class="s1">&#39;Component &quot;&#39;</span> <span class="o">+</span> <span class="n">component_meta</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;&quot; is expecting &#39;</span> <span class="o">+</span> <span class="n">component_meta</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">arg_index</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span>
+                                          <span class="s1">&#39; to be type(&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">component_meta</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">arg_index</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span class="o">+</span>
+                                          <span class="s1">&#39;), but the passed argument is type(&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">param_type</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+        <span class="n">arg_index</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="n">kargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kargs</span><span class="p">:</span>
+          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kargs</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">PipelineParam</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">input_spec</span> <span class="ow">in</span> <span class="n">component_meta</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">input_spec</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">key</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_types</span><span class="p">(</span><span class="n">kargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">param_type</span><span class="p">,</span> <span class="n">input_spec</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">InconsistentTypeException</span><span class="p">(</span><span class="s1">&#39;Component &quot;&#39;</span> <span class="o">+</span> <span class="n">component_meta</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;&quot; is expecting &#39;</span> <span class="o">+</span> <span class="n">input_spec</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span>
+                                                <span class="s1">&#39; to be type(&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_spec</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span class="o">+</span>
+                                                <span class="s1">&#39;), but the passed argument is type(&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">kargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">param_type</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+
+    <span class="n">container_op</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+    <span class="n">container_op</span><span class="o">.</span><span class="n">_set_metadata</span><span class="p">(</span><span class="n">component_meta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">container_op</span>
+
+  <span class="k">return</span> <span class="n">_component</span></div>
+
+<span class="c1">#TODO: combine the component and graph_component decorators into one</span>
+<div class="viewcode-block" id="graph_component"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.graph_component">[docs]</a><span class="k">def</span> <span class="nf">graph_component</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Decorator for graph component functions.</span>
+<span class="sd">  This decorator returns an ops_group.</span>
+
+<span class="sd">  .. WARNING:: Caching is tricky when recursion is involved. Please be careful and set proper max_cache_staleness in case of infinite loop.</span>
+
+<span class="sd">  Usage:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">      import kfp.dsl as dsl</span>
+
+<span class="sd">      @dsl.graph_component</span>
+<span class="sd">      def flip_component(flip_result):</span>
+
+<span class="sd">          print_flip = PrintOp(flip_result)</span>
+
+<span class="sd">          flip_a = FlipCoinOp().after(print_flip)</span>
+<span class="sd">          flip_a.execution_options.caching_strategy.max_cache_staleness = &quot;P0D&quot;</span>
+
+<span class="sd">          with dsl.Condition(flip_a.output == &#39;heads&#39;):</span>
+<span class="sd">              flip_component(flip_a.output)</span>
+
+<span class="sd">          return {&#39;flip_result&#39;: flip_a.output}</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+  <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">_graph_component</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
+    <span class="n">graph_ops_group</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">graph_ops_group</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">kargs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">graph_ops_group</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">PipelineParam</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;arguments to &#39;</span> <span class="o">+</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39; should be PipelineParams.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Entering the Graph Context</span>
+    <span class="k">with</span> <span class="n">graph_ops_group</span><span class="p">:</span>
+      <span class="c1"># Call the function</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">graph_ops_group</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">:</span>
+        <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">graph_ops_group</span>
+  <span class="k">return</span> <span class="n">_graph_component</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

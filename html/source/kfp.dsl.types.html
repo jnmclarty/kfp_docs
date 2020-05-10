@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.dsl.types module &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.Client class" href="kfp.client.html" />
+    <link rel="prev" title="kfp.dsl package" href="kfp.dsl.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html">kfp.components package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">kfp.dsl.types module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+          <li><a href="kfp.dsl.html">kfp.dsl package</a> &raquo;</li>
+        
+      <li>kfp.dsl.types module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.dsl.types.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-kfp.dsl.types">
+<span id="kfp-dsl-types-module"></span><h1>kfp.dsl.types module<a class="headerlink" href="#module-kfp.dsl.types" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="kfp.dsl.types.BaseType">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">BaseType</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#BaseType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.BaseType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>BaseType is a base type for all scalar and artifact types.</p>
+<dl class="py method">
+<dt id="kfp.dsl.types.BaseType.to_dict">
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>Dict<span class="p">, </span>str<span class="p">]</span><a class="reference internal" href="../_modules/kfp/dsl/types.html#BaseType.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.BaseType.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>to_dict serializes the type instance into a python dictionary or string</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.Bool">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">Bool</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#Bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.Bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.Dict">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">Dict</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#Dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.Dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.Float">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">Float</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#Float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.Float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.GCPProjectID">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">GCPProjectID</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#GCPProjectID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.GCPProjectID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+<p>MetaGCPProjectID: GCP project id</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.GCPRegion">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">GCPRegion</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#GCPRegion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.GCPRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.GCRPath">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">GCRPath</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#GCRPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.GCRPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.GCSPath">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">GCSPath</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#GCSPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.GCSPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="kfp.dsl.types.InconsistentTypeException">
+<em class="property">exception </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">InconsistentTypeException</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#InconsistentTypeException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.InconsistentTypeException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>InconsistencyTypeException is raised when two types are not consistent</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="kfp.dsl.types.InconsistentTypeWarning">
+<em class="property">exception </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">InconsistentTypeWarning</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#InconsistentTypeWarning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.InconsistentTypeWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Warning</span></code></p>
+<p>InconsistentTypeWarning is issued when two types are not consistent</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.Integer">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">Integer</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#Integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.Integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.List">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">List</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.List" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.LocalPath">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">LocalPath</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#LocalPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.LocalPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.types.String">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">String</code><a class="reference internal" href="../_modules/kfp/dsl/types.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.String" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kfp.dsl.types.BaseType" title="kfp.dsl.types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl.types.BaseType</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.dsl.types.check_types">
+<code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">check_types</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">checked_type</span></em>, <em class="sig-param"><span class="n">expected_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/types.html#check_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.check_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>check_types checks the type consistency.
+For each of the attribute in checked_type, there is the same attribute in expected_type with the same value.
+However, expected_type could contain more attributes that checked_type does not contain.
+:param checked_type: it describes a type from the upstream component output
+:type checked_type: BaseType/str/dict
+:param expected_type: it describes a type from the downstream component input
+:type expected_type: BaseType/str/dict</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.dsl.types.verify_type_compatibility">
+<code class="sig-prename descclassname">kfp.dsl.types.</code><code class="sig-name descname">verify_type_compatibility</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">given_type</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span><a class="reference internal" href="#kfp.dsl.types.Dict" title="kfp.dsl.types.Dict">kfp.dsl.types.Dict</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">expected_type</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span><a class="reference internal" href="#kfp.dsl.types.Dict" title="kfp.dsl.types.Dict">kfp.dsl.types.Dict</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">error_message_prefix</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/types.html#verify_type_compatibility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.types.verify_type_compatibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>verify_type_compatibility verifies that the given argument type is compatible with the expected input type.
+:param given_type: The type of the argument passed to the input
+:type given_type: str/dict
+:param expected_type: The declared type of the input
+:type expected_type: str/dict</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.client.html" class="btn btn-neutral float-right" title="kfp.Client class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kfp.dsl.html" class="btn btn-neutral float-left" title="kfp.dsl package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

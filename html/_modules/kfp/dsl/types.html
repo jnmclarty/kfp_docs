@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.dsl.types &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.dsl.types</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.dsl.types</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+
+<div class="viewcode-block" id="BaseType"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.BaseType">[docs]</a><span class="k">class</span> <span class="nc">BaseType</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39;BaseType is a base type for all scalar and artifact types.&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="BaseType.to_dict"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.BaseType.to_dict">[docs]</a>	<span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39;to_dict serializes the type instance into a python dictionary or string&#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="p">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">}</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">else</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span></div></div>
+
+
+<span class="c1"># Primitive Types</span>
+<div class="viewcode-block" id="Integer"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.Integer">[docs]</a><span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="String"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.String">[docs]</a><span class="k">class</span> <span class="nc">String</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="Float"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.Float">[docs]</a><span class="k">class</span> <span class="nc">Float</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="Bool"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.Bool">[docs]</a><span class="k">class</span> <span class="nc">Bool</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="List"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.List">[docs]</a><span class="k">class</span> <span class="nc">List</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="Dict"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.Dict">[docs]</a><span class="k">class</span> <span class="nc">Dict</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+		<span class="p">}</span></div>
+
+<span class="c1"># GCP Types</span>
+<div class="viewcode-block" id="GCSPath"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.GCSPath">[docs]</a><span class="k">class</span> <span class="nc">GCSPath</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^gs://.*$&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="GCRPath"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.GCRPath">[docs]</a><span class="k">class</span> <span class="nc">GCRPath</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+			<span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^.*gcr</span><span class="se">\\</span><span class="s2">.io/.*$&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="GCPRegion"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.GCPRegion">[docs]</a><span class="k">class</span> <span class="nc">GCPRegion</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="GCPProjectID"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.GCPProjectID">[docs]</a><span class="k">class</span> <span class="nc">GCPProjectID</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;MetaGCPProjectID: GCP project id&#39;&#39;&#39;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+		<span class="p">}</span></div>
+
+<span class="c1"># General Types</span>
+<div class="viewcode-block" id="LocalPath"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.LocalPath">[docs]</a><span class="k">class</span> <span class="nc">LocalPath</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+	<span class="c1">#TODO: add restriction to path</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">openapi_schema_validator</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+		<span class="p">}</span></div>
+
+<div class="viewcode-block" id="InconsistentTypeException"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.InconsistentTypeException">[docs]</a><span class="k">class</span> <span class="nc">InconsistentTypeException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;InconsistencyTypeException is raised when two types are not consistent&#39;&#39;&#39;</span>
+	<span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="InconsistentTypeWarning"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.InconsistentTypeWarning">[docs]</a><span class="k">class</span> <span class="nc">InconsistentTypeWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;InconsistentTypeWarning is issued when two types are not consistent&#39;&#39;&#39;</span>
+	<span class="k">pass</span></div>
+
+
+<span class="n">TypeSpecType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="verify_type_compatibility"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.verify_type_compatibility">[docs]</a><span class="k">def</span> <span class="nf">verify_type_compatibility</span><span class="p">(</span><span class="n">given_type</span><span class="p">:</span> <span class="n">TypeSpecType</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">:</span> <span class="n">TypeSpecType</span><span class="p">,</span> <span class="n">error_message_prefix</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;verify_type_compatibility verifies that the given argument type is compatible with the expected input type.</span>
+<span class="sd">	Args:</span>
+<span class="sd">		given_type (str/dict): The type of the argument passed to the input</span>
+<span class="sd">		expected_type (str/dict): The declared type of the input</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="k">if</span> <span class="n">given_type</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">expected_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">True</span> <span class="c1"># Missing types are treated as being compatible with any types</span>
+
+	<span class="n">types_are_compatible</span> <span class="o">=</span> <span class="n">check_types</span><span class="p">(</span><span class="n">given_type</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">types_are_compatible</span><span class="p">:</span>
+		<span class="n">error_text</span> <span class="o">=</span> <span class="n">error_message_prefix</span> <span class="o">+</span> <span class="s1">&#39;Argument type &quot;</span><span class="si">{}</span><span class="s1">&quot; is incompatible with the input type &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">given_type</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">expected_type</span><span class="p">))</span>
+		<span class="kn">import</span> <span class="nn">kfp</span>
+		<span class="k">if</span> <span class="n">kfp</span><span class="o">.</span><span class="n">TYPE_CHECK</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="n">InconsistentTypeException</span><span class="p">(</span><span class="n">error_text</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">InconsistentTypeWarning</span><span class="p">(</span><span class="n">error_text</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">types_are_compatible</span></div>
+
+
+<div class="viewcode-block" id="check_types"><a class="viewcode-back" href="../../../source/kfp.dsl.types.html#kfp.dsl.types.check_types">[docs]</a><span class="k">def</span> <span class="nf">check_types</span><span class="p">(</span><span class="n">checked_type</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;check_types checks the type consistency.</span>
+<span class="sd">	For each of the attribute in checked_type, there is the same attribute in expected_type with the same value.</span>
+<span class="sd">	However, expected_type could contain more attributes that checked_type does not contain.</span>
+<span class="sd">	Args:</span>
+<span class="sd">		checked_type (BaseType/str/dict): it describes a type from the upstream component output</span>
+<span class="sd">		expected_type (BaseType/str/dict): it describes a type from the downstream component input</span>
+<span class="sd">		&#39;&#39;&#39;</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">checked_type</span><span class="p">,</span> <span class="n">BaseType</span><span class="p">):</span>
+		<span class="n">checked_type</span> <span class="o">=</span> <span class="n">checked_type</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">checked_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+		<span class="n">checked_type</span> <span class="o">=</span> <span class="p">{</span><span class="n">checked_type</span><span class="p">:</span> <span class="p">{}}</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected_type</span><span class="p">,</span> <span class="n">BaseType</span><span class="p">):</span>
+		<span class="n">expected_type</span> <span class="o">=</span> <span class="n">expected_type</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+		<span class="n">expected_type</span> <span class="o">=</span> <span class="p">{</span><span class="n">expected_type</span><span class="p">:</span> <span class="p">{}}</span>
+	<span class="k">return</span> <span class="n">_check_dict_types</span><span class="p">(</span><span class="n">checked_type</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">_check_valid_type_dict</span><span class="p">(</span><span class="n">payload</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;_check_valid_type_dict checks whether a dict is a correct serialization of a type</span>
+<span class="sd">	Args:</span>
+<span class="sd">		payload(dict)</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">False</span>
+	<span class="k">for</span> <span class="n">type_name</span> <span class="ow">in</span> <span class="n">payload</span><span class="p">:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="n">type_name</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+			<span class="k">return</span> <span class="kc">False</span>
+		<span class="n">property_types</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+		<span class="n">property_value_types</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">property_name</span> <span class="ow">in</span> <span class="n">payload</span><span class="p">[</span><span class="n">type_name</span><span class="p">]:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="n">property_types</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="n">type_name</span><span class="p">][</span><span class="n">property_name</span><span class="p">],</span> <span class="n">property_value_types</span><span class="p">):</span>
+				<span class="k">return</span> <span class="kc">False</span>
+	<span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_check_dict_types</span><span class="p">(</span><span class="n">checked_type</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
+	<span class="sd">&#39;&#39;&#39;_check_dict_types checks the type consistency.</span>
+<span class="sd">	Args:</span>
+<span class="sd">  	checked_type (dict): A dict that describes a type from the upstream component output</span>
+<span class="sd">  	expected_type (dict): A dict that describes a type from the downstream component input</span>
+<span class="sd">	&#39;&#39;&#39;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">checked_type</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">expected_type</span><span class="p">:</span>
+		<span class="c1"># If the type is empty, it matches any types</span>
+		<span class="k">return</span> <span class="kc">True</span>
+	<span class="n">checked_type_name</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">checked_type</span><span class="o">.</span><span class="n">items</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="n">expected_type_name</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">expected_type</span><span class="o">.</span><span class="n">items</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="k">if</span> <span class="n">checked_type_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">expected_type_name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="c1"># If the type name is empty, it matches any types</span>
+		<span class="k">return</span> <span class="kc">True</span>
+	<span class="k">if</span> <span class="n">checked_type_name</span> <span class="o">!=</span> <span class="n">expected_type_name</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;type name &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">checked_type_name</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; is different from expected: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">expected_type_name</span><span class="p">))</span>
+		<span class="k">return</span> <span class="kc">False</span>
+	<span class="n">type_name</span> <span class="o">=</span> <span class="n">checked_type_name</span>
+	<span class="k">for</span> <span class="n">type_property</span> <span class="ow">in</span> <span class="n">checked_type</span><span class="p">[</span><span class="n">type_name</span><span class="p">]:</span>
+		<span class="k">if</span> <span class="n">type_property</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">expected_type</span><span class="p">[</span><span class="n">type_name</span><span class="p">]:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="n">type_name</span> <span class="o">+</span> <span class="s1">&#39; has a property &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">type_property</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; that the latter does not.&#39;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="kc">False</span>
+		<span class="k">if</span> <span class="n">checked_type</span><span class="p">[</span><span class="n">type_name</span><span class="p">][</span><span class="n">type_property</span><span class="p">]</span> <span class="o">!=</span> <span class="n">expected_type</span><span class="p">[</span><span class="n">type_name</span><span class="p">][</span><span class="n">type_property</span><span class="p">]:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="n">type_name</span> <span class="o">+</span> <span class="s1">&#39; has a property &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">type_property</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; with value: &#39;</span> <span class="o">+</span>
+						<span class="nb">str</span><span class="p">(</span><span class="n">checked_type</span><span class="p">[</span><span class="n">type_name</span><span class="p">][</span><span class="n">type_property</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; and &#39;</span> <span class="o">+</span>
+						<span class="nb">str</span><span class="p">(</span><span class="n">expected_type</span><span class="p">[</span><span class="n">type_name</span><span class="p">][</span><span class="n">type_property</span><span class="p">]))</span>
+			<span class="k">return</span> <span class="kc">False</span>
+	<span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

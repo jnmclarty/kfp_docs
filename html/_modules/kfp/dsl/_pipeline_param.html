@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.dsl._pipeline_param &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.dsl._pipeline_param</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.dsl._pipeline_param</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+
+
+<span class="c1"># TODO: Move this to a separate class</span>
+<span class="c1"># For now, this identifies a condition with only &quot;==&quot; operator supported.</span>
+<span class="n">ConditionOperator</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ConditionOperator&#39;</span><span class="p">,</span> <span class="s1">&#39;operator operand1 operand2&#39;</span><span class="p">)</span>
+<span class="n">PipelineParamTuple</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;PipelineParamTuple&#39;</span><span class="p">,</span> <span class="s1">&#39;name op pattern&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">sanitize_k8s_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">allow_capital_underscore</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;From _make_kubernetes_name</span>
+<span class="sd">    sanitize_k8s_name cleans and converts the names in the workflow.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">    name: original name,</span>
+<span class="sd">    allow_capital_underscore: whether to allow capital letter and underscore</span>
+<span class="sd">      in this name.</span>
+
+<span class="sd">  Returns:</span>
+<span class="sd">    sanitized name.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="n">allow_capital_underscore</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;-+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[^-_0-9A-Za-z]+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;-+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[^-0-9a-z]+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">match_serialized_pipelineparam</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;match_serialized_pipelineparam matches the serialized pipelineparam.</span>
+<span class="sd">  Args:</span>
+<span class="sd">    payloads (str): a string that contains the serialized pipelineparam.</span>
+
+<span class="sd">  Returns:</span>
+<span class="sd">    PipelineParamTuple</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;{{pipelineparam:op=([\w\s_-]*);name=([\w\s_-]+)}}&#39;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+  <span class="n">param_tuples</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+      <span class="n">pattern</span> <span class="o">=</span> <span class="s1">&#39;{{pipelineparam:op=</span><span class="si">%s</span><span class="s1">;name=</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+      <span class="n">param_tuples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PipelineParamTuple</span><span class="p">(</span>
+                          <span class="n">name</span><span class="o">=</span><span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span>
+                          <span class="n">op</span><span class="o">=</span><span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> 
+                          <span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">param_tuples</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_pipelineparams</span><span class="p">(</span><span class="n">payloads</span><span class="p">:</span> <span class="nb">str</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+  <span class="sd">&quot;&quot;&quot;_extract_pipelineparam extract a list of PipelineParam instances from the payload string.</span>
+<span class="sd">  Note: this function removes all duplicate matches.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">    payload (str or list[str]): a string/a list of strings that contains serialized pipelineparams</span>
+<span class="sd">  Return:</span>
+<span class="sd">    List[PipelineParam]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payloads</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">payloads</span> <span class="o">=</span> <span class="p">[</span><span class="n">payloads</span><span class="p">]</span>
+  <span class="n">param_tuples</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">payload</span> <span class="ow">in</span> <span class="n">payloads</span><span class="p">:</span>
+    <span class="n">param_tuples</span> <span class="o">+=</span> <span class="n">match_serialized_pipelineparam</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+  <span class="n">pipeline_params</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">param_tuple</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">param_tuples</span><span class="p">)):</span>
+    <span class="n">pipeline_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PipelineParam</span><span class="p">(</span><span class="n">param_tuple</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                         <span class="n">param_tuple</span><span class="o">.</span><span class="n">op</span><span class="p">,</span> 
+                                         <span class="n">pattern</span><span class="o">=</span><span class="n">param_tuple</span><span class="o">.</span><span class="n">pattern</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">pipeline_params</span>
+
+
+<span class="k">def</span> <span class="nf">extract_pipelineparams_from_any</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;PipelineParam&#39;</span><span class="p">]:</span>
+  <span class="sd">&quot;&quot;&quot;Recursively extract PipelineParam instances or serialized string from any object or list of objects.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">    payload (str or k8_obj or list[str or k8_obj]): a string/a list </span>
+<span class="sd">        of strings that contains serialized pipelineparams or a k8 definition </span>
+<span class="sd">        object.</span>
+<span class="sd">  Return:</span>
+<span class="sd">    List[PipelineParam]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">payload</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">[]</span>
+
+  <span class="c1"># PipelineParam</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">PipelineParam</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">payload</span><span class="p">]</span>
+ 
+  <span class="c1"># str</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">_extract_pipelineparams</span><span class="p">(</span><span class="n">payload</span><span class="p">)))</span>
+  
+  <span class="c1"># list or tuple</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+    <span class="n">pipeline_params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">payload</span><span class="p">:</span>
+      <span class="n">pipeline_params</span> <span class="o">+=</span> <span class="n">extract_pipelineparams_from_any</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pipeline_params</span><span class="p">))</span>
+
+  <span class="c1"># dict</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="n">pipeline_params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">payload</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="n">pipeline_params</span> <span class="o">+=</span> <span class="n">extract_pipelineparams_from_any</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pipeline_params</span><span class="p">))</span>
+
+  <span class="c1"># k8s OpenAPI object</span>
+  <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="s1">&#39;attribute_map&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">attribute_map</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="n">pipeline_params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">payload</span><span class="o">.</span><span class="n">attribute_map</span><span class="p">:</span>
+      <span class="n">pipeline_params</span> <span class="o">+=</span> <span class="n">extract_pipelineparams_from_any</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pipeline_params</span><span class="p">))</span>
+
+  <span class="c1"># return empty list  </span>
+  <span class="k">return</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="PipelineParam"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.PipelineParam">[docs]</a><span class="k">class</span> <span class="nc">PipelineParam</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Representing a future value that is passed between pipeline components.</span>
+
+<span class="sd">  A PipelineParam object can be used as a pipeline function argument so that it will be a</span>
+<span class="sd">  pipeline parameter that shows up in ML Pipelines system UI. It can also represent an intermediate</span>
+<span class="sd">  value passed between components.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">op_name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">param_type</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a new instance of PipelineParam.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      name: name of the pipeline parameter.</span>
+<span class="sd">      op_name: the name of the operation that produces the PipelineParam. None means</span>
+<span class="sd">               it is not produced by any operator, so if None, either user constructs it</span>
+<span class="sd">               directly (for providing an immediate value), or it is a pipeline function</span>
+<span class="sd">               argument.</span>
+<span class="sd">      value: The actual value of the PipelineParam. If provided, the PipelineParam is</span>
+<span class="sd">             &quot;resolved&quot; immediately. For now, we support string only.</span>
+<span class="sd">      param_type: the type of the PipelineParam.</span>
+<span class="sd">      pattern: the serialized string regex pattern this pipeline parameter created from. </span>
+<span class="sd">    Raises: ValueError in name or op_name contains invalid characters, or both op_name</span>
+<span class="sd">            and value are set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">valid_name_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^[A-Za-z][A-Za-z0-9\s_-]*$&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">valid_name_regex</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only letters, numbers, spaces, &quot;_&quot;, and &quot;-&quot; are allowed in name. Must begin with a letter.  &#39;</span>
+                       <span class="s1">&#39;Got name: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">op_name</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;op_name and value cannot be both set.&#39;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="c1"># ensure value is None even if empty string or empty list</span>
+    <span class="c1"># so that serialization and unserialization remain consistent</span>
+    <span class="c1"># (i.e. None =&gt; &#39;&#39; =&gt; None)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">op_name</span> <span class="o">=</span> <span class="n">op_name</span> <span class="k">if</span> <span class="n">op_name</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">param_type</span> <span class="o">=</span> <span class="n">param_type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Unique name in the argo yaml for the PipelineParam&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_name</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+  <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;String representation.</span>
+
+<span class="sd">    The string representation is a string identifier so we can mix the PipelineParam inline</span>
+<span class="sd">    with other strings such as arguments. For example, we can support:</span>
+<span class="sd">    [&#39;echo %s&#39; % param] as the container command and later a compiler can replace</span>
+<span class="sd">    the placeholder &quot;{{pipelineparam:op=%s;name=%s}}&quot; with its own parameter identifier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#This is deleted because if users specify default values to PipelineParam,</span>
+    <span class="c1"># The compiler can not detect it as the value is not NULL.</span>
+    <span class="c1">#if self.value:</span>
+    <span class="c1">#  return str(self.value)</span>
+
+    <span class="n">op_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_name</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">return</span> <span class="s1">&#39;{{pipelineparam:op=</span><span class="si">%s</span><span class="s1">;name=</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+  
+  <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># return str({self.__class__.__name__: self.__dict__})</span>
+    <span class="c1"># We make repr return the placeholder string so that if someone uses str()-based serialization of complex objects containing `PipelineParam` it works properly (e.g. str([1, 2, 3, kfp.dsl.PipelineParam(&quot;aaa&quot;), 4, 5, 6,]))</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PipelineParam.to_struct"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.PipelineParam.to_struct">[docs]</a>  <span class="k">def</span> <span class="nf">to_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># Used by the json serializer. Outputs a JSON-serializable representation of the object</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+  <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ConditionOperator</span><span class="p">(</span><span class="s1">&#39;==&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ConditionOperator</span><span class="p">(</span><span class="s1">&#39;!=&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ConditionOperator</span><span class="p">(</span><span class="s1">&#39;&lt;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ConditionOperator</span><span class="p">(</span><span class="s1">&#39;&lt;=&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ConditionOperator</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ConditionOperator</span><span class="p">(</span><span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">op_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+<div class="viewcode-block" id="PipelineParam.ignore_type"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.PipelineParam.ignore_type">[docs]</a>  <span class="k">def</span> <span class="nf">ignore_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;ignore_type ignores the type information such that type checking would also pass&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">param_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="bp">self</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

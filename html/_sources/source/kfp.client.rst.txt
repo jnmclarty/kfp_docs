@@ -1,0 +1,103 @@
+
+kfp.Client class
+================
+
+.. autoclass:: kfp.Client
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
+kfp.Client.api_models Struct
+----------------------------
+
+  .. automethod:: kfp.Client.api_models.ApiCronSchedule
+  .. automethod:: kfp.Client.api_models.ApiExperiment
+  .. automethod:: kfp.Client.api_models.ApiGetTemplateResponse
+  .. automethod:: kfp.Client.api_models.ApiJob
+  .. automethod:: kfp.Client.api_models.ApiListExperimentsResponse
+  .. automethod:: kfp.Client.api_models.ApiListJobsResponse
+  .. automethod:: kfp.Client.api_models.ApiListPipelineVersionsResponse
+  .. automethod:: kfp.Client.api_models.ApiListPipelinesResponse
+  .. automethod:: kfp.Client.api_models.ApiListRunsResponse
+  .. automethod:: kfp.Client.api_models.ApiParameter
+  .. automethod:: kfp.Client.api_models.ApiPeriodicSchedule
+  .. automethod:: kfp.Client.api_models.ApiPipeline
+  .. automethod:: kfp.Client.api_models.ApiPipelineRuntime
+  .. automethod:: kfp.Client.api_models.ApiPipelineSpec
+  .. automethod:: kfp.Client.api_models.ApiPipelineVersion
+  .. automethod:: kfp.Client.api_models.ApiReadArtifactResponse
+  .. automethod:: kfp.Client.api_models.ApiRelationship
+  .. automethod:: kfp.Client.api_models.ApiReportRunMetricsRequest
+  .. automethod:: kfp.Client.api_models.ApiReportRunMetricsResponse
+  .. automethod:: kfp.Client.api_models.ApiResourceKey
+  .. automethod:: kfp.Client.api_models.ApiResourceReference
+  .. automethod:: kfp.Client.api_models.ApiResourceType
+  .. automethod:: kfp.Client.api_models.ApiRun
+  .. automethod:: kfp.Client.api_models.ApiRunDetail
+  .. automethod:: kfp.Client.api_models.ApiRunMetric
+  .. automethod:: kfp.Client.api_models.ApiStatus
+  .. automethod:: kfp.Client.api_models.ApiTrigger
+  .. automethod:: kfp.Client.api_models.ApiUrl
+  .. automethod:: kfp.Client.api_models.JobMode
+  .. automethod:: kfp.Client.api_models.ProtobufAny
+  .. automethod:: kfp.Client.api_models.ReportRunMetricsResponseReportRunMetricResult
+  .. automethod:: kfp.Client.api_models.ReportRunMetricsResponseReportRunMetricResultStatus
+  .. automethod:: kfp.Client.api_models.RunMetricFormat
+  .. automethod:: kfp.Client.api_models.RunStorageState
+
+kfp.Client.experiments Struct
+-----------------------------
+
+  .. automethod:: kfp.Client.experiments.api_client
+  .. automethod:: kfp.Client.experiments.create_experiment
+  .. automethod:: kfp.Client.experiments.delete_experiment
+  .. automethod:: kfp.Client.experiments.get_experiment
+  .. automethod:: kfp.Client.experiments.list_experiment
+
+kfp.Client.jobs Struct
+----------------------
+
+  .. automethod:: kfp.Client.jobs.api_client
+  .. automethod:: kfp.Client.jobs.create_job
+  .. automethod:: kfp.Client.jobs.delete_job
+  .. automethod:: kfp.Client.jobs.disable_job
+  .. automethod:: kfp.Client.jobs.enable_job
+  .. automethod:: kfp.Client.jobs.get_job
+  .. automethod:: kfp.Client.jobs.list_jobs
+
+kfp.Client.pipeline_uploads Struct
+----------------------------------
+
+  .. automethod:: kfp.Client.pipeline_uploads.api_client
+  .. automethod:: kfp.Client.pipeline_uploads.upload_pipeline
+  .. automethod:: kfp.Client.pipeline_uploads.upload_pipeline_version
+
+kfp.Client.pipelines Struct
+---------------------------
+
+  .. automethod:: kfp.Client.pipelines.api_client
+  .. automethod:: kfp.Client.pipelines.create_pipeline
+  .. automethod:: kfp.Client.pipelines.create_pipeline_version
+  .. automethod:: kfp.Client.pipelines.delete_pipeline
+  .. automethod:: kfp.Client.pipelines.delete_pipeline_version
+  .. automethod:: kfp.Client.pipelines.get_pipeline
+  .. automethod:: kfp.Client.pipelines.get_pipeline_version
+  .. automethod:: kfp.Client.pipelines.get_pipeline_version_template
+  .. automethod:: kfp.Client.pipelines.get_template
+  .. automethod:: kfp.Client.pipelines.list_pipeline_versions
+  .. automethod:: kfp.Client.pipelines.list_pipelines
+
+kfp.Client.runs Struct
+----------------------
+
+  .. automethod:: kfp.Client.runs.api_client
+  .. automethod:: kfp.Client.runs.archive_run
+  .. automethod:: kfp.Client.runs.create_run
+  .. automethod:: kfp.Client.runs.delete_run
+  .. automethod:: kfp.Client.runs.get_run
+  .. automethod:: kfp.Client.runs.list_runs
+  .. automethod:: kfp.Client.runs.read_artifact
+  .. automethod:: kfp.Client.runs.report_run_metrics
+  .. automethod:: kfp.Client.runs.retry_run
+  .. automethod:: kfp.Client.runs.terminate_run
+  .. automethod:: kfp.Client.runs.unarchive_run

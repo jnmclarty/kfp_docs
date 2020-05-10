@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.cli.diagnose_me_cli &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.cli.diagnose_me_cli</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.cli.diagnose_me_cli</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Lint as: python3</span>
+<span class="sd">&quot;&quot;&quot;CLI interface for KFP diagnose_me tool.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">json</span> <span class="k">as</span> <span class="nn">json_library</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">from</span> <span class="nn">.diagnose_me</span> <span class="kn">import</span> <span class="n">dev_env</span>
+<span class="kn">from</span> <span class="nn">.diagnose_me</span> <span class="kn">import</span> <span class="n">gcp</span>
+<span class="kn">from</span> <span class="nn">.diagnose_me</span> <span class="kn">import</span> <span class="n">kubernetes_cluster</span> <span class="k">as</span> <span class="n">k8</span>
+<span class="kn">from</span> <span class="nn">.diagnose_me</span> <span class="kn">import</span> <span class="n">utility</span>
+
+
+<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">diagnose_me</span><span class="p">():</span>
+  <span class="sd">&quot;&quot;&quot;Prints diagnoses information for KFP environment.&quot;&quot;&quot;</span>
+  <span class="k">pass</span>
+
+
+<span class="nd">@diagnose_me</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
+    <span class="s1">&#39;--json&#39;</span><span class="p">,</span>
+    <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output in Json format, human readable format is set by default.&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
+    <span class="s1">&#39;--project-id&#39;</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">Text</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target project id. It will use environment default if not specified.&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
+    <span class="s1">&#39;--namespace&#39;</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">Text</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Namespace to use for Kubernetes cluster.all-namespaces is used if not specified.&#39;</span>
+<span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="k">def</span> <span class="nf">diagnose_me</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">json</span><span class="p">,</span> <span class="n">project_id</span><span class="p">,</span> <span class="n">namespace</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Runs environment diagnostic with specified parameters.&quot;&quot;&quot;</span>
+  <span class="c1"># validate kubectl, gcloud , and gsutil exist</span>
+  <span class="n">local_env_gcloud_sdk</span> <span class="o">=</span> <span class="n">gcp</span><span class="o">.</span><span class="n">get_gcp_configuration</span><span class="p">(</span>
+      <span class="n">gcp</span><span class="o">.</span><span class="n">Commands</span><span class="o">.</span><span class="n">GET_GCLOUD_VERSION</span><span class="p">,</span>
+      <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">,</span>
+      <span class="n">human_readable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Google Cloud SDK&#39;</span><span class="p">,</span> <span class="s1">&#39;gsutil&#39;</span><span class="p">,</span> <span class="s1">&#39;kubectl&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">app</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">local_env_gcloud_sdk</span><span class="o">.</span><span class="n">json_output</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span>
+          <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not installed, gcloud, gsutil and kubectl are required&#39;</span> <span class="o">%</span> <span class="n">app</span><span class="p">,</span>
+          <span class="s1">&#39;for this app to run. Please follow instructions at&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;https://cloud.google.com/sdk/install to install the SDK.&#39;</span><span class="p">)</span>
+      <span class="k">return</span>
+
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Collecting diagnostic information ...&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+
+  <span class="c1"># default behaviour dump all configurations</span>
+  <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">for</span> <span class="n">gcp_command</span> <span class="ow">in</span> <span class="n">gcp</span><span class="o">.</span><span class="n">Commands</span><span class="p">:</span>
+    <span class="n">results</span><span class="p">[</span><span class="n">gcp_command</span><span class="p">]</span> <span class="o">=</span> <span class="n">gcp</span><span class="o">.</span><span class="n">get_gcp_configuration</span><span class="p">(</span>
+        <span class="n">gcp_command</span><span class="p">,</span> <span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">,</span> <span class="n">human_readable</span><span class="o">=</span><span class="ow">not</span> <span class="n">json</span><span class="p">)</span>
+
+  <span class="k">for</span> <span class="n">k8_command</span> <span class="ow">in</span> <span class="n">k8</span><span class="o">.</span><span class="n">Commands</span><span class="p">:</span>
+    <span class="n">results</span><span class="p">[</span><span class="n">k8_command</span><span class="p">]</span> <span class="o">=</span> <span class="n">k8</span><span class="o">.</span><span class="n">get_kubectl_configuration</span><span class="p">(</span>
+        <span class="n">k8_command</span><span class="p">,</span> <span class="n">human_readable</span><span class="o">=</span><span class="ow">not</span> <span class="n">json</span><span class="p">)</span>
+
+  <span class="k">for</span> <span class="n">dev_env_command</span> <span class="ow">in</span> <span class="n">dev_env</span><span class="o">.</span><span class="n">Commands</span><span class="p">:</span>
+    <span class="n">results</span><span class="p">[</span><span class="n">dev_env_command</span><span class="p">]</span> <span class="o">=</span> <span class="n">dev_env</span><span class="o">.</span><span class="n">get_dev_env_configuration</span><span class="p">(</span>
+        <span class="n">dev_env_command</span><span class="p">,</span> <span class="n">human_readable</span><span class="o">=</span><span class="ow">not</span> <span class="n">json</span><span class="p">)</span>
+
+  <span class="n">print_to_sdtout</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="ow">not</span> <span class="n">json</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="print_to_sdtout"><a class="viewcode-back" href="../../../source/kfp.cli.html#kfp.cli.diagnose_me_cli.print_to_sdtout">[docs]</a><span class="k">def</span> <span class="nf">print_to_sdtout</span><span class="p">(</span><span class="n">results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">utility</span><span class="o">.</span><span class="n">ExecutorResponse</span><span class="p">],</span>
+                    <span class="n">human_readable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Viewer to print the ExecutorResponse results to stdout.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">    results: A dictionary with key:command names and val: Execution response</span>
+<span class="sd">    human_readable: Print results in human readable format. If set to True</span>
+<span class="sd">      command names will be printed as visual delimiters in new lines. If False</span>
+<span class="sd">      results are printed as a dictionary with command as key.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">output_dict</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">human_readable_result</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">has_error</span><span class="p">:</span>
+      <span class="n">output_dict</span><span class="p">[</span>
+          <span class="n">key</span><span class="o">.</span>
+          <span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Following error occurred during the diagnoses: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">val</span><span class="o">.</span><span class="n">stderr</span>
+      <span class="k">continue</span>
+
+    <span class="n">output_dict</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">json_output</span>
+    <span class="n">human_readable_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;================ </span><span class="si">%s</span><span class="s1"> ===================&#39;</span> <span class="o">%</span>
+                                 <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">human_readable_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">parsed_output</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">human_readable</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">human_readable_result</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">json_library</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+        <span class="n">output_dict</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">))</span>
+
+  <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

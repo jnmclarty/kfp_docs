@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.components package &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.components.structures package" href="kfp.components.structures.html" />
+    <link rel="prev" title="kfp.compiler package" href="kfp.compiler.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kfp.components package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-components-structures-subpackage">kfp.components.structures subpackage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kfp.components.structures.html">kfp.components.structures package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+      <li>kfp.components package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.components.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-kfp.components">
+<span id="kfp-components-package"></span><h1>kfp.components package<a class="headerlink" href="#module-kfp.components" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="kfp.components.ComponentStore">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">ComponentStore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_search_paths</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url_search_prefixes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_component_store.html#ComponentStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.ComponentStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="kfp.components.ComponentStore.default_store">
+<code class="sig-name descname">default_store</code><em class="property"> = &lt;kfp.components._component_store.ComponentStore object&gt;</em><a class="headerlink" href="#kfp.components.ComponentStore.default_store" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.components.ComponentStore.load_component">
+<code class="sig-name descname">load_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">digest</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tag</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_component_store.html#ComponentStore.load_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.ComponentStore.load_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads component local file or URL and creates a task factory function</p>
+<p>Search locations:
+&lt;local-search-path&gt;/&lt;name&gt;/component.yaml
+&lt;url-search-prefix&gt;/&lt;name&gt;/component.yaml</p>
+<p>If the digest is specified, then the search locations are:
+&lt;local-search-path&gt;/&lt;name&gt;/versions/sha256/&lt;digest&gt;
+&lt;url-search-prefix&gt;/&lt;name&gt;/versions/sha256/&lt;digest&gt;</p>
+<p>If the tag is specified, then the search locations are:
+&lt;local-search-path&gt;/&lt;name&gt;/versions/tags/&lt;digest&gt;
+&lt;url-search-prefix&gt;/&lt;name&gt;/versions/tags/&lt;digest&gt;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Component name used to search and load the component artifact containing the component definition.
+Component name usually has the following form: group/subgroup/component</p></li>
+<li><p><strong>digest</strong> – Strict component version. SHA256 hash digest of the component artifact file. Can be used to load a specific component version so that the pipeline is reproducible.</p></li>
+<li><p><strong>tag</strong> – Version tag. Can be used to load component version from a specific branch. The version of the component referenced by a tag can change in future.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A factory function with a strongly-typed signature.
+Once called with the required arguments, the factory constructs a pipeline task instance (ContainerOp).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.components.ComponentStore.load_component_from_file">
+<code class="sig-name descname">load_component_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_component_store.html#ComponentStore.load_component_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.ComponentStore.load_component_from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.components.ComponentStore.load_component_from_url">
+<code class="sig-name descname">load_component_from_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_component_store.html#ComponentStore.load_component_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.ComponentStore.load_component_from_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.InputBinaryFile">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">InputBinaryFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#InputBinaryFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.InputBinaryFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>When creating component from function, InputBinaryFile should be used as function parameter annotation to tell the system to pass the <em>binary data stream</em> object (<cite>io.BytesIO</cite>) to the function instead of passing the actual data.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.InputPath">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">InputPath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#InputPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.InputPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>When creating component from function, InputPath should be used as function parameter annotation to tell the system to pass the <em>data file path</em> to the function instead of passing the actual data.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.InputTextFile">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">InputTextFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#InputTextFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.InputTextFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>When creating component from function, InputTextFile should be used as function parameter annotation to tell the system to pass the <em>text data stream</em> object (<cite>io.TextIOWrapper</cite>) to the function instead of passing the actual data.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.OutputBinaryFile">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">OutputBinaryFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#OutputBinaryFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.OutputBinaryFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>When creating component from function, OutputBinaryFile should be used as function parameter annotation to tell the system that the function wants to output data by writing it into a given binary file stream (<cite>io.BytesIO</cite>) instead of returning the data from the function.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.OutputPath">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">OutputPath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#OutputPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.OutputPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>When creating component from function, OutputPath should be used as function parameter annotation to tell the system that the function wants to output data by writing it into a file with the given path instead of returning the data from the function.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.OutputTextFile">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">OutputTextFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#OutputTextFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.OutputTextFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>When creating component from function, OutputTextFile should be used as function parameter annotation to tell the system that the function wants to output data by writing it into a given text file stream (<cite>io.TextIOWrapper</cite>) instead of returning the data from the function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.create_component_from_airflow_op">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">create_component_from_airflow_op</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">op_class</span><span class="p">:</span> <span class="n">type</span></em>, <em class="sig-param"><span class="n">base_image</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'apache/airflow:master-python3.6-ci'</span></em>, <em class="sig-param"><span class="n">variable_output_names</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xcom_output_names</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_airflow_op.html#create_component_from_airflow_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.create_component_from_airflow_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates component function from an Airflow operator class.
+The inputs of the component are the same as the operator constructor parameters.
+By default the component has the following outputs: “Result”, “Variables” and “XComs”. “Variables” and “XComs” are serialized JSON maps of all variables and xcoms produced by the operator during the execution.
+Use the variable_output_names and xcom_output_names parameters to output individual variables/xcoms as separate outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>op_class</strong> – Reference to the Airflow operator class (e.g. EmailOperator or BashOperator) to convert to componenent.</p></li>
+<li><p><strong>base_image</strong> – Optional. The container image to use for the component. Default is apache/airflow. The container image must have the same python version as the environment used to run create_component_from_airflow_op. The image should have python 3.5+ with airflow package installed.</p></li>
+<li><p><strong>variable_output_names</strong> – Optional. A list of Airflow “variables” produced by the operator that should be returned as separate outputs.</p></li>
+<li><p><strong>xcom_output_names</strong> – Optional. A list of Airflow “XComs” produced by the operator that should be returned as separate outputs.</p></li>
+<li><p><strong>modules_to_capture</strong> – Optional. A list of names of additional modules that the operator depends on. By default only the module containing the operator class is captured. If the operator class uses the code from another module, the name of that module can be specified in this list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.create_component_from_func">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">create_component_from_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">output_component_file</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">base_image</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#create_component_from_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.create_component_from_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a Python function to a component and returns a task factory (a function that accepts arguments and returns a task object).</p>
+<p>Function name and docstring are used as component name and description.
+Argument and return annotations are used as component input/output types.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Returns sum of two arguments&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="c1"># add_op is a task factory function that creates a task object when given arguments</span>
+<span class="n">add_op</span> <span class="o">=</span> <span class="n">create_component_from_func</span><span class="p">(</span>
+    <span class="n">func</span><span class="o">=</span><span class="n">add</span><span class="p">,</span>
+    <span class="n">base_image</span><span class="o">=</span><span class="s1">&#39;python:3.7&#39;</span><span class="p">,</span> <span class="c1"># Optional</span>
+    <span class="n">output_component_file</span><span class="o">=</span><span class="s1">&#39;add.component.yaml&#39;</span><span class="p">,</span> <span class="c1"># Optional</span>
+    <span class="n">packages_to_install</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pandas==0.24&#39;</span><span class="p">],</span> <span class="c1"># Optional</span>
+<span class="p">)</span>
+
+<span class="c1"># The component spec can be accessed through the .component_spec attribute:</span>
+<span class="n">add_op</span><span class="o">.</span><span class="n">component_spec</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;add.component.yaml&#39;</span><span class="p">)</span>
+
+<span class="c1"># The component function can be called with arguments to create a task:</span>
+<span class="n">add_task</span> <span class="o">=</span> <span class="n">add_op</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># The resulting task has output references, corresponding to the component outputs.</span>
+<span class="c1"># When the function only has a single anonymous return value, the output name is &quot;Output&quot;:</span>
+<span class="n">sum_output_ref</span> <span class="o">=</span> <span class="n">add_task</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;Output&#39;</span><span class="p">]</span>
+
+<span class="c1"># These task output references can be passed to other component functions, constructing a computation graph:</span>
+<span class="n">task2</span> <span class="o">=</span> <span class="n">add_op</span><span class="p">(</span><span class="n">sum_output_ref</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>create_component_from_func</cite> function can also be used as decorator:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@create_component_from_func</span>
+<span class="k">def</span> <span class="nf">add_op</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Returns sum of two arguments&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>To declare a function with multiple return values, use the NamedTuple return annotation syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
+
+<span class="k">def</span> <span class="nf">add_multiply_two_numbers</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="s1">&#39;Outputs&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;product&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)]):</span>
+    <span class="sd">&quot;&quot;&quot;Returns sum and product of two arguments&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="n">add_multiply_op</span> <span class="o">=</span> <span class="n">create_component_from_func</span><span class="p">(</span><span class="n">add_multiply_two_numbers</span><span class="p">)</span>
+
+<span class="c1"># The component function can be called with arguments to create a task:</span>
+<span class="n">add_multiply_task</span> <span class="o">=</span> <span class="n">add_multiply_op</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># The resulting task has output references, corresponding to the component outputs:</span>
+<span class="n">sum_output_ref</span> <span class="o">=</span> <span class="n">add_multiply_task</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">]</span>
+
+<span class="c1"># These task output references can be passed to other component functions, constructing a computation graph:</span>
+<span class="n">task2</span> <span class="o">=</span> <span class="n">add_multiply_op</span><span class="p">(</span><span class="n">sum_output_ref</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Bigger data should be read from files and written to files.
+Use the <cite>InputPath</cite> parameter annotation to tell the system that the function wants to consume the corresponding input data as a file. The system will download the data, write it to a local file and then pass the <strong>path</strong> of that file to the function.
+Use the <cite>OutputPath</cite> parameter annotation to tell the system that the function wants to produce the corresponding output data as a file. The system will prepare and pass the <strong>path</strong> of a file where the function should write the output data. After the function exits, the system will upload the data to the storage system so that it can be passed to downstream components.
+You can specify the type of the consumed/produced data by specifying the type argument to <cite>InputPath</cite> and <cite>OutputPath</cite>. The type can be a python type or an arbitrary type name string. <cite>OutputPath(‘CatBoostModel’)</cite> means that the function states that the data it has written to a file has type ‘CatBoostModel’. <cite>InputPath(‘CatBoostModel’)</cite> means that the function states that it expect the data it reads from a file to have type ‘CatBoostModel’. When the pipeline author connects inputs to outputs the system checks whether the types match.
+Every kind of data can be consumed as a file input. Conversely, bigger data should not be consumed by value as all value inputs pass through the command line.</p>
+<p>Example of a component function declaring file input and output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">catboost_train_classifier</span><span class="p">(</span>
+    <span class="n">training_data_path</span><span class="p">:</span> <span class="n">InputPath</span><span class="p">(</span><span class="s1">&#39;CSV&#39;</span><span class="p">),</span>            <span class="c1"># Path to input data file of type &quot;CSV&quot;</span>
+    <span class="n">trained_model_path</span><span class="p">:</span> <span class="n">OutputPath</span><span class="p">(</span><span class="s1">&#39;CatBoostModel&#39;</span><span class="p">),</span> <span class="c1"># Path to output data file of type &quot;CatBoostModel&quot;</span>
+    <span class="n">number_of_trees</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>                      <span class="c1"># Small output of type &quot;Integer&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="s1">&#39;Outputs&#39;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;Accuracy&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>  <span class="c1"># Small output of type &quot;Float&quot;</span>
+    <span class="p">(</span><span class="s1">&#39;Precision&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span> <span class="c1"># Small output of type &quot;Float&quot;</span>
+    <span class="p">(</span><span class="s1">&#39;JobUri&#39;</span><span class="p">,</span> <span class="s1">&#39;URI&#39;</span><span class="p">),</span>    <span class="c1"># Small output of type &quot;URI&quot;</span>
+<span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Trains CatBoost classification model&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> – The python function to convert</p></li>
+<li><p><strong>base_image</strong> – Optional. Specify a custom Docker container image to use in the component. For lightweight components, the image needs to have python 3.5+. Default is the python image corresponding to the current python environment.</p></li>
+<li><p><strong>output_component_file</strong> – Optional. Write a component definition to a local file. The produced component file can be loaded back by calling <cite>load_component_from_file</cite> or <cite>load_component_from_uri</cite>.</p></li>
+<li><p><strong>packages_to_install</strong> – Optional. List of [versioned] python packages to pip install before executing the user function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A factory function with a strongly-typed signature taken from the python function.
+Once called with the required arguments, the factory constructs a task instance that can run the original function in a container.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.create_graph_component_from_pipeline_func">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">create_graph_component_from_pipeline_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_func</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">output_component_file</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">embed_component_specs</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Callable<a class="reference internal" href="../_modules/kfp/components/_python_to_graph_component.html#create_graph_component_from_pipeline_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.create_graph_component_from_pipeline_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Experimental! Creates graph component definition from a python pipeline function. The component file can be published for sharing.
+Pipeline function is a function that only calls component functions and passes outputs to inputs.
+This feature is experimental and lacks support for some of the DSL features like conditions and loops.
+Only pipelines consisting of loaded components or python components are currently supported (no manually created ContainerOps or ResourceOps).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_func</strong> – Python function to convert</p></li>
+<li><p><strong>output_component_file</strong> – Path of the file where the component definition will be written. The <cite>component.yaml</cite> file can then be published for sharing.</p></li>
+<li><p><strong>embed_component_specs</strong> – Whether to embed component definitions or just reference them. Embedding makes the graph component self-contained. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function representing the graph component. The component spec can be accessed using the .component_spec attribute.
+The function will have the same parameters as the original function.
+When called, the function will return a task object, corresponding to the graph component.
+To reference the outputs of the task, use task.outputs[“Output name”].</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">producer_op</span> <span class="o">=</span> <span class="n">load_component_from_file</span><span class="p">(</span><span class="s1">&#39;producer/component.yaml&#39;</span><span class="p">)</span>
+<span class="n">processor_op</span> <span class="o">=</span> <span class="n">load_component_from_file</span><span class="p">(</span><span class="s1">&#39;processor/component.yaml&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">pipeline1</span><span class="p">(</span><span class="n">pipeline_param_1</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">producer_task</span> <span class="o">=</span> <span class="n">producer_op</span><span class="p">()</span>
+    <span class="n">processor_task</span> <span class="o">=</span> <span class="n">processor_op</span><span class="p">(</span><span class="n">pipeline_param_1</span><span class="p">,</span> <span class="n">producer_task</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;Output 2&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">([</span>
+        <span class="p">(</span><span class="s1">&#39;Pipeline output 1&#39;</span><span class="p">,</span> <span class="n">producer_task</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;Output 1&#39;</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s1">&#39;Pipeline output 2&#39;</span><span class="p">,</span> <span class="n">processor_task</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;Output 2&#39;</span><span class="p">]),</span>
+    <span class="p">])</span>
+
+<span class="n">create_graph_component_from_pipeline_func</span><span class="p">(</span><span class="n">pipeline1</span><span class="p">,</span> <span class="n">output_component_file</span><span class="o">=</span><span class="s1">&#39;pipeline.component.yaml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.func_to_component_text">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">func_to_component_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">extra_code</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">base_image</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_code_pickling</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#func_to_component_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.func_to_component_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a Python function to a component definition and returns its textual representation</p>
+<p>Function docstring is used as component description.
+Argument and return annotations are used as component input/output types.
+To declare a function with multiple return values, use the NamedTuple return annotation syntax:</p>
+<blockquote>
+<div><p>from typing import NamedTuple
+def add_multiply_two_numbers(a: float, b: float) -&gt; NamedTuple(‘DummyName’, [(‘sum’, float), (‘product’, float)]):</p>
+<blockquote>
+<div><p>“””Returns sum and product of two arguments”””
+return (a + b, a * b)</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> – The python function to convert</p></li>
+<li><p><strong>base_image</strong> – Optional. Specify a custom Docker container image to use in the component. For lightweight components, the image needs to have python 3.5+. Default is tensorflow/tensorflow:1.13.2-py3</p></li>
+<li><p><strong>extra_code</strong> – Optional. Extra code to add before the function code. Can be used as workaround to define types used in function signature.</p></li>
+<li><p><strong>packages_to_install</strong> – Optional. List of [versioned] python packages to pip install before executing the user function.</p></li>
+<li><p><strong>modules_to_capture</strong> – Optional. List of module names that will be captured (instead of just referencing) during the dependency scan. By default the func.__module__ is captured. The actual algorithm: Starting with the initial function, start traversing dependencies. If the dependecy.__module__ is in the modules_to_capture list then it’s captured and it’s dependencies are traversed. Otherwise the dependency is only referenced instead of capturing and its dependencies are not traversed.</p></li>
+<li><p><strong>use_code_pickling</strong> – Specifies whether the function code should be captured using pickling as opposed to source code manipulation. Pickling has better support for capturing dependencies, but is sensitive to version mismatch between python in component creation environment and runtime image.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Textual representation of a component definition</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.func_to_container_op">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">func_to_container_op</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">output_component_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">base_image</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extra_code</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_code_pickling</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#func_to_container_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.func_to_container_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a Python function to a component and returns a task (ContainerOp) factory</p>
+<p>Function docstring is used as component description.
+Argument and return annotations are used as component input/output types.
+To declare a function with multiple return values, use the NamedTuple return annotation syntax:</p>
+<blockquote>
+<div><p>from typing import NamedTuple
+def add_multiply_two_numbers(a: float, b: float) -&gt; NamedTuple(‘DummyName’, [(‘sum’, float), (‘product’, float)]):</p>
+<blockquote>
+<div><p>“””Returns sum and product of two arguments”””
+return (a + b, a * b)</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> – The python function to convert</p></li>
+<li><p><strong>base_image</strong> – Optional. Specify a custom Docker container image to use in the component. For lightweight components, the image needs to have python 3.5+. Default is tensorflow/tensorflow:1.13.2-py3</p></li>
+<li><p><strong>output_component_file</strong> – Optional. Write a component definition to a local file. Can be used for sharing.</p></li>
+<li><p><strong>extra_code</strong> – Optional. Extra code to add before the function code. Can be used as workaround to define types used in function signature.</p></li>
+<li><p><strong>packages_to_install</strong> – Optional. List of [versioned] python packages to pip install before executing the user function.</p></li>
+<li><p><strong>modules_to_capture</strong> – Optional. List of module names that will be captured (instead of just referencing) during the dependency scan. By default the func.__module__ is captured. The actual algorithm: Starting with the initial function, start traversing dependencies. If the dependecy.__module__ is in the modules_to_capture list then it’s captured and it’s dependencies are traversed. Otherwise the dependency is only referenced instead of capturing and its dependencies are not traversed.</p></li>
+<li><p><strong>use_code_pickling</strong> – Specifies whether the function code should be captured using pickling as opposed to source code manipulation. Pickling has better support for capturing dependencies, but is sensitive to version mismatch between python in component creation environment and runtime image.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A factory function with a strongly-typed signature taken from the python function.
+Once called with the required arguments, the factory constructs a pipeline task instance (ContainerOp) that can run the original function in a container.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.get_default_base_image">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">get_default_base_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>str<span class="p">, </span>Callable<span class="p">[</span><span class="p">]</span><span class="p">, </span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#get_default_base_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.get_default_base_image" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.1.32.</span></p>
+</div>
+<p>Use the kfp.components.default_base_image_or_builder variable
+instead</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.load_component">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">load_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_components.html#load_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.load_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads component from text, file or URL and creates a task factory function</p>
+<p>Only one argument should be specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – Path of local file containing the component definition.</p></li>
+<li><p><strong>url</strong> – The URL of the component file data</p></li>
+<li><p><strong>text</strong> – A string containing the component file data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A factory function with a strongly-typed signature.
+Once called with the required arguments, the factory constructs a pipeline task instance (ContainerOp).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.load_component_from_file">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">load_component_from_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_components.html#load_component_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.load_component_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads component from file and creates a task factory function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> – Path of local file containing the component definition.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A factory function with a strongly-typed signature.
+Once called with the required arguments, the factory constructs a pipeline task instance (ContainerOp).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.load_component_from_text">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">load_component_from_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_components.html#load_component_from_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.load_component_from_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads component from text and creates a task factory function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> – A string containing the component file data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A factory function with a strongly-typed signature.
+Once called with the required arguments, the factory constructs a pipeline task instance (ContainerOp).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.load_component_from_url">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">load_component_from_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_components.html#load_component_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.load_component_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads component from URL and creates a task factory function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> – The URL of the component file data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A factory function with a strongly-typed signature.
+Once called with the required arguments, the factory constructs a pipeline task instance (ContainerOp).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.components.set_default_base_image">
+<code class="sig-prename descclassname">kfp.components.</code><code class="sig-name descname">set_default_base_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_or_factory</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Callable<span class="p">[</span><span class="p">]</span><span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_python_op.html#set_default_base_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.set_default_base_image" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>set_default_base_image sets the name of the container image that will be used for component creation when base_image is not specified.</dt><dd><p>Alternatively, the base image can also be set to a factory function that will be returning the image.</p>
+</dd>
+</dl>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.1.32: </span>Use the kfp.components.default_base_image_or_builder variable
+instead</p>
+</div>
+</dd></dl>
+
+<div class="section" id="kfp-components-structures-subpackage">
+<h2>kfp.components.structures subpackage<a class="headerlink" href="#kfp-components-structures-subpackage" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kfp.components.structures.html">kfp.components.structures package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.structures.kubernetes.html">kfp.components.structures.kubernetes package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kfp.components.structures.kubernetes.html#module-kfp.components.structures.kubernetes.v1">kfp.components.structures.kubernetes.v1 module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.components.structures.html" class="btn btn-neutral float-right" title="kfp.components.structures package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kfp.compiler.html" class="btn btn-neutral float-left" title="kfp.compiler package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,708 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.dsl package &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.dsl.types module" href="kfp.dsl.types.html" />
+    <link rel="prev" title="kfp.containers package" href="kfp.containers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html">kfp.components package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kfp.dsl package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kfp.dsl.types.html">kfp.dsl.types module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+      <li>kfp.dsl package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.dsl.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-kfp.dsl">
+<span id="kfp-dsl-package"></span><h1>kfp.dsl package<a class="headerlink" href="#module-kfp.dsl" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="kfp.dsl.Condition">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">Condition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">condition</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_ops_group.html#Condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.Condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._ops_group.OpsGroup</span></code></p>
+<p>Represents an condition group with a condition.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">Condition</span><span class="p">(</span><span class="n">param1</span><span class="o">==</span><span class="s1">&#39;pizza&#39;</span><span class="p">,</span> <span class="s1">&#39;[param1 is pizza]&#39;</span><span class="p">):</span>
+    <span class="n">op1</span> <span class="o">=</span> <span class="n">ContainerOp</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">op2</span> <span class="o">=</span> <span class="n">ContainerOp</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.ContainerOp">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">ContainerOp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">image</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">command</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">arguments</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">init_containers</span><span class="p">:</span> <span class="n">List<span class="p">[</span>kfp.dsl._container_op.UserContainer<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sidecars</span><span class="p">:</span> <span class="n">List<span class="p">[</span>kfp.dsl._container_op.Sidecar<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">container_kwargs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">artifact_argument_paths</span><span class="p">:</span> <span class="n">List<span class="p">[</span>kfp.dsl._container_op.InputArgumentPath<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_outputs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">output_artifact_paths</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_exit_handler</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">pvolumes</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>kubernetes.client.models.v1_volume.V1Volume<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_container_op.html#ContainerOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.ContainerOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._container_op.BaseOp</span></code></p>
+<p>Represents an op implemented by a container image.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kfp</span> <span class="kn">import</span> <span class="n">dsl</span>
+<span class="kn">from</span> <span class="nn">kubernetes.client.models</span> <span class="kn">import</span> <span class="n">V1EnvVar</span><span class="p">,</span> <span class="n">V1SecretKeySelector</span>
+
+
+<span class="nd">@dsl</span><span class="o">.</span><span class="n">pipeline</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s1">&#39;hello world&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">foo_pipeline</span><span class="p">(</span><span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pull_image_policy</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+    <span class="c1"># any attributes can be parameterized (both serialized string or actual PipelineParam)</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ContainerOp</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span>
+                        <span class="n">image</span><span class="o">=</span><span class="s1">&#39;busybox:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">tag</span><span class="p">,</span>
+                        <span class="c1"># pass in init_container list</span>
+                        <span class="n">init_containers</span><span class="o">=</span><span class="p">[</span><span class="n">dsl</span><span class="o">.</span><span class="n">InitContainer</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">,</span> <span class="s1">&#39;busybox:latest&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="s1">&#39;echo &quot;hello&quot;&#39;</span><span class="p">)],</span>
+                        <span class="c1"># pass in sidecars list</span>
+                        <span class="n">sidecars</span><span class="o">=</span><span class="p">[</span><span class="n">dsl</span><span class="o">.</span><span class="n">Sidecar</span><span class="p">(</span><span class="s1">&#39;print&#39;</span><span class="p">,</span> <span class="s1">&#39;busybox:latest&#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="s1">&#39;echo &quot;hello&quot;&#39;</span><span class="p">)],</span>
+                        <span class="c1"># pass in k8s container kwargs</span>
+                        <span class="n">container_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;env&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">V1EnvVar</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">)]},</span>
+    <span class="p">)</span>
+
+    <span class="c1"># set `imagePullPolicy` property for `container` with `PipelineParam`</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">set_image_pull_policy</span><span class="p">(</span><span class="n">pull_image_policy</span><span class="p">)</span>
+
+    <span class="c1"># add sidecar with parameterized image tag</span>
+    <span class="c1"># sidecar follows the argo sidecar swagger spec</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">add_sidecar</span><span class="p">(</span><span class="n">dsl</span><span class="o">.</span><span class="n">Sidecar</span><span class="p">(</span><span class="s1">&#39;redis&#39;</span><span class="p">,</span> <span class="s1">&#39;redis:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">tag</span><span class="p">)</span><span class="o">.</span><span class="n">set_image_pull_policy</span><span class="p">(</span><span class="s1">&#39;Always&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="kfp.dsl.ContainerOp.add_pvolumes">
+<code class="sig-name descname">add_pvolumes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pvolumes</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>kubernetes.client.models.v1_volume.V1Volume<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_container_op.html#ContainerOp.add_pvolumes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.ContainerOp.add_pvolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the existing pvolumes dict, extends volumes and volume_mounts
+and redefines the pvolume attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pvolumes</strong> – Dictionary. Keys are mount paths, values are Kubernetes
+volumes or inherited types (e.g. PipelineVolumes).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.ContainerOp.arguments">
+<em class="property">property </em><code class="sig-name descname">arguments</code><a class="headerlink" href="#kfp.dsl.ContainerOp.arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.ContainerOp.command">
+<em class="property">property </em><code class="sig-name descname">command</code><a class="headerlink" href="#kfp.dsl.ContainerOp.command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.ContainerOp.container">
+<em class="property">property </em><code class="sig-name descname">container</code><a class="headerlink" href="#kfp.dsl.ContainerOp.container" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>Container</cite> object that represents the <cite>container</cite> property in
+<cite>io.argoproj.workflow.v1alpha1.Template</cite>. Can be used to update the
+container configurations.</p>
+<p class="rubric">Example</p>
+<p>import kfp.dsl as dsl
+from kubernetes.client.models import V1EnvVar</p>
+<p>&#64;dsl.pipeline(name=’example_pipeline’)
+def immediate_value_pipeline():</p>
+<blockquote>
+<div><dl>
+<dt>op1 = (dsl.ContainerOp(name=’example’, image=’nginx:alpine’)</dt><dd><blockquote>
+<div><dl class="simple">
+<dt>.container</dt><dd><p>.add_env_variable(V1EnvVar(name=’HOST’, value=’foo.bar’))
+.add_env_variable(V1EnvVar(name=’PORT’, value=’80’))
+.parent # return the parent <cite>ContainerOp</cite></p>
+</dd>
+</dl>
+</div></blockquote>
+<p>)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.ContainerOp.env_variables">
+<em class="property">property </em><code class="sig-name descname">env_variables</code><a class="headerlink" href="#kfp.dsl.ContainerOp.env_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.ContainerOp.image">
+<em class="property">property </em><code class="sig-name descname">image</code><a class="headerlink" href="#kfp.dsl.ContainerOp.image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.ExitHandler">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">ExitHandler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">exit_op</span><span class="p">:</span> <span class="n">kfp.dsl._container_op.ContainerOp</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_ops_group.html#ExitHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.ExitHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._ops_group.OpsGroup</span></code></p>
+<p>Represents an exit handler that is invoked upon exiting a group of ops.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exit_op</span> <span class="o">=</span> <span class="n">ContainerOp</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">ExitHandler</span><span class="p">(</span><span class="n">exit_op</span><span class="p">):</span>
+  <span class="n">op1</span> <span class="o">=</span> <span class="n">ContainerOp</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+  <span class="n">op2</span> <span class="o">=</span> <span class="n">ContainerOp</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.InputArgumentPath">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">InputArgumentPath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">argument</span></em>, <em class="sig-param"><span class="n">input</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_container_op.html#InputArgumentPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.InputArgumentPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.ParallelFor">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">ParallelFor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">loop_args</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span>Union<span class="p">[</span>int<span class="p">, </span>float<span class="p">, </span>str<span class="p">, </span>Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">, </span>kfp.dsl._pipeline_param.PipelineParam<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_ops_group.html#ParallelFor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.ParallelFor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._ops_group.OpsGroup</span></code></p>
+<p>Represents a parallel for loop over a static set of items.</p>
+<p>Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ParallelFor</span><span class="p">([{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}])</span> <span class="k">as</span> <span class="n">item</span><span class="p">:</span>
+   <span class="n">op1</span> <span class="o">=</span> <span class="n">ContainerOp</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;echo </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">a</span><span class="p">)])</span>
+   <span class="n">op2</span> <span class="o">=</span> <span class="n">ContainerOp</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;echo </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">b</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>And, op1 would be executed twice, once with args=[‘echo 1’] and once with args=[‘echo 2’]</p>
+<dl class="py attribute">
+<dt id="kfp.dsl.ParallelFor.TYPE_NAME">
+<code class="sig-name descname">TYPE_NAME</code><em class="property"> = 'for_loop'</em><a class="headerlink" href="#kfp.dsl.ParallelFor.TYPE_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.PipelineConf">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">PipelineConf</code><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#PipelineConf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineConf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>PipelineConf contains pipeline level settings</p>
+<dl class="py method">
+<dt id="kfp.dsl.PipelineConf.add_op_transformer">
+<code class="sig-name descname">add_op_transformer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transformer</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#PipelineConf.add_op_transformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineConf.add_op_transformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the op_transformers which will be applied to all ops in the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>transformer</strong> – a function that takes a ContainOp as input and returns a ContainerOp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.PipelineConf.set_default_pod_node_selector">
+<code class="sig-name descname">set_default_pod_node_selector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#PipelineConf.set_default_pod_node_selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineConf.set_default_pod_node_selector" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Add a constraint for nodeSelector for a pipeline. Each constraint is a key-value pair label. For the</dt><dd><p>container to be eligible to run on a node, the node must have each of the constraints appeared
+as labels.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label_name</strong> – The name of the constraint label.</p></li>
+<li><p><strong>value</strong> – The value of the constraint label.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.PipelineConf.set_image_pull_policy">
+<code class="sig-name descname">set_image_pull_policy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">policy</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#PipelineConf.set_image_pull_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineConf.set_image_pull_policy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the default image pull policy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>policy</strong> – the pull policy, has to be one of: Always, Never, IfNotPresent.</p></li>
+<li><p><strong>more info</strong> (<em>For</em>) – <a class="reference external" href="https://github.com/kubernetes-client/python/blob/10a7f95435c0b94a6d949ba98375f8cc85a70e5a/kubernetes/docs/V1Container.md">https://github.com/kubernetes-client/python/blob/10a7f95435c0b94a6d949ba98375f8cc85a70e5a/kubernetes/docs/V1Container.md</a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.PipelineConf.set_image_pull_secrets">
+<code class="sig-name descname">set_image_pull_secrets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_pull_secrets</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#PipelineConf.set_image_pull_secrets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineConf.set_image_pull_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the pipeline level imagepullsecret</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_pull_secrets</strong> – a list of Kubernetes V1LocalObjectReference</p></li>
+<li><p><strong>detailed description</strong><strong>, </strong><strong>check Kubernetes V1LocalObjectReference definition</strong> (<em>For</em>) – </p></li>
+<li><p><strong>https</strong> – //github.com/kubernetes-client/python/blob/master/kubernetes/docs/V1LocalObjectReference.md</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.PipelineConf.set_parallelism">
+<code class="sig-name descname">set_parallelism</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_num_pods</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#PipelineConf.set_parallelism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineConf.set_parallelism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the max number of total parallel pods that can execute at the same time in a workflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_num_pods</strong> (<em>int</em>) – max number of total parallel pods.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.PipelineConf.set_timeout">
+<code class="sig-name descname">set_timeout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seconds</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#PipelineConf.set_timeout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineConf.set_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the pipeline level timeout</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seconds</strong> – number of seconds for timeout</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.PipelineConf.set_ttl_seconds_after_finished">
+<code class="sig-name descname">set_ttl_seconds_after_finished</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seconds</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#PipelineConf.set_ttl_seconds_after_finished"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineConf.set_ttl_seconds_after_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the ttl after the pipeline has finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seconds</strong> – number of seconds for the workflow to be garbage collected after it is finished.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.PipelineParam">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">PipelineParam</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">op_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">param_type</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pattern</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline_param.html#PipelineParam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineParam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representing a future value that is passed between pipeline components.</p>
+<p>A PipelineParam object can be used as a pipeline function argument so that it will be a
+pipeline parameter that shows up in ML Pipelines system UI. It can also represent an intermediate
+value passed between components.</p>
+<dl class="py method">
+<dt id="kfp.dsl.PipelineParam.full_name">
+<em class="property">property </em><code class="sig-name descname">full_name</code><a class="headerlink" href="#kfp.dsl.PipelineParam.full_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unique name in the argo yaml for the PipelineParam</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.PipelineParam.ignore_type">
+<code class="sig-name descname">ignore_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline_param.html#PipelineParam.ignore_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineParam.ignore_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>ignore_type ignores the type information such that type checking would also pass</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.PipelineParam.to_struct">
+<code class="sig-name descname">to_struct</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline_param.html#PipelineParam.to_struct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineParam.to_struct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.PipelineVolume">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">PipelineVolume</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pvc</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">volume</span><span class="p">:</span> <span class="n">kubernetes.client.models.v1_volume.V1Volume</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline_volume.html#PipelineVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineVolume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kubernetes.client.models.v1_volume.V1Volume</span></code></p>
+<p>Representing a volume that is passed between pipeline operators and is
+to be mounted by a ContainerOp or its inherited type.</p>
+<p>A PipelineVolume object can be used as an extention of the pipeline
+function’s filesystem. It may then be passed between ContainerOps,
+exposing dependencies.</p>
+<dl class="py method">
+<dt id="kfp.dsl.PipelineVolume.after">
+<code class="sig-name descname">after</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">ops</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline_volume.html#PipelineVolume.after"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.PipelineVolume.after" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a duplicate of self with the required dependecies excluding
+the redundant dependenices.
+:param *ops: Pipeline operators to add as dependencies</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.ResourceOp">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">ResourceOp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8s_resource</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">action</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'create'</span></em>, <em class="sig-param"><span class="n">merge_strategy</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">success_condition</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">failure_condition</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attribute_outputs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_resource_op.html#ResourceOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.ResourceOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._container_op.BaseOp</span></code></p>
+<p>Represents an op which will be translated into a resource template</p>
+<dl class="py method">
+<dt id="kfp.dsl.ResourceOp.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_resource_op.html#ResourceOp.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.ResourceOp.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a ResourceOp which deletes the resource.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.ResourceOp.resource">
+<em class="property">property </em><code class="sig-name descname">resource</code><a class="headerlink" href="#kfp.dsl.ResourceOp.resource" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>Resource</cite> object that represents the <cite>resource</cite> property in
+<cite>io.argoproj.workflow.v1alpha1.Template</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.Sidecar">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">Sidecar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">image</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">command</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mirror_volume_mounts</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_container_op.html#Sidecar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.Sidecar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._container_op.UserContainer</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.UserContainer">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">UserContainer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">image</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">command</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mirror_volume_mounts</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_container_op.html#UserContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.UserContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._container_op.Container</span></code></p>
+<p>Represents an argo workflow UserContainer (io.argoproj.workflow.v1alpha1.UserContainer)
+to be used in <cite>UserContainer</cite> property in argo’s workflow template
+(io.argoproj.workflow.v1alpha1.Template).</p>
+<p><cite>UserContainer</cite> inherits from <cite>Container</cite> class with an addition of <cite>mirror_volume_mounts</cite>
+attribute (<cite>mirrorVolumeMounts</cite> property).</p>
+<p>See <a class="reference external" href="https://github.com/argoproj/argo/blob/master/api/openapi-spec/swagger.json">https://github.com/argoproj/argo/blob/master/api/openapi-spec/swagger.json</a></p>
+<p>Example</p>
+<blockquote>
+<div><p>from kfp.dsl import ContainerOp, UserContainer</p>
+<p># creates a <cite>ContainerOp</cite> and adds a redis init container
+op = (ContainerOp(name=’foo-op’, image=’busybox:latest’)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>.add_initContainer(</dt><dd><p>UserContainer(name=’redis’, image=’redis:alpine’)))</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<dl class="py attribute">
+<dt id="kfp.dsl.UserContainer.attribute_map">
+<code class="sig-name descname">attribute_map</code><em class="property"> = {'args': 'args', 'command': 'command', 'env': 'env', 'env_from': 'envFrom', 'image': 'image', 'image_pull_policy': 'imagePullPolicy', 'lifecycle': 'lifecycle', 'liveness_probe': 'livenessProbe', 'mirror_volume_mounts': 'mirrorVolumeMounts', 'name': 'name', 'ports': 'ports', 'readiness_probe': 'readinessProbe', 'resources': 'resources', 'security_context': 'securityContext', 'stdin': 'stdin', 'stdin_once': 'stdinOnce', 'termination_message_path': 'terminationMessagePath', 'termination_message_policy': 'terminationMessagePolicy', 'tty': 'tty', 'volume_devices': 'volumeDevices', 'volume_mounts': 'volumeMounts', 'working_dir': 'workingDir'}</em><a class="headerlink" href="#kfp.dsl.UserContainer.attribute_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.UserContainer.inputs">
+<em class="property">property </em><code class="sig-name descname">inputs</code><a class="headerlink" href="#kfp.dsl.UserContainer.inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of PipelineParam found in the UserContainer object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.dsl.UserContainer.set_mirror_volume_mounts">
+<code class="sig-name descname">set_mirror_volume_mounts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mirror_volume_mounts</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_container_op.html#UserContainer.set_mirror_volume_mounts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.UserContainer.set_mirror_volume_mounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setting mirrorVolumeMounts to true will mount the same volumes specified
+in the main container to the container (including artifacts), at the same
+mountPaths. This enables dind daemon to partially see the same filesystem
+as the main container in order to use features such as docker volume
+binding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mirror_volume_mounts</strong> – boolean flag</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.dsl.UserContainer.swagger_types">
+<code class="sig-name descname">swagger_types</code><em class="property"> = {'args': 'list[str]', 'command': 'list[str]', 'env': 'list[V1EnvVar]', 'env_from': 'list[V1EnvFromSource]', 'image': 'str', 'image_pull_policy': 'str', 'lifecycle': 'V1Lifecycle', 'liveness_probe': 'V1Probe', 'mirror_volume_mounts': 'bool', 'name': 'str', 'ports': 'list[V1ContainerPort]', 'readiness_probe': 'V1Probe', 'resources': 'V1ResourceRequirements', 'security_context': 'V1SecurityContext', 'stdin': 'bool', 'stdin_once': 'bool', 'termination_message_path': 'str', 'termination_message_policy': 'str', 'tty': 'bool', 'volume_devices': 'list[V1VolumeDevice]', 'volume_mounts': 'list[V1VolumeMount]', 'working_dir': 'str'}</em><a class="headerlink" href="#kfp.dsl.UserContainer.swagger_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.VolumeOp">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">VolumeOp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">size</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">storage_class</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">modes</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">annotations</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">data_source</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">volume_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_volume_op.html#VolumeOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.VolumeOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._resource_op.ResourceOp</span></code></p>
+<p>Represents an op which will be translated into a resource template
+which will be creating a PVC.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.dsl.VolumeSnapshotOp">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">VolumeSnapshotOp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pvc</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">snapshot_class</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">annotations</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">volume</span><span class="p">:</span> <span class="n">kubernetes.client.models.v1_volume.V1Volume</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_volume_snapshot_op.html#VolumeSnapshotOp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.VolumeSnapshotOp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.dsl._resource_op.ResourceOp</span></code></p>
+<p>Represents an op which will be translated into a resource template
+which will be creating a VolumeSnapshot.</p>
+<p>At the time that this feature is written, VolumeSnapshots are an Alpha
+feature in Kubernetes. You should check with your Kubernetes Cluster admin
+if they have it enabled.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.dsl.component">
+<code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_component.html#component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator for component functions that returns a ContainerOp.
+This is useful to enable type checking in the DSL compiler</p>
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dsl</span><span class="o">.</span><span class="n">component</span>
+<span class="k">def</span> <span class="nf">foobar</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">TFModel</span><span class="p">(),</span> <span class="n">step</span><span class="p">:</span> <span class="n">MLStep</span><span class="p">()):</span>
+   <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ContainerOp</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.dsl.get_pipeline_conf">
+<code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">get_pipeline_conf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#get_pipeline_conf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.get_pipeline_conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the pipeline level setting to the current pipeline
+Note: call the function inside the user defined pipeline function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.dsl.graph_component">
+<code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">graph_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_component.html#graph_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.graph_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator for graph component functions.
+This decorator returns an ops_group.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Caching is tricky when recursion is involved. Please be careful and set proper max_cache_staleness in case of infinite loop.</p>
+</div>
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kfp.dsl</span> <span class="k">as</span> <span class="nn">dsl</span>
+
+<span class="nd">@dsl</span><span class="o">.</span><span class="n">graph_component</span>
+<span class="k">def</span> <span class="nf">flip_component</span><span class="p">(</span><span class="n">flip_result</span><span class="p">):</span>
+
+    <span class="n">print_flip</span> <span class="o">=</span> <span class="n">PrintOp</span><span class="p">(</span><span class="n">flip_result</span><span class="p">)</span>
+
+    <span class="n">flip_a</span> <span class="o">=</span> <span class="n">FlipCoinOp</span><span class="p">()</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="n">print_flip</span><span class="p">)</span>
+    <span class="n">flip_a</span><span class="o">.</span><span class="n">execution_options</span><span class="o">.</span><span class="n">caching_strategy</span><span class="o">.</span><span class="n">max_cache_staleness</span> <span class="o">=</span> <span class="s2">&quot;P0D&quot;</span>
+
+    <span class="k">with</span> <span class="n">dsl</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">flip_a</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s1">&#39;heads&#39;</span><span class="p">):</span>
+        <span class="n">flip_component</span><span class="p">(</span><span class="n">flip_a</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;flip_result&#39;</span><span class="p">:</span> <span class="n">flip_a</span><span class="o">.</span><span class="n">output</span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.dsl.pipeline">
+<code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_pipeline.html#pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator of pipeline functions.</p>
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pipeline</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my awesome pipeline&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Is it really awesome?&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_pipeline</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">PipelineParam</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">PipelineParam</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.dsl.python_component">
+<code class="sig-prename descclassname">kfp.dsl.</code><code class="sig-name descname">python_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">base_image</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_component_file</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/dsl/_component.html#python_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.dsl.python_component" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>Decorator for Python component functions.</dt><dd><p>This decorator adds the metadata to the function object itself.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>name: Human-readable name of the component
+description: Optional. Description of the component
+base_image: Optional. Docker container image to use as the base of the component. Needs to have Python 3.5+ installed.
+target_component_file: Optional. Local file to store the component definition. The file can then be used for sharing.</p>
+</dd>
+<dt>Returns:</dt><dd><p>The same function (with some metadata fields set).</p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dsl</span><span class="o">.</span><span class="n">python_component</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my awesome component&#39;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Come, Let&#39;</span><span class="n">s</span> <span class="n">play</span><span class="s1">&#39;,</span>
+    <span class="n">base_image</span><span class="o">=</span><span class="s1">&#39;tensorflow/tensorflow:1.11.0-py3&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_component</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.2.6: </span>This decorator does not seem to be used, so we deprecate it. If you
+need this decorator, please create an issue at
+<a class="reference external" href="https://github.com/kubeflow/pipelines/issues">https://github.com/kubeflow/pipelines/issues</a></p>
+</div>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kfp.dsl.types.html">kfp.dsl.types module</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.dsl.types.html" class="btn btn-neutral float-right" title="kfp.dsl.types module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kfp.containers.html" class="btn btn-neutral float-left" title="kfp.containers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.dsl._ops_group &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.dsl._ops_group</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.dsl._ops_group</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018-2019 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">from</span> <span class="nn">kfp.dsl</span> <span class="kn">import</span> <span class="n">_for_loop</span><span class="p">,</span> <span class="n">_pipeline_param</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_container_op</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_pipeline</span>
+
+
+<span class="k">class</span> <span class="nc">OpsGroup</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Represents a logical group of ops and group of OpsGroups.</span>
+
+<span class="sd">  This class is the base class for groups of ops, such as ops sharing an exit handler,</span>
+<span class="sd">  a condition branch, or a loop. This class is not supposed to be used by pipeline authors.</span>
+<span class="sd">  It is useful for implementing a compiler.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a new instance of OpsGroup.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      group_type (str): one of &#39;pipeline&#39;, &#39;exit_handler&#39;, &#39;condition&#39;, &#39;for_loop&#39;, and &#39;graph&#39;.</span>
+<span class="sd">      name (str): name of the opsgroup</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#TODO: declare the group_type to be strongly typed</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">group_type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dependencies</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># recursive_ref points to the opsgroups with the same name if exists.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">recursive_ref</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">loop_args</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">_get_matching_opsgroup_already_in_pipeline</span><span class="p">(</span><span class="n">group_type</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;retrieves the opsgroup when the pipeline already contains it.</span>
+<span class="sd">    the opsgroup might be already in the pipeline in case of recursive calls.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      group_type (str): one of &#39;pipeline&#39;, &#39;exit_handler&#39;, &#39;condition&#39;, and &#39;graph&#39;.</span>
+<span class="sd">      name (str): the name before conversion. &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">():</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Default pipeline not defined.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">name_pattern</span> <span class="o">=</span> <span class="s1">&#39;^&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="n">group_type</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;[\d]+$&#39;</span>
+    <span class="k">for</span> <span class="n">ops_group_already_in_pipeline</span> <span class="ow">in</span> <span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+      <span class="kn">import</span> <span class="nn">re</span>
+      <span class="k">if</span> <span class="n">ops_group_already_in_pipeline</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">group_type</span> \
+              <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">name_pattern</span> <span class="p">,</span><span class="n">ops_group_already_in_pipeline</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ops_group_already_in_pipeline</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+  <span class="k">def</span> <span class="nf">_make_name_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a unique opsgroup name in the pipeline&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">():</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Default pipeline not defined.&#39;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">+</span>
+                   <span class="nb">str</span><span class="p">(</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">get_next_group_id</span><span class="p">()))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">():</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Default pipeline not defined.&#39;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">recursive_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_matching_opsgroup_already_in_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_make_name_unique</span><span class="p">()</span>
+
+    <span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">push_ops_group</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
+
+  <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">pop_ops_group</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependency</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Specify explicit dependency on another op.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dependencies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dependency</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
+
+  <span class="k">def</span> <span class="nf">remove_op_recursive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span> <span class="ow">and</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sub_group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="ow">or</span> <span class="p">[]:</span>
+      <span class="n">sub_group</span><span class="o">.</span><span class="n">remove_op_recursive</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ExitHandler"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.ExitHandler">[docs]</a><span class="k">class</span> <span class="nc">ExitHandler</span><span class="p">(</span><span class="n">OpsGroup</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Represents an exit handler that is invoked upon exiting a group of ops.</span>
+
+<span class="sd">  Example usage:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">     exit_op = ContainerOp(...)</span>
+
+<span class="sd">     with ExitHandler(exit_op):</span>
+<span class="sd">       op1 = ContainerOp(...)</span>
+<span class="sd">       op2 = ContainerOp(...)</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exit_op</span><span class="p">:</span> <span class="n">_container_op</span><span class="o">.</span><span class="n">ContainerOp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a new instance of ExitHandler.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      exit_op: an operator invoked at exiting a group of ops.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">      ValueError is the exit_op is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">ExitHandler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;exit_handler&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">exit_op</span><span class="o">.</span><span class="n">dependent_names</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;exit_op cannot depend on any other ops.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Removing exit_op form any group</span>
+    <span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">remove_op_from_groups</span><span class="p">(</span><span class="n">exit_op</span><span class="p">)</span>
+
+    <span class="c1"># Setting is_exit_handler since the compiler might be using this attribute. TODO: Check that it&#39;s needed</span>
+    <span class="n">exit_op</span><span class="o">.</span><span class="n">is_exit_handler</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">exit_op</span> <span class="o">=</span> <span class="n">exit_op</span></div>
+
+
+<div class="viewcode-block" id="Condition"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.Condition">[docs]</a><span class="k">class</span> <span class="nc">Condition</span><span class="p">(</span><span class="n">OpsGroup</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Represents an condition group with a condition.</span>
+
+<span class="sd">  Example usage:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">     with Condition(param1==&#39;pizza&#39;, &#39;[param1 is pizza]&#39;):</span>
+<span class="sd">         op1 = ContainerOp(...)</span>
+<span class="sd">         op2 = ContainerOp(...)</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a new instance of Condition.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      condition (ConditionOperator): the condition.</span>
+<span class="sd">      name (str): name of the condition</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">Condition</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">condition</span></div>
+
+
+<span class="k">class</span> <span class="nc">Graph</span><span class="p">(</span><span class="n">OpsGroup</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Graph DAG with inputs, recursive_inputs, and outputs.</span>
+<span class="sd">  This is not used directly by the users but auto generated when the graph_component decoration exists</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">Graph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">group_type</span><span class="o">=</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dependencies</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<div class="viewcode-block" id="ParallelFor"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.ParallelFor">[docs]</a><span class="k">class</span> <span class="nc">ParallelFor</span><span class="p">(</span><span class="n">OpsGroup</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Represents a parallel for loop over a static set of items.</span>
+
+<span class="sd">  Example usage:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">     with dsl.ParallelFor([{&#39;a&#39;: 1, &#39;b&#39;: 10}, {&#39;a&#39;: 2, &#39;b&#39;: 20}]) as item:</span>
+<span class="sd">        op1 = ContainerOp(..., args=[&#39;echo {}&#39;.format(item.a)])</span>
+<span class="sd">        op2 = ContainerOp(..., args=[&#39;echo {}&#39;.format(item.b])</span>
+
+<span class="sd">  And, op1 would be executed twice, once with args=[&#39;echo 1&#39;] and once with args=[&#39;echo 2&#39;]</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">TYPE_NAME</span> <span class="o">=</span> <span class="s1">&#39;for_loop&#39;</span>
+
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">_get_unique_id_code</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="n">_for_loop</span><span class="o">.</span><span class="n">LoopArguments</span><span class="o">.</span><span class="n">NUM_CODE_CHARS</span><span class="p">]</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loop_args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">_for_loop</span><span class="o">.</span><span class="n">ItemList</span><span class="p">,</span> <span class="n">_pipeline_param</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">]):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">items_is_pipeline_param</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loop_args</span><span class="p">,</span> <span class="n">_pipeline_param</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">)</span>
+
+    <span class="c1"># use a random code to uniquely identify this loop</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_unique_id_code</span><span class="p">()</span>
+    <span class="n">group_name</span> <span class="o">=</span> <span class="s1">&#39;for-loop-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPE_NAME</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">group_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">items_is_pipeline_param</span><span class="p">:</span>
+      <span class="n">loop_args</span> <span class="o">=</span> <span class="n">_for_loop</span><span class="o">.</span><span class="n">LoopArguments</span><span class="o">.</span><span class="n">from_pipeline_param</span><span class="p">(</span><span class="n">loop_args</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">items_is_pipeline_param</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loop_args</span><span class="p">,</span> <span class="n">_for_loop</span><span class="o">.</span><span class="n">LoopArguments</span><span class="p">):</span>
+      <span class="c1"># we were passed a raw list, wrap it in loop args</span>
+      <span class="n">loop_args</span> <span class="o">=</span> <span class="n">_for_loop</span><span class="o">.</span><span class="n">LoopArguments</span><span class="p">(</span><span class="n">loop_args</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">loop_args</span> <span class="o">=</span> <span class="n">loop_args</span>
+
+  <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_for_loop</span><span class="o">.</span><span class="n">LoopArguments</span><span class="p">:</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loop_args</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

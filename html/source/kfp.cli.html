@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.cli interface &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="KFP extension modules" href="kfp.extensions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html">kfp.components package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kfp.cli interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-cli-pipeline-command">kfp.cli.pipeline Command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-cli-run-command">kfp.cli.run Command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-cli-diagnose-me-command">kfp.cli.diagnose_me Command</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+      <li>kfp.cli interface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.cli.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kfp-cli-interface">
+<h1>kfp.cli interface<a class="headerlink" href="#kfp-cli-interface" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="kfp.cli.cli.cli">
+<code class="sig-prename descclassname">kfp.cli.cli.</code><code class="sig-name descname">cli</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.cli.cli" title="Permalink to this definition">¶</a></dt>
+<dd><p>kfp is the command line interface to KFP service.</p>
+</dd></dl>
+
+<div class="section" id="kfp-cli-pipeline-command">
+<h2>kfp.cli.pipeline Command<a class="headerlink" href="#kfp-cli-pipeline-command" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="kfp.cli.pipeline.upload">
+<code class="sig-prename descclassname">kfp.cli.pipeline.</code><code class="sig-name descname">upload</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.pipeline.upload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a KFP pipeline</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.cli.pipeline.upload_version">
+<code class="sig-prename descclassname">kfp.cli.pipeline.</code><code class="sig-name descname">upload_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.pipeline.upload_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload a version of the KFP pipeline</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.cli.pipeline.list">
+<code class="sig-prename descclassname">kfp.cli.pipeline.</code><code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.pipeline.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List uploaded KFP pipelines</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.cli.pipeline.get">
+<code class="sig-prename descclassname">kfp.cli.pipeline.</code><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.pipeline.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get detailed information about an uploaded KFP pipeline</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.cli.pipeline.delete">
+<code class="sig-prename descclassname">kfp.cli.pipeline.</code><code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.pipeline.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an uploaded KFP pipeline</p>
+</dd></dl>
+
+</div>
+<div class="section" id="kfp-cli-run-command">
+<h2>kfp.cli.run Command<a class="headerlink" href="#kfp-cli-run-command" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="kfp.cli.run.list">
+<code class="sig-prename descclassname">kfp.cli.run.</code><code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.run.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>list recent KFP runs</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.cli.run.submit">
+<code class="sig-prename descclassname">kfp.cli.run.</code><code class="sig-name descname">submit</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.run.submit" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit a KFP run</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.cli.run.get">
+<code class="sig-prename descclassname">kfp.cli.run.</code><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.run.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>display the details of a KFP run</p>
+</dd></dl>
+
+</div>
+<div class="section" id="kfp-cli-diagnose-me-command">
+<h2>kfp.cli.diagnose_me Command<a class="headerlink" href="#kfp-cli-diagnose-me-command" title="Permalink to this headline">¶</a></h2>
+<p>There are a variety of diagnostic features under the kfp.cli.diagnose_me package exposed through
+the <cite>kfp diagnose_me</cite> command.</p>
+<dl class="py function">
+<dt id="kfp.cli.diagnose_me_cli.diagnose_me">
+<code class="sig-prename descclassname">kfp.cli.diagnose_me_cli.</code><code class="sig-name descname">diagnose_me</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.cli.diagnose_me_cli.diagnose_me" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs environment diagnostic with specified parameters.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.cli.diagnose_me_cli.print_to_sdtout">
+<code class="sig-prename descclassname">kfp.cli.diagnose_me_cli.</code><code class="sig-name descname">print_to_sdtout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">results</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>kfp.cli.diagnose_me.utility.ExecutorResponse<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">human_readable</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/cli/diagnose_me_cli.html#print_to_sdtout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.cli.diagnose_me_cli.print_to_sdtout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Viewer to print the ExecutorResponse results to stdout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>results</strong> – A dictionary with key:command names and val: Execution response</p></li>
+<li><p><strong>human_readable</strong> – Print results in human readable format. If set to True
+command names will be printed as visual delimiters in new lines. If False
+results are printed as a dictionary with command as key.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="kfp.extensions.html" class="btn btn-neutral float-left" title="KFP extension modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

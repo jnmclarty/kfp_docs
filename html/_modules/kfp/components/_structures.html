@@ -1,0 +1,870 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.components._structures &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.components._structures</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.components._structures</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;InputSpec&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OutputSpec&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;InputValuePlaceholder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;InputPathPlaceholder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OutputPathPlaceholder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ConcatPlaceholder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;IsPresentPlaceholder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;IfPlaceholderStructure&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;IfPlaceholder&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;ContainerSpec&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ContainerImplementation&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;ComponentSpec&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;ComponentReference&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;GraphInputReference&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;GraphInputArgument&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TaskOutputReference&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TaskOutputArgument&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;EqualsPredicate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;NotEqualsPredicate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;GreaterThanPredicate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;GreaterThanOrEqualPredicate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;LessThenPredicate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;LessThenOrEqualPredicate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;NotPredicate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;AndPredicate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OrPredicate&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;RetryStrategySpec&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CachingStrategySpec&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ExecutionOptionsSpec&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TaskSpec&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;GraphSpec&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;GraphImplementation&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;PipelineRunSpec&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">.modelbase</span> <span class="kn">import</span> <span class="n">ModelBase</span>
+
+<span class="kn">from</span> <span class="nn">.structures.kubernetes</span> <span class="kn">import</span> <span class="n">v1</span>
+
+
+<span class="n">PrimitiveTypes</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span>
+<span class="n">PrimitiveTypesIncludingNone</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PrimitiveTypes</span><span class="p">]</span>
+
+<span class="n">TypeSpecType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="InputSpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.InputSpec">[docs]</a><span class="k">class</span> <span class="nc">InputSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Describes the component input specification&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TypeSpecType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">default</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PrimitiveTypes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">optional</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="OutputSpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.OutputSpec">[docs]</a><span class="k">class</span> <span class="nc">OutputSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Describes the component output specification&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TypeSpecType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="InputValuePlaceholder"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.InputValuePlaceholder">[docs]</a><span class="k">class</span> <span class="nc">InputValuePlaceholder</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#Non-standard attr names</span>
+    <span class="sd">&#39;&#39;&#39;Represents the command-line argument placeholder that will be replaced at run-time by the input argument value.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;input_name&#39;</span><span class="p">:</span> <span class="s1">&#39;inputValue&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="InputPathPlaceholder"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.InputPathPlaceholder">[docs]</a><span class="k">class</span> <span class="nc">InputPathPlaceholder</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#Non-standard attr names</span>
+    <span class="sd">&#39;&#39;&#39;Represents the command-line argument placeholder that will be replaced at run-time by a local file path pointing to a file containing the input argument value.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;input_name&#39;</span><span class="p">:</span> <span class="s1">&#39;inputPath&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="OutputPathPlaceholder"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.OutputPathPlaceholder">[docs]</a><span class="k">class</span> <span class="nc">OutputPathPlaceholder</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#Non-standard attr names</span>
+    <span class="sd">&#39;&#39;&#39;Represents the command-line argument placeholder that will be replaced at run-time by a local file path pointing to a file where the program should write its output data.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;output_name&#39;</span><span class="p">:</span> <span class="s1">&#39;outputPath&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">output_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<span class="n">CommandlineArgumentType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
+    <span class="nb">str</span><span class="p">,</span>
+    <span class="n">InputValuePlaceholder</span><span class="p">,</span>
+    <span class="n">InputPathPlaceholder</span><span class="p">,</span>
+    <span class="n">OutputPathPlaceholder</span><span class="p">,</span>
+    <span class="s1">&#39;ConcatPlaceholder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;IfPlaceholder&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="ConcatPlaceholder"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.ConcatPlaceholder">[docs]</a><span class="k">class</span> <span class="nc">ConcatPlaceholder</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#Non-standard attr names</span>
+    <span class="sd">&#39;&#39;&#39;Represents the command-line argument placeholder that will be replaced at run-time by the concatenated values of its items.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="s1">&#39;concat&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CommandlineArgumentType</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="IsPresentPlaceholder"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.IsPresentPlaceholder">[docs]</a><span class="k">class</span> <span class="nc">IsPresentPlaceholder</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#Non-standard attr names</span>
+    <span class="sd">&#39;&#39;&#39;Represents the command-line argument placeholder that will be replaced at run-time by a boolean value specifying whether the caller has passed an argument for the specified optional input.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;input_name&#39;</span><span class="p">:</span> <span class="s1">&#39;isPresent&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<span class="n">IfConditionArgumentType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">IsPresentPlaceholder</span><span class="p">,</span> <span class="n">InputValuePlaceholder</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="IfPlaceholderStructure"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.IfPlaceholderStructure">[docs]</a><span class="k">class</span> <span class="nc">IfPlaceholderStructure</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#Non-standard attr names</span>
+    <span class="sd">&#39;&#39;&#39;Used in by the IfPlaceholder - the command-line argument placeholder that will be replaced at run-time by the expanded value of either &quot;then_value&quot; or &quot;else_value&quot; depending on the submissio-time resolved value of the &quot;cond&quot; predicate.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;condition&#39;</span><span class="p">:</span> <span class="s1">&#39;cond&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;then_value&#39;</span><span class="p">:</span> <span class="s1">&#39;then&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;else_value&#39;</span><span class="p">:</span> <span class="s1">&#39;else&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">condition</span><span class="p">:</span> <span class="n">IfConditionArgumentType</span><span class="p">,</span>
+        <span class="n">then_value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CommandlineArgumentType</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">CommandlineArgumentType</span><span class="p">]],</span>
+        <span class="n">else_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">CommandlineArgumentType</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">CommandlineArgumentType</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="IfPlaceholder"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.IfPlaceholder">[docs]</a><span class="k">class</span> <span class="nc">IfPlaceholder</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#Non-standard attr names</span>
+    <span class="sd">&#39;&#39;&#39;Represents the command-line argument placeholder that will be replaced at run-time by the expanded value of either &quot;then_value&quot; or &quot;else_value&quot; depending on the submissio-time resolved value of the &quot;cond&quot; predicate.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;if_structure&#39;</span><span class="p">:</span> <span class="s1">&#39;if&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">if_structure</span><span class="p">:</span> <span class="n">IfPlaceholderStructure</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ContainerSpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.ContainerSpec">[docs]</a><span class="k">class</span> <span class="nc">ContainerSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Describes the container component implementation.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;file_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;fileOutputs&#39;</span><span class="p">,</span> <span class="c1">#TODO: rename to something like legacy_unconfigurable_output_paths</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">image</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">command</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">CommandlineArgumentType</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">CommandlineArgumentType</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">file_outputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1">#TODO: rename to something like legacy_unconfigurable_output_paths</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ContainerImplementation"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.ContainerImplementation">[docs]</a><span class="k">class</span> <span class="nc">ContainerImplementation</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the container component implementation.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">container</span><span class="p">:</span> <span class="n">ContainerSpec</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<span class="n">ImplementationType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">ContainerImplementation</span><span class="p">,</span> <span class="s1">&#39;GraphImplementation&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">MetadataSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">annotations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="ComponentSpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.ComponentSpec">[docs]</a><span class="k">class</span> <span class="nc">ComponentSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Component specification. Describes the metadata (name, description, annotations and labels), the interface (inputs and outputs) and the implementation of the component.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1">#? Move to metadata?</span>
+        <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1">#? Move to metadata?</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MetadataSpec</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">inputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">InputSpec</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">outputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">OutputSpec</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">implementation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ImplementationType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;google.com/cloud/pipelines/component/v1&#39;</span><span class="p">,</span>
+        <span class="c1">#tags: Optional[Set[str]] = None,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_init</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_post_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#Checking input names for uniqueness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inputs_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inputs_dict</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Non-unique input name &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_inputs_dict</span><span class="p">[</span><span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span>
+
+        <span class="c1">#Checking output names for uniqueness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputs_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs_dict</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Non-unique output name &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_outputs_dict</span><span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">implementation</span><span class="p">,</span> <span class="n">ContainerImplementation</span><span class="p">):</span>
+            <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">implementation</span><span class="o">.</span><span class="n">container</span>
+
+            <span class="k">if</span> <span class="n">container</span><span class="o">.</span><span class="n">file_outputs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">container</span><span class="o">.</span><span class="n">file_outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">output_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs_dict</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unconfigurable output entry &quot;</span><span class="si">{}</span><span class="s1">&quot; references non-existing output.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">({</span><span class="n">output_name</span><span class="p">:</span> <span class="n">path</span><span class="p">}))</span>
+
+            <span class="k">def</span> <span class="nf">verify_arg</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">arg2</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">:</span>
+                        <span class="n">verify_arg</span><span class="p">(</span><span class="n">arg2</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="n">InputValuePlaceholder</span><span class="p">,</span> <span class="n">InputPathPlaceholder</span><span class="p">,</span> <span class="n">IsPresentPlaceholder</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">input_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inputs_dict</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Argument &quot;</span><span class="si">{}</span><span class="s1">&quot; references non-existing input.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">OutputPathPlaceholder</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">output_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs_dict</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Argument &quot;</span><span class="si">{}</span><span class="s1">&quot; references non-existing output.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">ConcatPlaceholder</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">arg2</span> <span class="ow">in</span> <span class="n">arg</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+                        <span class="n">verify_arg</span><span class="p">(</span><span class="n">arg2</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">IfPlaceholder</span><span class="p">):</span>
+                    <span class="n">verify_arg</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">if_structure</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
+                    <span class="n">verify_arg</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">if_structure</span><span class="o">.</span><span class="n">then_value</span><span class="p">)</span>
+                    <span class="n">verify_arg</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">if_structure</span><span class="o">.</span><span class="n">else_value</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unexpected argument &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg</span><span class="p">))</span>
+            
+            <span class="n">verify_arg</span><span class="p">(</span><span class="n">container</span><span class="o">.</span><span class="n">command</span><span class="p">)</span>
+            <span class="n">verify_arg</span><span class="p">(</span><span class="n">container</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">implementation</span><span class="p">,</span> <span class="n">GraphImplementation</span><span class="p">):</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">implementation</span><span class="o">.</span><span class="n">graph</span>
+
+            <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">output_values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">output_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">output_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs_dict</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Graph output argument entry &quot;</span><span class="si">{}</span><span class="s1">&quot; references non-existing output.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">({</span><span class="n">output_name</span><span class="p">:</span> <span class="n">argument</span><span class="p">}))</span>
+
+            <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">tasks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">tasks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">arguments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">task</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="n">GraphInputArgument</span><span class="p">)</span> <span class="ow">and</span> <span class="n">argument</span><span class="o">.</span><span class="n">graph_input</span><span class="o">.</span><span class="n">input_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inputs_dict</span><span class="p">:</span>
+                                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Argument &quot;</span><span class="si">{}</span><span class="s1">&quot; references non-existing input.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">argument</span><span class="p">))</span>
+
+<div class="viewcode-block" id="ComponentSpec.save"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.ComponentSpec.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Saves the component definition to file. It can be shared online and later loaded using the load_component function.&#39;&#39;&#39;</span>
+        <span class="kn">from</span> <span class="nn">._yaml_utils</span> <span class="kn">import</span> <span class="n">dump_yaml</span>
+        <span class="n">component_yaml</span> <span class="o">=</span> <span class="n">dump_yaml</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">component_yaml</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ComponentReference"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.ComponentReference">[docs]</a><span class="k">class</span> <span class="nc">ComponentReference</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Component reference. Contains information that can be used to locate and load a component by name, digest or URL&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">digest</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">spec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ComponentSpec</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_init</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_post_init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">digest</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Need at least one argument.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GraphInputReference"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GraphInputReference">[docs]</a><span class="k">class</span> <span class="nc">GraphInputReference</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;References the input of the graph (the scope is a single graph).&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;input_name&#39;</span><span class="p">:</span> <span class="s1">&#39;inputName&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TypeSpecType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>    <span class="c1"># Can be used to override the reference data type</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+<div class="viewcode-block" id="GraphInputReference.as_argument"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GraphInputReference.as_argument">[docs]</a>    <span class="k">def</span> <span class="nf">as_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;GraphInputArgument&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GraphInputArgument</span><span class="p">(</span><span class="n">graph_input</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphInputReference.with_type"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GraphInputReference.with_type">[docs]</a>    <span class="k">def</span> <span class="nf">with_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_spec</span><span class="p">:</span> <span class="n">TypeSpecType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;GraphInputReference&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GraphInputReference</span><span class="p">(</span>
+            <span class="n">input_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_name</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">type_spec</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphInputReference.without_type"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GraphInputReference.without_type">[docs]</a>    <span class="k">def</span> <span class="nf">without_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;GraphInputReference&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="GraphInputArgument"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GraphInputArgument">[docs]</a><span class="k">class</span> <span class="nc">GraphInputArgument</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the component argument value that comes from the graph component input.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;graph_input&#39;</span><span class="p">:</span> <span class="s1">&#39;graphInput&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">graph_input</span><span class="p">:</span> <span class="n">GraphInputReference</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="TaskOutputReference"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.TaskOutputReference">[docs]</a><span class="k">class</span> <span class="nc">TaskOutputReference</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;References the output of some task (the scope is a single graph).&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;task_id&#39;</span><span class="p">:</span> <span class="s1">&#39;taskId&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;output_name&#39;</span><span class="p">:</span> <span class="s1">&#39;outputName&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">output_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>      <span class="c1"># Used for linking to the upstream task in serialized component file.</span>
+        <span class="n">task</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;TaskSpec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Used for linking to the upstream task in runtime since Task does not have an ID until inserted into a graph.</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TypeSpecType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>    <span class="c1"># Can be used to override the reference data type</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;task_id and task cannot be None at the same time.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TaskOutputReference.with_type"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.TaskOutputReference.with_type">[docs]</a>    <span class="k">def</span> <span class="nf">with_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_spec</span><span class="p">:</span> <span class="n">TypeSpecType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;TaskOutputReference&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TaskOutputReference</span><span class="p">(</span>
+            <span class="n">output_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_name</span><span class="p">,</span>
+            <span class="n">task_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_id</span><span class="p">,</span>
+            <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">type_spec</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TaskOutputReference.without_type"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.TaskOutputReference.without_type">[docs]</a>    <span class="k">def</span> <span class="nf">without_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;TaskOutputReference&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="TaskOutputArgument"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.TaskOutputArgument">[docs]</a><span class="k">class</span> <span class="nc">TaskOutputArgument</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#Has additional constructor for convenience</span>
+    <span class="sd">&#39;&#39;&#39;Represents the component argument value that comes from the output of another task.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;task_output&#39;</span><span class="p">:</span> <span class="s1">&#39;taskOutput&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">task_output</span><span class="p">:</span> <span class="n">TaskOutputReference</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+<div class="viewcode-block" id="TaskOutputArgument.construct"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.TaskOutputArgument.construct">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">construct</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">output_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;TaskOutputArgument&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TaskOutputArgument</span><span class="p">(</span><span class="n">TaskOutputReference</span><span class="p">(</span>
+            <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span>
+            <span class="n">output_name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span>
+        <span class="p">))</span></div>
+
+<div class="viewcode-block" id="TaskOutputArgument.with_type"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.TaskOutputArgument.with_type">[docs]</a>    <span class="k">def</span> <span class="nf">with_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_spec</span><span class="p">:</span> <span class="n">TypeSpecType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;TaskOutputArgument&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TaskOutputArgument</span><span class="p">(</span>
+            <span class="n">task_output</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_output</span><span class="o">.</span><span class="n">with_type</span><span class="p">(</span><span class="n">type_spec</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TaskOutputArgument.without_type"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.TaskOutputArgument.without_type">[docs]</a>    <span class="k">def</span> <span class="nf">without_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;TaskOutputArgument&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div></div>
+
+<span class="n">ArgumentType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">PrimitiveTypes</span><span class="p">,</span> <span class="n">GraphInputArgument</span><span class="p">,</span> <span class="n">TaskOutputArgument</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">TwoOperands</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">op1</span><span class="p">:</span> <span class="n">ArgumentType</span><span class="p">,</span>
+        <span class="n">op2</span><span class="p">:</span> <span class="n">ArgumentType</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+
+<span class="k">class</span> <span class="nc">BinaryPredicate</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span> <span class="c1">#abstract base type</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">operands</span><span class="p">:</span> <span class="n">TwoOperands</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="EqualsPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.EqualsPredicate">[docs]</a><span class="k">class</span> <span class="nc">EqualsPredicate</span><span class="p">(</span><span class="n">BinaryPredicate</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;equals&quot; comparison predicate.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operands&#39;</span><span class="p">:</span> <span class="s1">&#39;==&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="NotEqualsPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.NotEqualsPredicate">[docs]</a><span class="k">class</span> <span class="nc">NotEqualsPredicate</span><span class="p">(</span><span class="n">BinaryPredicate</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;not equals&quot; comparison predicate.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operands&#39;</span><span class="p">:</span> <span class="s1">&#39;!=&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="GreaterThanPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GreaterThanPredicate">[docs]</a><span class="k">class</span> <span class="nc">GreaterThanPredicate</span><span class="p">(</span><span class="n">BinaryPredicate</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;greater than&quot; comparison predicate.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operands&#39;</span><span class="p">:</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="GreaterThanOrEqualPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GreaterThanOrEqualPredicate">[docs]</a><span class="k">class</span> <span class="nc">GreaterThanOrEqualPredicate</span><span class="p">(</span><span class="n">BinaryPredicate</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;greater than or equal&quot; comparison predicate.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operands&#39;</span><span class="p">:</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LessThenPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.LessThenPredicate">[docs]</a><span class="k">class</span> <span class="nc">LessThenPredicate</span><span class="p">(</span><span class="n">BinaryPredicate</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;less than&quot; comparison predicate.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operands&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LessThenOrEqualPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.LessThenOrEqualPredicate">[docs]</a><span class="k">class</span> <span class="nc">LessThenOrEqualPredicate</span><span class="p">(</span><span class="n">BinaryPredicate</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;less than or equal&quot; comparison predicate.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;operands&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">}</span></div>
+
+
+<span class="n">PredicateType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
+    <span class="n">ArgumentType</span><span class="p">,</span>
+    <span class="n">EqualsPredicate</span><span class="p">,</span> <span class="n">NotEqualsPredicate</span><span class="p">,</span> <span class="n">GreaterThanPredicate</span><span class="p">,</span> <span class="n">GreaterThanOrEqualPredicate</span><span class="p">,</span> <span class="n">LessThenPredicate</span><span class="p">,</span> <span class="n">LessThenOrEqualPredicate</span><span class="p">,</span>
+    <span class="s1">&#39;NotPredicate&#39;</span><span class="p">,</span> <span class="s1">&#39;AndPredicate&#39;</span><span class="p">,</span> <span class="s1">&#39;OrPredicate&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">TwoBooleanOperands</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">op1</span><span class="p">:</span> <span class="n">PredicateType</span><span class="p">,</span>
+        <span class="n">op2</span><span class="p">:</span> <span class="n">PredicateType</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="NotPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.NotPredicate">[docs]</a><span class="k">class</span> <span class="nc">NotPredicate</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;not&quot; logical operation.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operand&#39;</span><span class="p">:</span> <span class="s1">&#39;not&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">operand</span><span class="p">:</span> <span class="n">PredicateType</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="AndPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.AndPredicate">[docs]</a><span class="k">class</span> <span class="nc">AndPredicate</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;and&quot; logical operation.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operands&#39;</span><span class="p">:</span> <span class="s1">&#39;and&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">operands</span><span class="p">:</span> <span class="n">TwoBooleanOperands</span>
+    <span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="OrPredicate"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.OrPredicate">[docs]</a><span class="k">class</span> <span class="nc">OrPredicate</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the &quot;or&quot; logical operation.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;operands&#39;</span><span class="p">:</span> <span class="s1">&#39;or&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">operands</span><span class="p">:</span> <span class="n">TwoBooleanOperands</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="RetryStrategySpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.RetryStrategySpec">[docs]</a><span class="k">class</span> <span class="nc">RetryStrategySpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;max_retries&#39;</span><span class="p">:</span> <span class="s1">&#39;maxRetries&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="CachingStrategySpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.CachingStrategySpec">[docs]</a><span class="k">class</span> <span class="nc">CachingStrategySpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;max_cache_staleness&#39;</span><span class="p">:</span> <span class="s1">&#39;maxCacheStaleness&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">max_cache_staleness</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># RFC3339 compliant duration: P30DT1H22M3S</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<span class="k">class</span> <span class="nc">KubernetesExecutionOptionsSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;main_container&#39;</span><span class="p">:</span> <span class="s1">&#39;mainContainer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;pod_spec&#39;</span><span class="p">:</span> <span class="s1">&#39;podSpec&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">v1</span><span class="o">.</span><span class="n">ObjectMetaArgoSubset</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">main_container</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">v1</span><span class="o">.</span><span class="n">Container</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pod_spec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">v1</span><span class="o">.</span><span class="n">PodSpecArgoSubset</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="ExecutionOptionsSpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.ExecutionOptionsSpec">[docs]</a><span class="k">class</span> <span class="nc">ExecutionOptionsSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;retry_strategy&#39;</span><span class="p">:</span> <span class="s1">&#39;retryStrategy&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;caching_strategy&#39;</span><span class="p">:</span> <span class="s1">&#39;cachingStrategy&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;kubernetes_options&#39;</span><span class="p">:</span> <span class="s1">&#39;kubernetesOptions&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">retry_strategy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RetryStrategySpec</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">caching_strategy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CachingStrategySpec</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kubernetes_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">KubernetesExecutionOptionsSpec</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="TaskSpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.TaskSpec">[docs]</a><span class="k">class</span> <span class="nc">TaskSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Task specification. Task is a &quot;configured&quot; component - a component supplied with arguments and other applied configuration changes.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;component_ref&#39;</span><span class="p">:</span> <span class="s1">&#39;componentRef&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;is_enabled&#39;</span><span class="p">:</span> <span class="s1">&#39;isEnabled&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;execution_options&#39;</span><span class="p">:</span> <span class="s1">&#39;executionOptions&#39;</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">component_ref</span><span class="p">:</span> <span class="n">ComponentReference</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArgumentType</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_enabled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PredicateType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">execution_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ExecutionOptionsSpec</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+        <span class="c1">#TODO: If component_ref is resolved to component spec, then check that the arguments correspond to the inputs</span>
+
+    <span class="k">def</span> <span class="nf">_init_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#Adding output references to the task</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_ref</span><span class="o">.</span><span class="n">spec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">task_outputs</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_ref</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">outputs</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="n">task_output_ref</span> <span class="o">=</span> <span class="n">TaskOutputReference</span><span class="p">(</span>
+                <span class="n">output_name</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="c1"># TODO: Resolve type expressions. E.g. type: {TypeOf: Input 1}</span>
+            <span class="p">)</span>
+            <span class="n">task_output_arg</span> <span class="o">=</span> <span class="n">TaskOutputArgument</span><span class="p">(</span><span class="n">task_output</span><span class="o">=</span><span class="n">task_output_ref</span><span class="p">)</span>
+            <span class="n">task_outputs</span><span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">task_output_arg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">task_outputs</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_outputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">task_outputs</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="GraphSpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GraphSpec">[docs]</a><span class="k">class</span> <span class="nc">GraphSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Describes the graph component implementation. It represents a graph of component tasks connected to the upstream sources of data using the argument specifications. It also describes the sources of graph output values.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;output_values&#39;</span><span class="p">:</span> <span class="s1">&#39;outputValues&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">tasks</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TaskSpec</span><span class="p">],</span>
+        <span class="n">output_values</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArgumentType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_init</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_post_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#Checking task output references and preparing the dependency table</span>
+        <span class="n">task_dependencies</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">task</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">dependencies</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">task_dependencies</span><span class="p">[</span><span class="n">task_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">dependencies</span>
+            <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">arguments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">task</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="n">TaskOutputArgument</span><span class="p">):</span>
+                        <span class="n">dependencies</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">argument</span><span class="o">.</span><span class="n">task_output</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">argument</span><span class="o">.</span><span class="n">task_output</span><span class="o">.</span><span class="n">task_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Argument &quot;</span><span class="si">{}</span><span class="s1">&quot; references non-existing task.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">argument</span><span class="p">))</span>
+
+        <span class="c1">#Topologically sorting tasks to detect cycles</span>
+        <span class="n">task_dependents</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">set</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">task_dependencies</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="k">for</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">dependencies</span> <span class="ow">in</span> <span class="n">task_dependencies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">dependency</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="p">:</span>
+                <span class="n">task_dependents</span><span class="p">[</span><span class="n">dependency</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+        <span class="n">task_number_of_remaining_dependencies</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">task_dependencies</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">sorted_tasks</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="n">task_id</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">task_number_of_remaining_dependencies</span><span class="p">[</span><span class="n">task_id</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">task_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sorted_tasks</span><span class="p">:</span>
+                <span class="n">sorted_tasks</span><span class="p">[</span><span class="n">task_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">[</span><span class="n">task_id</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">dependent_task</span> <span class="ow">in</span> <span class="n">task_dependents</span><span class="p">[</span><span class="n">task_id</span><span class="p">]:</span>
+                    <span class="n">task_number_of_remaining_dependencies</span><span class="p">[</span><span class="n">dependent_task</span><span class="p">]</span> <span class="o">=</span> <span class="n">task_number_of_remaining_dependencies</span><span class="p">[</span><span class="n">dependent_task</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                    <span class="n">process_task</span><span class="p">(</span><span class="n">dependent_task</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">task_id</span> <span class="ow">in</span> <span class="n">task_dependencies</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">process_task</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_tasks</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_dependencies</span><span class="p">):</span>
+            <span class="n">tasks_with_unsatisfied_dependencies</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">task_number_of_remaining_dependencies</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">}</span>
+            <span class="n">task_wth_minimal_number_of_unsatisfied_dependencies</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">tasks_with_unsatisfied_dependencies</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">task_id</span><span class="p">:</span> <span class="n">tasks_with_unsatisfied_dependencies</span><span class="p">[</span><span class="n">task_id</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Task &quot;</span><span class="si">{}</span><span class="s1">&quot; has cyclical dependency.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task_wth_minimal_number_of_unsatisfied_dependencies</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_toposorted_tasks</span> <span class="o">=</span> <span class="n">sorted_tasks</span></div>
+
+
+<div class="viewcode-block" id="GraphImplementation"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.GraphImplementation">[docs]</a><span class="k">class</span> <span class="nc">GraphImplementation</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Represents the graph component implementation.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">graph</span><span class="p">:</span> <span class="n">GraphSpec</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="PipelineRunSpec"><a class="viewcode-back" href="../../../source/kfp.components.structures.html#kfp.components.structures.PipelineRunSpec">[docs]</a><span class="k">class</span> <span class="nc">PipelineRunSpec</span><span class="p">(</span><span class="n">ModelBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;The object that can be sent to the backend to start a new Run.&#39;&#39;&#39;</span>
+    <span class="n">_serialized_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;root_task&#39;</span><span class="p">:</span> <span class="s1">&#39;rootTask&#39;</span><span class="p">,</span>
+        <span class="c1">#&#39;on_exit_task&#39;: &#39;onExitTask&#39;,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">root_task</span><span class="p">:</span> <span class="n">TaskSpec</span><span class="p">,</span>
+        <span class="c1">#on_exit_task: Optional[TaskSpec] = None,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+kfp.cli interface
+=================
+
+.. autofunction:: kfp.cli.cli.cli
+
+kfp.cli.pipeline Command
+------------------------
+
+.. autofunction:: kfp.cli.pipeline.upload
+
+.. autofunction:: kfp.cli.pipeline.upload_version
+
+.. autofunction:: kfp.cli.pipeline.list
+
+.. autofunction:: kfp.cli.pipeline.get
+
+.. autofunction:: kfp.cli.pipeline.delete
+
+
+kfp.cli.run Command
+-------------------
+
+.. autofunction:: kfp.cli.run.list
+
+.. autofunction:: kfp.cli.run.submit
+
+.. autofunction:: kfp.cli.run.get
+
+
+kfp.cli.diagnose_me Command
+---------------------------
+
+There are a variety of diagnostic features under the kfp.cli.diagnose_me package exposed through
+the `kfp diagnose_me` command.
+
+.. autofunction:: kfp.cli.diagnose_me_cli.diagnose_me
+
+.. autofunction:: kfp.cli.diagnose_me_cli.print_to_sdtout

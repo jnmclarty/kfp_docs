@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.components.structures package &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.components.structures.kubernetes package" href="kfp.components.structures.kubernetes.html" />
+    <link rel="prev" title="kfp.components package" href="kfp.components.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="kfp.components.html">kfp.components package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="kfp.components.html#kfp-components-structures-subpackage">kfp.components.structures subpackage</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">kfp.components.structures package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+          <li><a href="kfp.components.html">kfp.components package</a> &raquo;</li>
+        
+      <li>kfp.components.structures package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.components.structures.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-kfp.components.structures">
+<span id="kfp-components-structures-package"></span><h1>kfp.components.structures package<a class="headerlink" href="#module-kfp.components.structures" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="kfp.components.structures.AndPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">AndPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operands</span><span class="p">:</span> <span class="n">kfp.components._structures.TwoBooleanOperands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#AndPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.AndPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the “and” logical operation.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.CachingStrategySpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">CachingStrategySpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_cache_staleness</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#CachingStrategySpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.CachingStrategySpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.ComponentReference">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">ComponentReference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">digest</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tag</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">spec</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>kfp.components._structures.ComponentSpec<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#ComponentReference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.ComponentReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Component reference. Contains information that can be used to locate and load a component by name, digest or URL</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.ComponentSpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">ComponentSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metadata</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>kfp.components._structures.MetadataSpec<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>kfp.components._structures.InputSpec<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">outputs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>kfp.components._structures.OutputSpec<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">implementation</span><span class="p">:</span> <span class="n">Union[kfp.components._structures.ContainerImplementation, GraphImplementation, None]</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">version</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'google.com/cloud/pipelines/component/v1'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#ComponentSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.ComponentSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Component specification. Describes the metadata (name, description, annotations and labels), the interface (inputs and outputs) and the implementation of the component.</p>
+<dl class="py method">
+<dt id="kfp.components.structures.ComponentSpec.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#ComponentSpec.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.ComponentSpec.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the component definition to file. It can be shared online and later loaded using the load_component function.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.ConcatPlaceholder">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">ConcatPlaceholder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">items</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Union<span class="p">[</span>str<span class="p">, </span>kfp.components._structures.InputValuePlaceholder<span class="p">, </span>kfp.components._structures.InputPathPlaceholder<span class="p">, </span>kfp.components._structures.OutputPathPlaceholder<span class="p">, </span>ConcatPlaceholder<span class="p">, </span>IfPlaceholder<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#ConcatPlaceholder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.ConcatPlaceholder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the command-line argument placeholder that will be replaced at run-time by the concatenated values of its items.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.ContainerImplementation">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">ContainerImplementation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">container</span><span class="p">:</span> <span class="n">kfp.components._structures.ContainerSpec</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#ContainerImplementation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.ContainerImplementation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the container component implementation.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.ContainerSpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">ContainerSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">command</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>Union<span class="p">[</span>str<span class="p">, </span>kfp.components._structures.InputValuePlaceholder<span class="p">, </span>kfp.components._structures.InputPathPlaceholder<span class="p">, </span>kfp.components._structures.OutputPathPlaceholder<span class="p">, </span>ConcatPlaceholder<span class="p">, </span>IfPlaceholder<span class="p">]</span><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">args</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>Union<span class="p">[</span>str<span class="p">, </span>kfp.components._structures.InputValuePlaceholder<span class="p">, </span>kfp.components._structures.InputPathPlaceholder<span class="p">, </span>kfp.components._structures.OutputPathPlaceholder<span class="p">, </span>ConcatPlaceholder<span class="p">, </span>IfPlaceholder<span class="p">]</span><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">env</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_outputs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#ContainerSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.ContainerSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Describes the container component implementation.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.EqualsPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">EqualsPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operands</span><span class="p">:</span> <span class="n">kfp.components._structures.TwoOperands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#EqualsPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.EqualsPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components._structures.BinaryPredicate</span></code></p>
+<p>Represents the “equals” comparison predicate.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.ExecutionOptionsSpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">ExecutionOptionsSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">retry_strategy</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>kfp.components._structures.RetryStrategySpec<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">caching_strategy</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>kfp.components._structures.CachingStrategySpec<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kubernetes_options</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>kfp.components._structures.KubernetesExecutionOptionsSpec<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#ExecutionOptionsSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.ExecutionOptionsSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.GraphImplementation">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">GraphImplementation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">graph</span><span class="p">:</span> <span class="n">kfp.components._structures.GraphSpec</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#GraphImplementation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GraphImplementation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the graph component implementation.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.GraphInputArgument">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">GraphInputArgument</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">graph_input</span><span class="p">:</span> <span class="n">kfp.components._structures.GraphInputReference</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#GraphInputArgument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GraphInputArgument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the component argument value that comes from the graph component input.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.GraphInputReference">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">GraphInputReference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">type</span><span class="p">:</span> <span class="n">Union[str, Dict, List, None]</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#GraphInputReference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GraphInputReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>References the input of the graph (the scope is a single graph).</p>
+<dl class="py method">
+<dt id="kfp.components.structures.GraphInputReference.as_argument">
+<code class="sig-name descname">as_argument</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; kfp.components._structures.GraphInputArgument<a class="reference internal" href="../_modules/kfp/components/_structures.html#GraphInputReference.as_argument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GraphInputReference.as_argument" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.components.structures.GraphInputReference.with_type">
+<code class="sig-name descname">with_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type_spec</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">, </span>List<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; kfp.components._structures.GraphInputReference<a class="reference internal" href="../_modules/kfp/components/_structures.html#GraphInputReference.with_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GraphInputReference.with_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.components.structures.GraphInputReference.without_type">
+<code class="sig-name descname">without_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; kfp.components._structures.GraphInputReference<a class="reference internal" href="../_modules/kfp/components/_structures.html#GraphInputReference.without_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GraphInputReference.without_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.GraphSpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">GraphSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tasks</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>str<span class="p">, </span>kfp.components._structures.TaskSpec<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">output_values</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>str<span class="p">, </span>Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">, </span>float<span class="p">, </span>bool<span class="p">, </span>kfp.components._structures.GraphInputArgument<span class="p">, </span>kfp.components._structures.TaskOutputArgument<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#GraphSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GraphSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Describes the graph component implementation. It represents a graph of component tasks connected to the upstream sources of data using the argument specifications. It also describes the sources of graph output values.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.GreaterThanOrEqualPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">GreaterThanOrEqualPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operands</span><span class="p">:</span> <span class="n">kfp.components._structures.TwoOperands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#GreaterThanOrEqualPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GreaterThanOrEqualPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components._structures.BinaryPredicate</span></code></p>
+<p>Represents the “greater than or equal” comparison predicate.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.GreaterThanPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">GreaterThanPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operands</span><span class="p">:</span> <span class="n">kfp.components._structures.TwoOperands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#GreaterThanPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.GreaterThanPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components._structures.BinaryPredicate</span></code></p>
+<p>Represents the “greater than” comparison predicate.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.IfPlaceholder">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">IfPlaceholder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">if_structure</span><span class="p">:</span> <span class="n">kfp.components._structures.IfPlaceholderStructure</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#IfPlaceholder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.IfPlaceholder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the command-line argument placeholder that will be replaced at run-time by the expanded value of either “then_value” or “else_value” depending on the submissio-time resolved value of the “cond” predicate.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.IfPlaceholderStructure">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">IfPlaceholderStructure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">condition</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>bool<span class="p">, </span>str<span class="p">, </span>kfp.components._structures.IsPresentPlaceholder<span class="p">, </span>kfp.components._structures.InputValuePlaceholder<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">then_value</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>kfp.components._structures.InputValuePlaceholder<span class="p">, </span>kfp.components._structures.InputPathPlaceholder<span class="p">, </span>kfp.components._structures.OutputPathPlaceholder<span class="p">, </span>ConcatPlaceholder<span class="p">, </span>IfPlaceholder<span class="p">, </span>List<span class="p">[</span>Union<span class="p">[</span>str<span class="p">, </span>kfp.components._structures.InputValuePlaceholder<span class="p">, </span>kfp.components._structures.InputPathPlaceholder<span class="p">, </span>kfp.components._structures.OutputPathPlaceholder<span class="p">, </span>ConcatPlaceholder<span class="p">, </span>IfPlaceholder<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">else_value</span><span class="p">:</span> <span class="n">Union[str, kfp.components._structures.InputValuePlaceholder, kfp.components._structures.InputPathPlaceholder, kfp.components._structures.OutputPathPlaceholder, ConcatPlaceholder, IfPlaceholder, List[Union[str, kfp.components._structures.InputValuePlaceholder, kfp.components._structures.InputPathPlaceholder, kfp.components._structures.OutputPathPlaceholder, ConcatPlaceholder, IfPlaceholder]], None]</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#IfPlaceholderStructure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.IfPlaceholderStructure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Used in by the IfPlaceholder - the command-line argument placeholder that will be replaced at run-time by the expanded value of either “then_value” or “else_value” depending on the submissio-time resolved value of the “cond” predicate.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.InputPathPlaceholder">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">InputPathPlaceholder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#InputPathPlaceholder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.InputPathPlaceholder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the command-line argument placeholder that will be replaced at run-time by a local file path pointing to a file containing the input argument value.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.InputSpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">InputSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">type</span><span class="p">:</span> <span class="n">Union[str, Dict, List, None]</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default</span><span class="p">:</span> <span class="n">Union[str, int, float, bool, None]</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">optional</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#InputSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.InputSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Describes the component input specification</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.InputValuePlaceholder">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">InputValuePlaceholder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#InputValuePlaceholder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.InputValuePlaceholder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the command-line argument placeholder that will be replaced at run-time by the input argument value.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.IsPresentPlaceholder">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">IsPresentPlaceholder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#IsPresentPlaceholder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.IsPresentPlaceholder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the command-line argument placeholder that will be replaced at run-time by a boolean value specifying whether the caller has passed an argument for the specified optional input.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.LessThenOrEqualPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">LessThenOrEqualPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operands</span><span class="p">:</span> <span class="n">kfp.components._structures.TwoOperands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#LessThenOrEqualPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.LessThenOrEqualPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components._structures.BinaryPredicate</span></code></p>
+<p>Represents the “less than or equal” comparison predicate.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.LessThenPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">LessThenPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operands</span><span class="p">:</span> <span class="n">kfp.components._structures.TwoOperands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#LessThenPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.LessThenPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components._structures.BinaryPredicate</span></code></p>
+<p>Represents the “less than” comparison predicate.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.NotEqualsPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">NotEqualsPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operands</span><span class="p">:</span> <span class="n">kfp.components._structures.TwoOperands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#NotEqualsPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.NotEqualsPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components._structures.BinaryPredicate</span></code></p>
+<p>Represents the “not equals” comparison predicate.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.NotPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">NotPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operand</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">, </span>float<span class="p">, </span>bool<span class="p">, </span>kfp.components._structures.GraphInputArgument<span class="p">, </span>kfp.components._structures.TaskOutputArgument<span class="p">, </span>kfp.components._structures.EqualsPredicate<span class="p">, </span>kfp.components._structures.NotEqualsPredicate<span class="p">, </span>kfp.components._structures.GreaterThanPredicate<span class="p">, </span>kfp.components._structures.GreaterThanOrEqualPredicate<span class="p">, </span>kfp.components._structures.LessThenPredicate<span class="p">, </span>kfp.components._structures.LessThenOrEqualPredicate<span class="p">, </span>NotPredicate<span class="p">, </span>AndPredicate<span class="p">, </span>OrPredicate<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#NotPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.NotPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the “not” logical operation.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.OrPredicate">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">OrPredicate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operands</span><span class="p">:</span> <span class="n">kfp.components._structures.TwoBooleanOperands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#OrPredicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.OrPredicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the “or” logical operation.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.OutputPathPlaceholder">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">OutputPathPlaceholder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#OutputPathPlaceholder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.OutputPathPlaceholder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the command-line argument placeholder that will be replaced at run-time by a local file path pointing to a file where the program should write its output data.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.OutputSpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">OutputSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">type</span><span class="p">:</span> <span class="n">Union[str, Dict, List, None]</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#OutputSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.OutputSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Describes the component output specification</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.PipelineRunSpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">PipelineRunSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_task</span><span class="p">:</span> <span class="n">kfp.components._structures.TaskSpec</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#PipelineRunSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.PipelineRunSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>The object that can be sent to the backend to start a new Run.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.RetryStrategySpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">RetryStrategySpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_retries</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#RetryStrategySpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.RetryStrategySpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.TaskOutputArgument">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">TaskOutputArgument</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">task_output</span><span class="p">:</span> <span class="n">kfp.components._structures.TaskOutputReference</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#TaskOutputArgument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.TaskOutputArgument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Represents the component argument value that comes from the output of another task.</p>
+<dl class="py method">
+<dt id="kfp.components.structures.TaskOutputArgument.construct">
+<em class="property">static </em><code class="sig-name descname">construct</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">task_id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">output_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; kfp.components._structures.TaskOutputArgument<a class="reference internal" href="../_modules/kfp/components/_structures.html#TaskOutputArgument.construct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.TaskOutputArgument.construct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.components.structures.TaskOutputArgument.with_type">
+<code class="sig-name descname">with_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type_spec</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">, </span>List<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; kfp.components._structures.TaskOutputArgument<a class="reference internal" href="../_modules/kfp/components/_structures.html#TaskOutputArgument.with_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.TaskOutputArgument.with_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.components.structures.TaskOutputArgument.without_type">
+<code class="sig-name descname">without_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; kfp.components._structures.TaskOutputArgument<a class="reference internal" href="../_modules/kfp/components/_structures.html#TaskOutputArgument.without_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.TaskOutputArgument.without_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.TaskOutputReference">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">TaskOutputReference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">task_id</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">task</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>TaskSpec<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">type</span><span class="p">:</span> <span class="n">Union[str, Dict, List, None]</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#TaskOutputReference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.TaskOutputReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>References the output of some task (the scope is a single graph).</p>
+<dl class="py method">
+<dt id="kfp.components.structures.TaskOutputReference.with_type">
+<code class="sig-name descname">with_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type_spec</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">, </span>List<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; kfp.components._structures.TaskOutputReference<a class="reference internal" href="../_modules/kfp/components/_structures.html#TaskOutputReference.with_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.TaskOutputReference.with_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.components.structures.TaskOutputReference.without_type">
+<code class="sig-name descname">without_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; kfp.components._structures.TaskOutputReference<a class="reference internal" href="../_modules/kfp/components/_structures.html#TaskOutputReference.without_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.TaskOutputReference.without_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.components.structures.TaskSpec">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.components.structures.</code><code class="sig-name descname">TaskSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">component_ref</span><span class="p">:</span> <span class="n">kfp.components._structures.ComponentReference</span></em>, <em class="sig-param"><span class="n">arguments</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">[</span>str<span class="p">, </span>Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">, </span>float<span class="p">, </span>bool<span class="p">, </span>kfp.components._structures.GraphInputArgument<span class="p">, </span>kfp.components._structures.TaskOutputArgument<span class="p">]</span><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">is_enabled</span><span class="p">:</span> <span class="n">Union[str, int, float, bool, kfp.components._structures.GraphInputArgument, kfp.components._structures.TaskOutputArgument, kfp.components._structures.EqualsPredicate, kfp.components._structures.NotEqualsPredicate, kfp.components._structures.GreaterThanPredicate, kfp.components._structures.GreaterThanOrEqualPredicate, kfp.components._structures.LessThenPredicate, kfp.components._structures.LessThenOrEqualPredicate, NotPredicate, AndPredicate, OrPredicate, None]</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">execution_options</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>kfp.components._structures.ExecutionOptionsSpec<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/components/_structures.html#TaskSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.components.structures.TaskSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kfp.components.modelbase.ModelBase</span></code></p>
+<p>Task specification. Task is a “configured” component - a component supplied with arguments and other applied configuration changes.</p>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kfp.components.structures.kubernetes.html">kfp.components.structures.kubernetes package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.structures.kubernetes.html#module-kfp.components.structures.kubernetes.v1">kfp.components.structures.kubernetes.v1 module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.components.structures.kubernetes.html" class="btn btn-neutral float-right" title="kfp.components.structures.kubernetes package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kfp.components.html" class="btn btn-neutral float-left" title="kfp.components package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

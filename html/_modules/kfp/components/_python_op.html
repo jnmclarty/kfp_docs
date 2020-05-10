@@ -1,0 +1,1082 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.components._python_op &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.components._python_op</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.components._python_op</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;create_component_from_func&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;func_to_container_op&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;func_to_component_text&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;default_base_image_or_builder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_default_base_image&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;set_default_base_image&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;InputPath&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;InputTextFile&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;InputBinaryFile&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OutputPath&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OutputTextFile&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;OutputBinaryFile&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">._yaml_utils</span> <span class="kn">import</span> <span class="n">dump_yaml</span>
+<span class="kn">from</span> <span class="nn">._components</span> <span class="kn">import</span> <span class="n">_create_task_factory_from_component_spec</span>
+<span class="kn">from</span> <span class="nn">._data_passing</span> <span class="kn">import</span> <span class="n">serialize_value</span><span class="p">,</span> <span class="n">get_deserializer_code_for_type_struct</span><span class="p">,</span> <span class="n">get_serializer_func_for_type_struct</span><span class="p">,</span> <span class="n">get_canonical_type_struct_for_type</span>
+<span class="kn">from</span> <span class="nn">._naming</span> <span class="kn">import</span> <span class="n">_make_name_unique_by_adding_index</span>
+<span class="kn">from</span> <span class="nn">.structures</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># InputPath(list) or InputPath(&#39;JsonObject&#39;)</span>
+
+<div class="viewcode-block" id="InputPath"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.InputPath">[docs]</a><span class="k">class</span> <span class="nc">InputPath</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;When creating component from function, InputPath should be used as function parameter annotation to tell the system to pass the *data file path* to the function instead of passing the actual data.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
+
+
+<div class="viewcode-block" id="InputTextFile"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.InputTextFile">[docs]</a><span class="k">class</span> <span class="nc">InputTextFile</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;When creating component from function, InputTextFile should be used as function parameter annotation to tell the system to pass the *text data stream* object (`io.TextIOWrapper`) to the function instead of passing the actual data.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
+
+
+<div class="viewcode-block" id="InputBinaryFile"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.InputBinaryFile">[docs]</a><span class="k">class</span> <span class="nc">InputBinaryFile</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;When creating component from function, InputBinaryFile should be used as function parameter annotation to tell the system to pass the *binary data stream* object (`io.BytesIO`) to the function instead of passing the actual data.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
+
+
+<span class="c1">#OutputFile[GcsPath[Gzipped[Text]]]</span>
+
+
+<div class="viewcode-block" id="OutputPath"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.OutputPath">[docs]</a><span class="k">class</span> <span class="nc">OutputPath</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;When creating component from function, OutputPath should be used as function parameter annotation to tell the system that the function wants to output data by writing it into a file with the given path instead of returning the data from the function.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
+
+
+<div class="viewcode-block" id="OutputTextFile"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.OutputTextFile">[docs]</a><span class="k">class</span> <span class="nc">OutputTextFile</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;When creating component from function, OutputTextFile should be used as function parameter annotation to tell the system that the function wants to output data by writing it into a given text file stream (`io.TextIOWrapper`) instead of returning the data from the function.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
+
+
+<div class="viewcode-block" id="OutputBinaryFile"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.OutputBinaryFile">[docs]</a><span class="k">class</span> <span class="nc">OutputBinaryFile</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;When creating component from function, OutputBinaryFile should be used as function parameter annotation to tell the system that the function wants to output data by writing it into a given binary file stream (`io.BytesIO`) instead of returning the data from the function.&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
+
+
+<span class="k">def</span> <span class="nf">_make_parent_dirs_and_return_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">file_path</span>
+
+
+<span class="k">def</span> <span class="nf">_parent_dirs_maker_that_returns_open_file</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">make_parent_dirs_and_return_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">os</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">make_parent_dirs_and_return_path</span>
+
+
+<span class="c1">#TODO: Replace this image name with another name once people decide what to replace it with.</span>
+<span class="n">default_base_image_or_builder</span><span class="o">=</span><span class="s1">&#39;tensorflow/tensorflow:1.13.2-py3&#39;</span>
+
+<div class="viewcode-block" id="get_default_base_image"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.get_default_base_image">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.32&#39;</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Use the kfp.components.default_base_image_or_builder variable instead&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_default_base_image</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="k">return</span> <span class="n">default_base_image_or_builder</span></div>
+
+
+<div class="viewcode-block" id="set_default_base_image"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.set_default_base_image">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.32&#39;</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Use the kfp.components.default_base_image_or_builder variable instead&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">set_default_base_image</span><span class="p">(</span><span class="n">image_or_factory</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">str</span><span class="p">]]):</span>
+    <span class="sd">&#39;&#39;&#39;set_default_base_image sets the name of the container image that will be used for component creation when base_image is not specified.</span>
+<span class="sd">    Alternatively, the base image can also be set to a factory function that will be returning the image.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">global</span> <span class="n">default_base_image_or_builder</span>
+    <span class="n">default_base_image_or_builder</span> <span class="o">=</span> <span class="n">image_or_factory</span></div>
+
+
+<span class="k">def</span> <span class="nf">_python_function_name_to_component_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+    <span class="n">name_with_spaces</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; +&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">name_with_spaces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">name_with_spaces</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+
+<span class="k">def</span> <span class="nf">_capture_function_code_using_cloudpickle</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">base64</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="kn">import</span> <span class="nn">cloudpickle</span>
+    <span class="kn">import</span> <span class="nn">pickle</span>
+
+    <span class="k">if</span> <span class="n">modules_to_capture</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">modules_to_capture</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__module__</span><span class="p">]</span>
+
+    <span class="c1"># Hack to force cloudpickle to capture the whole function instead of just referencing the code file. See https://github.com/cloudpipe/cloudpickle/blob/74d69d759185edaeeac7bdcb7015cfc0c652f204/cloudpickle/cloudpickle.py#L490</span>
+    <span class="n">old_modules</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">old_sig</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__signature__&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span> <span class="c1"># Try is needed to restore the state if something goes wrong</span>
+        <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">modules_to_capture</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+                <span class="n">old_modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="c1"># Hack to prevent cloudpickle from trying to pickle generic types that might be present in the signature. See https://github.com/cloudpipe/cloudpickle/issues/196 </span>
+        <span class="c1"># Currently the __signature__ is only set by Airflow components as a means to spoof/pass the function signature to _func_to_component_spec</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__signature__&#39;</span><span class="p">):</span>
+            <span class="k">del</span> <span class="n">func</span><span class="o">.</span><span class="n">__signature__</span>
+        <span class="n">func_pickle</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">cloudpickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">DEFAULT_PROTOCOL</span><span class="p">))</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">old_modules</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">old_sig</span><span class="p">:</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">old_sig</span>
+
+    <span class="n">function_loading_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">import sys</span>
+<span class="s1">try:</span>
+<span class="s1">    import cloudpickle as _cloudpickle</span>
+<span class="s1">except ImportError:</span>
+<span class="s1">    import subprocess</span>
+<span class="s1">    try:</span>
+<span class="s1">        print(&quot;cloudpickle is not installed. Installing it globally&quot;, file=sys.stderr)</span>
+<span class="s1">        subprocess.run([sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;install&quot;, &quot;cloudpickle==1.1.1&quot;, &quot;--quiet&quot;], env={&quot;PIP_DISABLE_PIP_VERSION_CHECK&quot;: &quot;1&quot;}, check=True)</span>
+<span class="s1">        print(&quot;Installed cloudpickle globally&quot;, file=sys.stderr)</span>
+<span class="s1">    except:</span>
+<span class="s1">        print(&quot;Failed to install cloudpickle globally. Installing for the current user.&quot;, file=sys.stderr)</span>
+<span class="s1">        subprocess.run([sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;install&quot;, &quot;cloudpickle==1.1.1&quot;, &quot;--user&quot;, &quot;--quiet&quot;], env={&quot;PIP_DISABLE_PIP_VERSION_CHECK&quot;: &quot;1&quot;}, check=True)</span>
+<span class="s1">        print(&quot;Installed cloudpickle for the current user&quot;, file=sys.stderr)</span>
+<span class="s1">        # Enable loading from user-installed package directory. Python does not add it to sys.path if it was empty at start. Running pip does not refresh `sys.path`.</span>
+<span class="s1">        import site</span>
+<span class="s1">        sys.path.append(site.getusersitepackages())</span>
+<span class="s1">    import cloudpickle as _cloudpickle</span>
+<span class="s1">    print(&quot;cloudpickle loaded successfully after installing.&quot;, file=sys.stderr)</span>
+<span class="s1">&#39;&#39;&#39;</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">pickler_python_version = </span><span class="si">{pickler_python_version}</span><span class="s1"></span>
+<span class="s1">current_python_version = tuple(sys.version_info)</span>
+<span class="s1">if (</span>
+<span class="s1">    current_python_version[0] != pickler_python_version[0] or</span>
+<span class="s1">    current_python_version[1] &lt; pickler_python_version[1] or</span>
+<span class="s1">    current_python_version[0] == 3 and ((pickler_python_version[1] &lt; 6) != (current_python_version[1] &lt; 6))</span>
+<span class="s1">    ):</span>
+<span class="s1">    raise RuntimeError(&quot;Incompatible python versions: &quot; + str(current_python_version) + &quot; instead of &quot; + str(pickler_python_version))</span>
+
+<span class="s1">if current_python_version != pickler_python_version:</span>
+<span class="s1">    print(&quot;Warning!: Different python versions. The code may crash! Current environment python version: &quot; + str(current_python_version) + &quot;. Component code python version: &quot; + str(pickler_python_version), file=sys.stderr)</span>
+
+<span class="s1">import base64</span>
+<span class="s1">import pickle</span>
+
+<span class="si">{func_name}</span><span class="s1"> = pickle.loads(base64.b64decode(</span><span class="si">{func_pickle}</span><span class="s1">))</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">func_name</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">func_pickle</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">func_pickle</span><span class="p">),</span>
+        <span class="n">pickler_python_version</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">)),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">function_loading_code</span>
+
+
+<span class="k">def</span> <span class="nf">strip_type_hints</span><span class="p">(</span><span class="n">source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_strip_type_hints_using_strip_hints</span><span class="p">(</span><span class="n">source_code</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error when stripping type annotations: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>        
+        <span class="k">return</span> <span class="n">_strip_type_hints_using_lib2to3</span><span class="p">(</span><span class="n">source_code</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error when stripping type annotations: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">source_code</span>    
+
+
+<span class="k">def</span> <span class="nf">_strip_type_hints_using_strip_hints</span><span class="p">(</span><span class="n">source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">strip_hints</span> <span class="kn">import</span> <span class="n">strip_string_to_string</span>
+
+    <span class="c1"># Workaround for https://github.com/abarker/strip-hints/issues/4 , https://bugs.python.org/issue35107</span>
+    <span class="c1"># I could not repro it though</span>
+    <span class="k">if</span> <span class="n">source_code</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+        <span class="n">source_code</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="k">return</span> <span class="n">strip_string_to_string</span><span class="p">(</span><span class="n">source_code</span><span class="p">,</span> <span class="n">to_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_strip_type_hints_using_lib2to3</span><span class="p">(</span><span class="n">source_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Strips type annotations from the function definitions in the provided source code.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Using the standard lib2to3 library to strip type annotations.</span>
+    <span class="c1"># Switch to another library like strip-hints if issues are found.</span>
+    <span class="kn">from</span> <span class="nn">lib2to3</span> <span class="kn">import</span> <span class="n">fixer_base</span><span class="p">,</span> <span class="n">refactor</span><span class="p">,</span> <span class="n">fixer_util</span>
+
+    <span class="k">class</span> <span class="nc">StripAnnotations</span><span class="p">(</span><span class="n">fixer_base</span><span class="o">.</span><span class="n">BaseFix</span><span class="p">):</span>
+        <span class="n">PATTERN</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            typed_func_parameter=tname</span>
+<span class="s1">            |</span>
+<span class="s1">            typed_func_return_value=funcdef&lt; any+ &#39;-&gt;&#39; any+ &gt;</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+
+        <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;typed_func_parameter&#39;</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="c1"># Delete the annotation part of the function parameter declaration</span>
+                <span class="k">del</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">elif</span> <span class="s1">&#39;typed_func_return_value&#39;</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="c1"># Delete the return annotation part of the function declaration</span>
+                <span class="k">del</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">node</span>
+
+    <span class="k">class</span> <span class="nc">Refactor</span><span class="p">(</span><span class="n">refactor</span><span class="o">.</span><span class="n">RefactoringTool</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixers</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fixers</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">fixers</span><span class="p">]</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;print_function&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+
+        <span class="k">def</span> <span class="nf">get_fixers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixers</span><span class="p">,</span> <span class="p">[]</span>
+
+    <span class="n">stripped_code</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Refactor</span><span class="p">([</span><span class="n">StripAnnotations</span><span class="p">])</span><span class="o">.</span><span class="n">refactor_string</span><span class="p">(</span><span class="n">source_code</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">stripped_code</span>
+
+
+<span class="k">def</span> <span class="nf">_capture_function_code_using_source_copy</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>	
+    <span class="kn">import</span> <span class="nn">textwrap</span>
+
+    <span class="n">func_code</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="c1">#Function might be defined in some indented scope (e.g. in another function).</span>
+    <span class="c1">#We need to handle this and properly dedent the function source code</span>
+    <span class="n">func_code</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">func_code</span><span class="p">)</span>
+    <span class="n">func_code_lines</span> <span class="o">=</span> <span class="n">func_code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Removing possible decorators (can be multiline) until the function definition is found</span>
+    <span class="k">while</span> <span class="n">func_code_lines</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">func_code_lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;def &#39;</span><span class="p">):</span>
+        <span class="k">del</span> <span class="n">func_code_lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">func_code_lines</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Failed to dedent and clean up the source of function &quot;</span><span class="si">{}</span><span class="s1">&quot;. It is probably not properly indented.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+    <span class="n">func_code</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">func_code_lines</span><span class="p">)</span>
+
+    <span class="c1"># Stripping type annotations to prevent import errors.</span>
+    <span class="c1"># The most common cases are InputPath/OutputPath and typing.NamedTuple annotations</span>
+    <span class="n">func_code</span> <span class="o">=</span> <span class="n">strip_type_hints</span><span class="p">(</span><span class="n">func_code</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">func_code</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_component_interface</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComponentSpec</span><span class="p">:</span>
+    <span class="n">single_output_name_const</span> <span class="o">=</span> <span class="s1">&#39;Output&#39;</span>
+
+    <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">annotation_to_type_struct</span><span class="p">(</span><span class="n">annotation</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">annotation</span> <span class="ow">or</span> <span class="n">annotation</span> <span class="o">==</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="s1">&#39;to_dict&#39;</span><span class="p">):</span>
+            <span class="n">annotation</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">annotation</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+            <span class="n">type_struct</span> <span class="o">=</span> <span class="n">get_canonical_type_struct_for_type</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">type_struct</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">type_struct</span>
+            <span class="n">type_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">annotation</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="s1">&#39;__forward_arg__&#39;</span><span class="p">):</span> <span class="c1"># Handling typing.ForwardRef(&#39;Type_name&#39;) (the name was _ForwardRef in python 3.5-3.6)</span>
+            <span class="n">type_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">annotation</span><span class="o">.</span><span class="n">__forward_arg__</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">type_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
+
+        <span class="c1"># It&#39;s also possible to get the converter by type name</span>
+        <span class="n">type_struct</span> <span class="o">=</span> <span class="n">get_canonical_type_struct_for_type</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">type_struct</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">type_struct</span>
+        <span class="k">return</span> <span class="n">type_name</span>
+
+    <span class="n">input_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">output_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+        <span class="n">parameter_annotation</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span>
+        <span class="n">passing_style</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">io_name</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameter_annotation</span><span class="p">,</span> <span class="p">(</span><span class="n">InputPath</span><span class="p">,</span> <span class="n">InputTextFile</span><span class="p">,</span> <span class="n">InputBinaryFile</span><span class="p">,</span> <span class="n">OutputPath</span><span class="p">,</span> <span class="n">OutputTextFile</span><span class="p">,</span> <span class="n">OutputBinaryFile</span><span class="p">)):</span>
+            <span class="n">passing_style</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">parameter_annotation</span><span class="p">)</span>
+            <span class="n">parameter_annotation</span> <span class="o">=</span> <span class="n">parameter_annotation</span><span class="o">.</span><span class="n">type</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">passing_style</span> <span class="o">==</span> <span class="n">InputPath</span> <span class="ow">and</span> <span class="n">parameter</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Path inputs only support default values of None. Default values for outputs are not supported.&#39;</span><span class="p">)</span>
+            <span class="c1"># Removing the &quot;_path&quot; and &quot;_file&quot; suffixes from the input/output names as the argument passed to the component needs to be the data itself, not local file path.</span>
+            <span class="c1"># Problem: When accepting file inputs (outputs), the function inside the component receives file paths (or file streams), so it&#39;s natural to call the function parameter &quot;something_file_path&quot; (e.g. model_file_path or number_file_path).</span>
+            <span class="c1"># But from the outside perspective, there are no files or paths - the actual data objects (or references to them) are passed in.</span>
+            <span class="c1"># It looks very strange when argument passing code looks like this: `component(number_file_path=42)`. This looks like an error since 42 is not a path. It&#39;s not even a string.</span>
+            <span class="c1"># It&#39;s much more natural to strip the names of file inputs and outputs of &quot;_file&quot; or &quot;_path&quot; suffixes. Then the argument passing code will look natural: &quot;component(number=42)&quot;.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="p">(</span><span class="n">InputPath</span><span class="p">,</span> <span class="n">OutputPath</span><span class="p">))</span> <span class="ow">and</span> <span class="n">io_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">):</span>
+                <span class="n">io_name</span> <span class="o">=</span> <span class="n">io_name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="n">io_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;_file&#39;</span><span class="p">):</span>
+                <span class="n">io_name</span> <span class="o">=</span> <span class="n">io_name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;_file&#39;</span><span class="p">)]</span>
+        <span class="n">type_struct</span> <span class="o">=</span> <span class="n">annotation_to_type_struct</span><span class="p">(</span><span class="n">parameter_annotation</span><span class="p">)</span>
+        <span class="c1">#TODO: Humanize the input/output names</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="p">(</span><span class="n">OutputPath</span><span class="p">,</span> <span class="n">OutputTextFile</span><span class="p">,</span> <span class="n">OutputBinaryFile</span><span class="p">)):</span>
+            <span class="n">io_name</span> <span class="o">=</span> <span class="n">_make_name_unique_by_adding_index</span><span class="p">(</span><span class="n">io_name</span><span class="p">,</span> <span class="n">output_names</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">output_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">io_name</span><span class="p">)</span>
+            <span class="n">output_spec</span> <span class="o">=</span> <span class="n">OutputSpec</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">io_name</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">type_struct</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">output_spec</span><span class="o">.</span><span class="n">_passing_style</span> <span class="o">=</span> <span class="n">passing_style</span>
+            <span class="n">output_spec</span><span class="o">.</span><span class="n">_parameter_name</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_spec</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">io_name</span> <span class="o">=</span> <span class="n">_make_name_unique_by_adding_index</span><span class="p">(</span><span class="n">io_name</span><span class="p">,</span> <span class="n">input_names</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">input_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">io_name</span><span class="p">)</span>
+            <span class="n">input_spec</span> <span class="o">=</span> <span class="n">InputSpec</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">io_name</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">type_struct</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="n">input_spec</span><span class="o">.</span><span class="n">optional</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">outer_type_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">type_struct</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_struct</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">type_struct</span>
+                    <span class="n">input_spec</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">serialize_value</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">outer_type_name</span><span class="p">)</span>
+            <span class="n">input_spec</span><span class="o">.</span><span class="n">_passing_style</span> <span class="o">=</span> <span class="n">passing_style</span>
+            <span class="n">input_spec</span><span class="o">.</span><span class="n">_parameter_name</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_spec</span><span class="p">)</span>
+
+    <span class="c1">#Analyzing the return type annotations.</span>
+    <span class="n">return_ann</span> <span class="o">=</span> <span class="n">signature</span><span class="o">.</span><span class="n">return_annotation</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">return_ann</span><span class="p">,</span> <span class="s1">&#39;_fields&#39;</span><span class="p">):</span> <span class="c1">#NamedTuple</span>
+        <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">return_ann</span><span class="o">.</span><span class="n">_fields</span><span class="p">:</span>
+            <span class="n">type_struct</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">return_ann</span><span class="p">,</span> <span class="s1">&#39;_field_types&#39;</span><span class="p">):</span>
+                <span class="n">type_struct</span> <span class="o">=</span> <span class="n">annotation_to_type_struct</span><span class="p">(</span><span class="n">return_ann</span><span class="o">.</span><span class="n">_field_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+            <span class="n">output_name</span> <span class="o">=</span> <span class="n">_make_name_unique_by_adding_index</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">output_names</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">output_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">output_name</span><span class="p">)</span>
+            <span class="n">output_spec</span> <span class="o">=</span> <span class="n">OutputSpec</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">type_struct</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">output_spec</span><span class="o">.</span><span class="n">_passing_style</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">output_spec</span><span class="o">.</span><span class="n">_return_tuple_field_name</span> <span class="o">=</span> <span class="n">field_name</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_spec</span><span class="p">)</span>
+    <span class="c1"># Deprecated dict-based way of declaring multiple outputs. Was only used by the @component decorator</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">return_ann</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">warnings</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;The ability to specify multiple outputs using the dict syntax has been deprecated.&quot;</span>
+            <span class="s2">&quot;It will be removed soon after release 0.1.32.&quot;</span>
+            <span class="s2">&quot;Please use typing.NamedTuple to declare multiple outputs.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">output_type_annotation</span> <span class="ow">in</span> <span class="n">return_ann</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">output_type_struct</span> <span class="o">=</span> <span class="n">annotation_to_type_struct</span><span class="p">(</span><span class="n">output_type_annotation</span><span class="p">)</span>
+            <span class="n">output_spec</span> <span class="o">=</span> <span class="n">OutputSpec</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">output_type_struct</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_spec</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">signature</span><span class="o">.</span><span class="n">return_annotation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">signature</span><span class="o">.</span><span class="n">return_annotation</span> <span class="o">!=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="n">output_name</span> <span class="o">=</span> <span class="n">_make_name_unique_by_adding_index</span><span class="p">(</span><span class="n">single_output_name_const</span><span class="p">,</span> <span class="n">output_names</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="c1"># Fixes exotic, but possible collision: `def func(output_path: OutputPath()) -&gt; str: ...`</span>
+        <span class="n">output_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">output_name</span><span class="p">)</span>
+        <span class="n">type_struct</span> <span class="o">=</span> <span class="n">annotation_to_type_struct</span><span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">return_annotation</span><span class="p">)</span>
+        <span class="n">output_spec</span> <span class="o">=</span> <span class="n">OutputSpec</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">output_name</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">type_struct</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">output_spec</span><span class="o">.</span><span class="n">_passing_style</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_spec</span><span class="p">)</span>
+
+    <span class="c1"># Component name and description are derived from the function&#39;s name and docstring.</span>
+    <span class="c1"># The name can be overridden by setting setting func.__name__ attribute (of the legacy func._component_human_name attribute).</span>
+    <span class="c1"># The description can be overridden by setting the func.__doc__ attribute (or the legacy func._component_description attribute).</span>
+    <span class="n">component_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;_component_human_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_python_function_name_to_component_name</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;_component_description&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span>
+    <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="c1"># TODO: Parse input/output descriptions from the function docstring. See:</span>
+    <span class="c1"># https://github.com/rr-/docstring_parser</span>
+    <span class="c1"># https://github.com/terrencepreilly/darglint/blob/master/darglint/parse.py</span>
+
+    <span class="n">component_spec</span> <span class="o">=</span> <span class="n">ComponentSpec</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">component_name</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+        <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span> <span class="k">if</span> <span class="n">inputs</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span> <span class="k">if</span> <span class="n">outputs</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">component_spec</span>
+
+
+<span class="k">def</span> <span class="nf">_func_to_component_spec</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">extra_code</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">base_image</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">use_code_pickling</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComponentSpec</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;Takes a self-contained python function and converts it to component</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func: Required. The function to be converted</span>
+<span class="sd">        base_image: Optional. Docker image to be used as a base image for the python component. Must have python 3.5+ installed. Default is tensorflow/tensorflow:1.11.0-py3</span>
+<span class="sd">                    Note: The image can also be specified by decorating the function with the @python_component decorator. If different base images are explicitly specified in both places, an error is raised.</span>
+<span class="sd">        extra_code: Optional. Python source code that gets placed before the function code. Can be used as workaround to define types used in function signature.</span>
+<span class="sd">        packages_to_install: Optional. List of [versioned] python packages to pip install before executing the user function.</span>
+<span class="sd">        modules_to_capture: Optional. List of module names that will be captured (instead of just referencing) during the dependency scan. By default the func.__module__ is captured.</span>
+<span class="sd">        use_code_pickling: Specifies whether the function code should be captured using pickling as opposed to source code manipulation. Pickling has better support for capturing dependencies, but is sensitive to version mismatch between python in component creation environment and runtime image.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">decorator_base_image</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;_component_base_image&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">decorator_base_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">base_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">decorator_base_image</span> <span class="o">!=</span> <span class="n">base_image</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;base_image (</span><span class="si">{}</span><span class="s1">) conflicts with the decorator-specified base image metadata (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base_image</span><span class="p">,</span> <span class="n">decorator_base_image</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base_image</span> <span class="o">=</span> <span class="n">decorator_base_image</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">base_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">base_image</span> <span class="o">=</span> <span class="n">default_base_image_or_builder</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_image</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+                <span class="n">base_image</span> <span class="o">=</span> <span class="n">base_image</span><span class="p">()</span>
+
+    <span class="n">packages_to_install</span> <span class="o">=</span> <span class="n">packages_to_install</span> <span class="ow">or</span> <span class="p">[]</span>
+
+    <span class="n">component_spec</span> <span class="o">=</span> <span class="n">_extract_component_interface</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="n">component_inputs</span> <span class="o">=</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">inputs</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">component_outputs</span> <span class="o">=</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">outputs</span> <span class="ow">or</span> <span class="p">[]</span>
+
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">arguments</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">InputValuePlaceholder</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">component_inputs</span><span class="p">)</span>
+    <span class="n">arguments</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">OutputPathPlaceholder</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">component_outputs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_code_pickling</span><span class="p">:</span>
+        <span class="n">func_code</span> <span class="o">=</span> <span class="n">_capture_function_code_using_cloudpickle</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">modules_to_capture</span><span class="p">)</span>
+        <span class="c1"># pip startup is quite slow. TODO: Remove the special cloudpickle installation code in favor of the the following line once a way to speed up pip startup is discovered.</span>
+        <span class="c1">#packages_to_install.append(&#39;cloudpickle==1.1.1&#39;)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">func_code</span> <span class="o">=</span> <span class="n">_capture_function_code_using_source_copy</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="n">definitions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">get_deserializer_and_register_definitions</span><span class="p">(</span><span class="n">type_name</span><span class="p">):</span>
+        <span class="n">deserializer_code</span> <span class="o">=</span> <span class="n">get_deserializer_code_for_type_struct</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">deserializer_code</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">deserializer_code_str</span><span class="p">,</span> <span class="n">definition_str</span><span class="p">)</span> <span class="o">=</span> <span class="n">deserializer_code</span>
+            <span class="k">if</span> <span class="n">definition_str</span><span class="p">:</span>
+                <span class="n">definitions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">definition_str</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">deserializer_code_str</span>
+        <span class="k">return</span> <span class="s1">&#39;str&#39;</span>
+
+    <span class="n">pre_func_definitions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">get_argparse_type_for_input_file</span><span class="p">(</span><span class="n">passing_style</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">passing_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">passing_style</span> <span class="ow">is</span> <span class="n">InputPath</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;str&#39;</span>
+        <span class="k">elif</span> <span class="n">passing_style</span> <span class="ow">is</span> <span class="n">InputTextFile</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;argparse.FileType(&#39;rt&#39;)&quot;</span>
+        <span class="k">elif</span> <span class="n">passing_style</span> <span class="ow">is</span> <span class="n">InputBinaryFile</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;argparse.FileType(&#39;rb&#39;)&quot;</span>
+        <span class="c1"># For Output* we cannot use the build-in argparse.FileType objects since they do not create parent directories.</span>
+        <span class="k">elif</span> <span class="n">passing_style</span> <span class="ow">is</span> <span class="n">OutputPath</span><span class="p">:</span>
+            <span class="c1"># ~= return &#39;str&#39;</span>
+            <span class="n">pre_func_definitions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">_make_parent_dirs_and_return_path</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">_make_parent_dirs_and_return_path</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">elif</span> <span class="n">passing_style</span> <span class="ow">is</span> <span class="n">OutputTextFile</span><span class="p">:</span>
+            <span class="c1"># ~= return &quot;argparse.FileType(&#39;wt&#39;)&quot;</span>
+            <span class="n">pre_func_definitions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">_parent_dirs_maker_that_returns_open_file</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">_parent_dirs_maker_that_returns_open_file</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;(&#39;wt&#39;)&quot;</span>
+        <span class="k">elif</span> <span class="n">passing_style</span> <span class="ow">is</span> <span class="n">OutputBinaryFile</span><span class="p">:</span>
+            <span class="c1"># ~= return &quot;argparse.FileType(&#39;wb&#39;)&quot;</span>
+            <span class="n">pre_func_definitions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">_parent_dirs_maker_that_returns_open_file</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">_parent_dirs_maker_that_returns_open_file</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;(&#39;wb&#39;)&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Unexpected data passing style: &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">passing_style</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">get_serializer_and_register_definitions</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">serializer_func</span> <span class="o">=</span> <span class="n">get_serializer_func_for_type_struct</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">serializer_func</span><span class="p">:</span>
+            <span class="c1"># If serializer is not part of the standard python library, then include its code in the generated program</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">serializer_func</span><span class="p">,</span> <span class="s1">&#39;__module__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_module_is_builtin_or_standard</span><span class="p">(</span><span class="n">serializer_func</span><span class="o">.</span><span class="vm">__module__</span><span class="p">):</span>
+                <span class="kn">import</span> <span class="nn">inspect</span>
+                <span class="n">serializer_code_str</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">serializer_func</span><span class="p">)</span>
+                <span class="n">definitions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">serializer_code_str</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">serializer_func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">return</span> <span class="s1">&#39;str&#39;</span>
+
+    <span class="n">arg_parse_code_lines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;import argparse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_parser = argparse.ArgumentParser(prog=</span><span class="si">{prog_repr}</span><span class="s1">, description=</span><span class="si">{description_repr}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">prog_repr</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">component_spec</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="n">description_repr</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">component_spec</span><span class="o">.</span><span class="n">description</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">outputs_passed_through_func_return_tuple</span> <span class="o">=</span> <span class="p">[</span><span class="n">output</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">component_outputs</span> <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">_passing_style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">file_outputs_passed_using_func_parameters</span> <span class="o">=</span> <span class="p">[</span><span class="n">output</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">component_outputs</span> <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">_passing_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">component_inputs</span> <span class="o">+</span> <span class="n">file_outputs_passed_using_func_parameters</span><span class="p">:</span>
+        <span class="n">param_flag</span> <span class="o">=</span> <span class="s2">&quot;--&quot;</span> <span class="o">+</span> <span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="n">is_required</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">OutputSpec</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">optional</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="s1">&#39;_parser.add_argument(&quot;</span><span class="si">{param_flag}</span><span class="s1">&quot;, dest=&quot;</span><span class="si">{param_var}</span><span class="s1">&quot;, type=</span><span class="si">{param_type}</span><span class="s1">, required=</span><span class="si">{is_required}</span><span class="s1">, default=argparse.SUPPRESS)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">param_flag</span><span class="o">=</span><span class="n">param_flag</span><span class="p">,</span>
+            <span class="n">param_var</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">_parameter_name</span><span class="p">,</span> <span class="c1"># Not input.name, since the inputs could have been renamed</span>
+            <span class="n">param_type</span><span class="o">=</span><span class="n">get_argparse_type_for_input_file</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">_passing_style</span><span class="p">)</span> <span class="ow">or</span> <span class="n">get_deserializer_and_register_definitions</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+            <span class="n">is_required</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">is_required</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">arg_parse_code_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">_passing_style</span> <span class="ow">in</span> <span class="p">[</span><span class="n">InputPath</span><span class="p">,</span> <span class="n">InputTextFile</span><span class="p">,</span> <span class="n">InputBinaryFile</span><span class="p">]:</span>
+            <span class="n">arguments_for_input</span> <span class="o">=</span> <span class="p">[</span><span class="n">param_flag</span><span class="p">,</span> <span class="n">InputPathPlaceholder</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">_passing_style</span> <span class="ow">in</span> <span class="p">[</span><span class="n">OutputPath</span><span class="p">,</span> <span class="n">OutputTextFile</span><span class="p">,</span> <span class="n">OutputBinaryFile</span><span class="p">]:</span>
+            <span class="n">arguments_for_input</span> <span class="o">=</span> <span class="p">[</span><span class="n">param_flag</span><span class="p">,</span> <span class="n">OutputPathPlaceholder</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">arguments_for_input</span> <span class="o">=</span> <span class="p">[</span><span class="n">param_flag</span><span class="p">,</span> <span class="n">InputValuePlaceholder</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">is_required</span><span class="p">:</span>
+            <span class="n">arguments</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">arguments_for_input</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IfPlaceholder</span><span class="p">(</span>
+                    <span class="n">IfPlaceholderStructure</span><span class="p">(</span>
+                        <span class="n">condition</span><span class="o">=</span><span class="n">IsPresentPlaceholder</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+                        <span class="n">then_value</span><span class="o">=</span><span class="n">arguments_for_input</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">outputs_passed_through_func_return_tuple</span><span class="p">:</span>
+        <span class="n">param_flag</span><span class="o">=</span><span class="s2">&quot;----output-paths&quot;</span>
+        <span class="n">output_param_var</span><span class="o">=</span><span class="s2">&quot;_output_paths&quot;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="s1">&#39;_parser.add_argument(&quot;</span><span class="si">{param_flag}</span><span class="s1">&quot;, dest=&quot;</span><span class="si">{param_var}</span><span class="s1">&quot;, type=str, nargs=</span><span class="si">{nargs}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">param_flag</span><span class="o">=</span><span class="n">param_flag</span><span class="p">,</span>
+            <span class="n">param_var</span><span class="o">=</span><span class="n">output_param_var</span><span class="p">,</span>
+            <span class="n">nargs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">outputs_passed_through_func_return_tuple</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">arg_parse_code_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param_flag</span><span class="p">)</span>
+        <span class="n">arguments</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">OutputPathPlaceholder</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs_passed_through_func_return_tuple</span><span class="p">)</span>
+
+    <span class="n">output_serialization_expression_strings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs_passed_through_func_return_tuple</span><span class="p">:</span>
+        <span class="n">serializer_call_str</span> <span class="o">=</span> <span class="n">get_serializer_and_register_definitions</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+        <span class="n">output_serialization_expression_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">serializer_call_str</span><span class="p">)</span>
+
+    <span class="n">pre_func_code</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pre_func_definitions</span><span class="p">))</span>
+
+    <span class="n">arg_parse_code_lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">definitions</span><span class="p">)</span> <span class="o">+</span> <span class="n">arg_parse_code_lines</span>
+
+    <span class="n">arg_parse_code_lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+        <span class="s1">&#39;_parsed_args = vars(_parser.parse_args())&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_output_files = _parsed_args.pop(&quot;_output_paths&quot;, [])&#39;</span><span class="p">,</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Putting singular return values in a list to be &quot;zipped&quot; with the serializers and output paths</span>
+    <span class="n">outputs_to_list_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">return_ann</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">return_annotation</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="c1"># The return type is singular, not sequence</span>
+        <span class="n">return_ann</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="n">return_ann</span> <span class="o">!=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
+        <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">return_ann</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">return_ann</span><span class="p">,</span> <span class="s1">&#39;_fields&#39;</span><span class="p">)</span> <span class="c1"># namedtuple</span>
+    <span class="p">):</span>
+        <span class="n">outputs_to_list_code</span> <span class="o">=</span> <span class="s1">&#39;_outputs = [_outputs]&#39;</span>
+
+    <span class="n">output_serialization_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">,</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">output_serialization_expression_strings</span><span class="p">)</span>
+
+    <span class="n">full_source</span> <span class="o">=</span> \
+<span class="sd">&#39;&#39;&#39;\</span>
+<span class="sd">{pre_func_code}</span>
+
+<span class="sd">{extra_code}</span>
+
+<span class="sd">{func_code}</span>
+
+<span class="sd">{arg_parse_code}</span>
+
+<span class="sd">_outputs = {func_name}(**_parsed_args)</span>
+
+<span class="sd">{outputs_to_list_code}</span>
+
+<span class="sd">_output_serializers = [</span>
+<span class="sd">{output_serialization_code}</span>
+<span class="sd">]</span>
+
+<span class="sd">import os</span>
+<span class="sd">for idx, output_file in enumerate(_output_files):</span>
+<span class="sd">    try:</span>
+<span class="sd">        os.makedirs(os.path.dirname(output_file))</span>
+<span class="sd">    except OSError:</span>
+<span class="sd">        pass</span>
+<span class="sd">    with open(output_file, &#39;w&#39;) as f:</span>
+<span class="sd">        f.write(_output_serializers[idx](_outputs[idx]))</span>
+<span class="sd">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">func_name</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">func_code</span><span class="o">=</span><span class="n">func_code</span><span class="p">,</span>
+        <span class="n">pre_func_code</span><span class="o">=</span><span class="n">pre_func_code</span><span class="p">,</span>
+        <span class="n">extra_code</span><span class="o">=</span><span class="n">extra_code</span><span class="p">,</span>
+        <span class="n">arg_parse_code</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg_parse_code_lines</span><span class="p">),</span>
+        <span class="n">output_serialization_code</span><span class="o">=</span><span class="n">output_serialization_code</span><span class="p">,</span>
+        <span class="n">outputs_to_list_code</span><span class="o">=</span><span class="n">outputs_to_list_code</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1">#Removing consecutive blank lines</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+    <span class="n">full_source</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n\n</span><span class="s1">+&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">full_source</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="n">package_preinstallation_command</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">packages_to_install</span><span class="p">:</span>
+        <span class="n">package_install_command_line</span> <span class="o">=</span> <span class="s1">&#39;PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">repr</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">package</span><span class="p">))</span> <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages_to_install</span><span class="p">]))</span>
+        <span class="n">package_preinstallation_command</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sh&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;(</span><span class="si">{pip_install}</span><span class="s1"> || </span><span class="si">{pip_install}</span><span class="s1"> --user) &amp;&amp; &quot;$0&quot; &quot;$@&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pip_install</span><span class="o">=</span><span class="n">package_install_command_line</span><span class="p">)]</span>
+
+    <span class="n">component_spec</span><span class="o">.</span><span class="n">implementation</span><span class="o">=</span><span class="n">ContainerImplementation</span><span class="p">(</span>
+        <span class="n">container</span><span class="o">=</span><span class="n">ContainerSpec</span><span class="p">(</span>
+            <span class="n">image</span><span class="o">=</span><span class="n">base_image</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="n">package_preinstallation_command</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;-u&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">full_source</span><span class="p">],</span>
+            <span class="n">args</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">component_spec</span>
+
+
+<span class="k">def</span> <span class="nf">_func_to_component_dict</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">extra_code</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">use_code_pickling</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_func_to_component_spec</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+        <span class="n">extra_code</span><span class="o">=</span><span class="n">extra_code</span><span class="p">,</span>
+        <span class="n">base_image</span><span class="o">=</span><span class="n">base_image</span><span class="p">,</span>
+        <span class="n">packages_to_install</span><span class="o">=</span><span class="n">packages_to_install</span><span class="p">,</span>
+        <span class="n">modules_to_capture</span><span class="o">=</span><span class="n">modules_to_capture</span><span class="p">,</span>
+        <span class="n">use_code_pickling</span><span class="o">=</span><span class="n">use_code_pickling</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="func_to_component_text"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.func_to_component_text">[docs]</a><span class="k">def</span> <span class="nf">func_to_component_text</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">extra_code</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">use_code_pickling</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a Python function to a component definition and returns its textual representation</span>
+
+<span class="sd">    Function docstring is used as component description.</span>
+<span class="sd">    Argument and return annotations are used as component input/output types.</span>
+<span class="sd">    To declare a function with multiple return values, use the NamedTuple return annotation syntax:</span>
+
+<span class="sd">        from typing import NamedTuple</span>
+<span class="sd">        def add_multiply_two_numbers(a: float, b: float) -&gt; NamedTuple(&#39;DummyName&#39;, [(&#39;sum&#39;, float), (&#39;product&#39;, float)]):</span>
+<span class="sd">            &quot;&quot;&quot;Returns sum and product of two arguments&quot;&quot;&quot;</span>
+<span class="sd">            return (a + b, a * b)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func: The python function to convert</span>
+<span class="sd">        base_image: Optional. Specify a custom Docker container image to use in the component. For lightweight components, the image needs to have python 3.5+. Default is tensorflow/tensorflow:1.13.2-py3</span>
+<span class="sd">        extra_code: Optional. Extra code to add before the function code. Can be used as workaround to define types used in function signature.</span>
+<span class="sd">        packages_to_install: Optional. List of [versioned] python packages to pip install before executing the user function.</span>
+<span class="sd">        modules_to_capture: Optional. List of module names that will be captured (instead of just referencing) during the dependency scan. By default the func.__module__ is captured. The actual algorithm: Starting with the initial function, start traversing dependencies. If the dependecy.__module__ is in the modules_to_capture list then it&#39;s captured and it&#39;s dependencies are traversed. Otherwise the dependency is only referenced instead of capturing and its dependencies are not traversed.</span>
+<span class="sd">        use_code_pickling: Specifies whether the function code should be captured using pickling as opposed to source code manipulation. Pickling has better support for capturing dependencies, but is sensitive to version mismatch between python in component creation environment and runtime image.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Textual representation of a component definition</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">component_dict</span> <span class="o">=</span> <span class="n">_func_to_component_dict</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+        <span class="n">extra_code</span><span class="o">=</span><span class="n">extra_code</span><span class="p">,</span>
+        <span class="n">base_image</span><span class="o">=</span><span class="n">base_image</span><span class="p">,</span>
+        <span class="n">packages_to_install</span><span class="o">=</span><span class="n">packages_to_install</span><span class="p">,</span>
+        <span class="n">modules_to_capture</span><span class="o">=</span><span class="n">modules_to_capture</span><span class="p">,</span>
+        <span class="n">use_code_pickling</span><span class="o">=</span><span class="n">use_code_pickling</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">dump_yaml</span><span class="p">(</span><span class="n">component_dict</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">func_to_component_file</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">output_component_file</span><span class="p">,</span> <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">extra_code</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">use_code_pickling</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a Python function to a component definition and writes it to a file</span>
+
+<span class="sd">    Function docstring is used as component description.</span>
+<span class="sd">    Argument and return annotations are used as component input/output types.</span>
+<span class="sd">    To declare a function with multiple return values, use the NamedTuple return annotation syntax:</span>
+
+<span class="sd">        from typing import NamedTuple</span>
+<span class="sd">        def add_multiply_two_numbers(a: float, b: float) -&gt; NamedTuple(&#39;DummyName&#39;, [(&#39;sum&#39;, float), (&#39;product&#39;, float)]):</span>
+<span class="sd">            &quot;&quot;&quot;Returns sum and product of two arguments&quot;&quot;&quot;</span>
+<span class="sd">            return (a + b, a * b)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func: The python function to convert</span>
+<span class="sd">        output_component_file: Write a component definition to a local file. Can be used for sharing.</span>
+<span class="sd">        base_image: Optional. Specify a custom Docker container image to use in the component. For lightweight components, the image needs to have python 3.5+. Default is tensorflow/tensorflow:1.13.2-py3</span>
+<span class="sd">        extra_code: Optional. Extra code to add before the function code. Can be used as workaround to define types used in function signature.</span>
+<span class="sd">        packages_to_install: Optional. List of [versioned] python packages to pip install before executing the user function.</span>
+<span class="sd">        modules_to_capture: Optional. List of module names that will be captured (instead of just referencing) during the dependency scan. By default the func.__module__ is captured. The actual algorithm: Starting with the initial function, start traversing dependencies. If the dependecy.__module__ is in the modules_to_capture list then it&#39;s captured and it&#39;s dependencies are traversed. Otherwise the dependency is only referenced instead of capturing and its dependencies are not traversed.</span>
+<span class="sd">        use_code_pickling: Specifies whether the function code should be captured using pickling as opposed to source code manipulation. Pickling has better support for capturing dependencies, but is sensitive to version mismatch between python in component creation environment and runtime image.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">component_yaml</span> <span class="o">=</span> <span class="n">func_to_component_text</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+        <span class="n">extra_code</span><span class="o">=</span><span class="n">extra_code</span><span class="p">,</span>
+        <span class="n">base_image</span><span class="o">=</span><span class="n">base_image</span><span class="p">,</span>
+        <span class="n">packages_to_install</span><span class="o">=</span><span class="n">packages_to_install</span><span class="p">,</span>
+        <span class="n">modules_to_capture</span><span class="o">=</span><span class="n">modules_to_capture</span><span class="p">,</span>
+        <span class="n">use_code_pickling</span><span class="o">=</span><span class="n">use_code_pickling</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="n">Path</span><span class="p">(</span><span class="n">output_component_file</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">component_yaml</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="func_to_container_op"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.func_to_container_op">[docs]</a><span class="k">def</span> <span class="nf">func_to_container_op</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">output_component_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">extra_code</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">use_code_pickling</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a Python function to a component and returns a task (ContainerOp) factory</span>
+
+<span class="sd">    Function docstring is used as component description.</span>
+<span class="sd">    Argument and return annotations are used as component input/output types.</span>
+<span class="sd">    To declare a function with multiple return values, use the NamedTuple return annotation syntax:</span>
+
+<span class="sd">        from typing import NamedTuple</span>
+<span class="sd">        def add_multiply_two_numbers(a: float, b: float) -&gt; NamedTuple(&#39;DummyName&#39;, [(&#39;sum&#39;, float), (&#39;product&#39;, float)]):</span>
+<span class="sd">            &quot;&quot;&quot;Returns sum and product of two arguments&quot;&quot;&quot;</span>
+<span class="sd">            return (a + b, a * b)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func: The python function to convert</span>
+<span class="sd">        base_image: Optional. Specify a custom Docker container image to use in the component. For lightweight components, the image needs to have python 3.5+. Default is tensorflow/tensorflow:1.13.2-py3</span>
+<span class="sd">        output_component_file: Optional. Write a component definition to a local file. Can be used for sharing.</span>
+<span class="sd">        extra_code: Optional. Extra code to add before the function code. Can be used as workaround to define types used in function signature.</span>
+<span class="sd">        packages_to_install: Optional. List of [versioned] python packages to pip install before executing the user function.</span>
+<span class="sd">        modules_to_capture: Optional. List of module names that will be captured (instead of just referencing) during the dependency scan. By default the func.__module__ is captured. The actual algorithm: Starting with the initial function, start traversing dependencies. If the dependecy.__module__ is in the modules_to_capture list then it&#39;s captured and it&#39;s dependencies are traversed. Otherwise the dependency is only referenced instead of capturing and its dependencies are not traversed.</span>
+<span class="sd">        use_code_pickling: Specifies whether the function code should be captured using pickling as opposed to source code manipulation. Pickling has better support for capturing dependencies, but is sensitive to version mismatch between python in component creation environment and runtime image.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A factory function with a strongly-typed signature taken from the python function.</span>
+<span class="sd">        Once called with the required arguments, the factory constructs a pipeline task instance (ContainerOp) that can run the original function in a container.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">component_spec</span> <span class="o">=</span> <span class="n">_func_to_component_spec</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+        <span class="n">extra_code</span><span class="o">=</span><span class="n">extra_code</span><span class="p">,</span>
+        <span class="n">base_image</span><span class="o">=</span><span class="n">base_image</span><span class="p">,</span>
+        <span class="n">packages_to_install</span><span class="o">=</span><span class="n">packages_to_install</span><span class="p">,</span>
+        <span class="n">modules_to_capture</span><span class="o">=</span><span class="n">modules_to_capture</span><span class="p">,</span>
+        <span class="n">use_code_pickling</span><span class="o">=</span><span class="n">use_code_pickling</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">output_component_file</span> <span class="o">=</span> <span class="n">output_component_file</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;_component_target_component_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">output_component_file</span><span class="p">:</span>
+        <span class="n">component_spec</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_component_file</span><span class="p">)</span>
+        <span class="c1">#TODO: assert ComponentSpec.from_dict(load_yaml(output_component_file)) == component_spec</span>
+
+    <span class="k">return</span> <span class="n">_create_task_factory_from_component_spec</span><span class="p">(</span><span class="n">component_spec</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_component_from_func"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.create_component_from_func">[docs]</a><span class="k">def</span> <span class="nf">create_component_from_func</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">output_component_file</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">packages_to_install</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a Python function to a component and returns a task factory (a function that accepts arguments and returns a task object).</span>
+
+<span class="sd">    Function name and docstring are used as component name and description.</span>
+<span class="sd">    Argument and return annotations are used as component input/output types.</span>
+<span class="sd">    Example::</span>
+
+<span class="sd">        def add(a: float, b: float) -&gt; float:</span>
+<span class="sd">            &quot;&quot;&quot;Returns sum of two arguments&quot;&quot;&quot;</span>
+<span class="sd">            return a + b</span>
+
+<span class="sd">        # add_op is a task factory function that creates a task object when given arguments</span>
+<span class="sd">        add_op = create_component_from_func(</span>
+<span class="sd">            func=add,</span>
+<span class="sd">            base_image=&#39;python:3.7&#39;, # Optional</span>
+<span class="sd">            output_component_file=&#39;add.component.yaml&#39;, # Optional</span>
+<span class="sd">            packages_to_install=[&#39;pandas==0.24&#39;], # Optional</span>
+<span class="sd">        )</span>
+
+<span class="sd">        # The component spec can be accessed through the .component_spec attribute:</span>
+<span class="sd">        add_op.component_spec.save(&#39;add.component.yaml&#39;)</span>
+
+<span class="sd">        # The component function can be called with arguments to create a task:</span>
+<span class="sd">        add_task = add_op(1, 3)</span>
+
+<span class="sd">        # The resulting task has output references, corresponding to the component outputs.</span>
+<span class="sd">        # When the function only has a single anonymous return value, the output name is &quot;Output&quot;:</span>
+<span class="sd">        sum_output_ref = add_task.outputs[&#39;Output&#39;]</span>
+
+<span class="sd">        # These task output references can be passed to other component functions, constructing a computation graph:</span>
+<span class="sd">        task2 = add_op(sum_output_ref, 5)</span>
+
+
+<span class="sd">    `create_component_from_func` function can also be used as decorator::</span>
+
+<span class="sd">        @create_component_from_func</span>
+<span class="sd">        def add_op(a: float, b: float) -&gt; float:</span>
+<span class="sd">            &quot;&quot;&quot;Returns sum of two arguments&quot;&quot;&quot;</span>
+<span class="sd">            return a + b</span>
+
+<span class="sd">    To declare a function with multiple return values, use the NamedTuple return annotation syntax::</span>
+
+<span class="sd">        from typing import NamedTuple</span>
+
+<span class="sd">        def add_multiply_two_numbers(a: float, b: float) -&gt; NamedTuple(&#39;Outputs&#39;, [(&#39;sum&#39;, float), (&#39;product&#39;, float)]):</span>
+<span class="sd">            &quot;&quot;&quot;Returns sum and product of two arguments&quot;&quot;&quot;</span>
+<span class="sd">            return (a + b, a * b)</span>
+
+<span class="sd">        add_multiply_op = create_component_from_func(add_multiply_two_numbers)</span>
+
+<span class="sd">        # The component function can be called with arguments to create a task:</span>
+<span class="sd">        add_multiply_task = add_multiply_op(1, 3)</span>
+
+<span class="sd">        # The resulting task has output references, corresponding to the component outputs:</span>
+<span class="sd">        sum_output_ref = add_multiply_task.outputs[&#39;sum&#39;]</span>
+
+<span class="sd">        # These task output references can be passed to other component functions, constructing a computation graph:</span>
+<span class="sd">        task2 = add_multiply_op(sum_output_ref, 5)</span>
+
+
+<span class="sd">    Bigger data should be read from files and written to files.</span>
+<span class="sd">    Use the `InputPath` parameter annotation to tell the system that the function wants to consume the corresponding input data as a file. The system will download the data, write it to a local file and then pass the **path** of that file to the function.</span>
+<span class="sd">    Use the `OutputPath` parameter annotation to tell the system that the function wants to produce the corresponding output data as a file. The system will prepare and pass the **path** of a file where the function should write the output data. After the function exits, the system will upload the data to the storage system so that it can be passed to downstream components.</span>
+<span class="sd">    You can specify the type of the consumed/produced data by specifying the type argument to `InputPath` and `OutputPath`. The type can be a python type or an arbitrary type name string. `OutputPath(&#39;CatBoostModel&#39;)` means that the function states that the data it has written to a file has type &#39;CatBoostModel&#39;. `InputPath(&#39;CatBoostModel&#39;)` means that the function states that it expect the data it reads from a file to have type &#39;CatBoostModel&#39;. When the pipeline author connects inputs to outputs the system checks whether the types match.</span>
+<span class="sd">    Every kind of data can be consumed as a file input. Conversely, bigger data should not be consumed by value as all value inputs pass through the command line.</span>
+
+<span class="sd">    Example of a component function declaring file input and output::</span>
+
+<span class="sd">        def catboost_train_classifier(</span>
+<span class="sd">            training_data_path: InputPath(&#39;CSV&#39;),            # Path to input data file of type &quot;CSV&quot;</span>
+<span class="sd">            trained_model_path: OutputPath(&#39;CatBoostModel&#39;), # Path to output data file of type &quot;CatBoostModel&quot;</span>
+<span class="sd">            number_of_trees: int = 100,                      # Small output of type &quot;Integer&quot;</span>
+<span class="sd">        ) -&gt; NamedTuple(&#39;Outputs&#39;, [</span>
+<span class="sd">            (&#39;Accuracy&#39;, float),  # Small output of type &quot;Float&quot;</span>
+<span class="sd">            (&#39;Precision&#39;, float), # Small output of type &quot;Float&quot;</span>
+<span class="sd">            (&#39;JobUri&#39;, &#39;URI&#39;),    # Small output of type &quot;URI&quot;</span>
+<span class="sd">        ]):</span>
+<span class="sd">            &quot;&quot;&quot;Trains CatBoost classification model&quot;&quot;&quot;</span>
+<span class="sd">            ...</span>
+
+<span class="sd">            return (accuracy, precision, recall)</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        func: The python function to convert</span>
+<span class="sd">        base_image: Optional. Specify a custom Docker container image to use in the component. For lightweight components, the image needs to have python 3.5+. Default is the python image corresponding to the current python environment.</span>
+<span class="sd">        output_component_file: Optional. Write a component definition to a local file. The produced component file can be loaded back by calling `load_component_from_file` or `load_component_from_uri`.</span>
+<span class="sd">        packages_to_install: Optional. List of [versioned] python packages to pip install before executing the user function.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A factory function with a strongly-typed signature taken from the python function.</span>
+<span class="sd">        Once called with the required arguments, the factory constructs a task instance that can run the original function in a container.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">component_spec</span> <span class="o">=</span> <span class="n">_func_to_component_spec</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
+        <span class="n">base_image</span><span class="o">=</span><span class="n">base_image</span><span class="p">,</span>
+        <span class="n">packages_to_install</span><span class="o">=</span><span class="n">packages_to_install</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output_component_file</span><span class="p">:</span>
+        <span class="n">component_spec</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_component_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_create_task_factory_from_component_spec</span><span class="p">(</span><span class="n">component_spec</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_module_is_builtin_or_standard</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">builtin_module_names</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="kn">import</span> <span class="nn">distutils.sysconfig</span> <span class="k">as</span> <span class="nn">sysconfig</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="n">std_lib_dir</span> <span class="o">=</span> <span class="n">sysconfig</span><span class="o">.</span><span class="n">get_python_lib</span><span class="p">(</span><span class="n">standard_lib</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">module_name_parts</span> <span class="o">=</span> <span class="n">module_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">expected_module_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">std_lib_dir</span><span class="p">,</span> <span class="o">*</span><span class="n">module_name_parts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">expected_module_path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">expected_module_path</span> <span class="o">+</span> <span class="s1">&#39;.py&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

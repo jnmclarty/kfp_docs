@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.compiler package &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.components package" href="kfp.components.html" />
+    <link rel="prev" title="kfp package" href="kfp.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kfp.compiler package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html">kfp.components package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+      <li>kfp.compiler package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.compiler.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-kfp.compiler">
+<span id="kfp-compiler-package"></span><h1>kfp.compiler package<a class="headerlink" href="#module-kfp.compiler" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="kfp.compiler.Compiler">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.compiler.</code><code class="sig-name descname">Compiler</code><a class="reference internal" href="../_modules/kfp/compiler/compiler.html#Compiler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.Compiler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DSL Compiler.</p>
+<p>It compiles DSL pipeline functions into workflow yaml. Example usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@dsl</span><span class="o">.</span><span class="n">pipeline</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;description&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_pipeline</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default value&quot;</span><span class="p">):</span>
+   <span class="o">...</span>
+
+<span class="n">Compiler</span><span class="p">()</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">my_pipeline</span><span class="p">,</span> <span class="s1">&#39;path/to/workflow.yaml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="kfp.compiler.Compiler.compile">
+<code class="sig-name descname">compile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_func</span></em>, <em class="sig-param"><span class="n">package_path</span></em>, <em class="sig-param"><span class="n">type_check</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">kfp.dsl._pipeline.PipelineConf</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">allow_telemetry</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/compiler/compiler.html#Compiler.compile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.Compiler.compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile the given pipeline function into workflow yaml.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_func</strong> – pipeline functions with &#64;dsl.pipeline decorator.</p></li>
+<li><p><strong>package_path</strong> – the output workflow tar.gz file path. for example, “~/a.tar.gz”</p></li>
+<li><p><strong>type_check</strong> – whether to enable the type check or not, default: False.</p></li>
+<li><p><strong>pipeline_conf</strong> – PipelineConf instance. Can specify op transforms, image pull secrets and other pipeline-level configuration options. Overrides any configuration that may be set by the pipeline.</p></li>
+<li><p><strong>allow_telemetry</strong> – If set to true, two pod labels will be attached to k8s
+pods spawned by this pipeline: 1) pipeline SDK style, 2) pipeline random
+ID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.compiler.Compiler.create_workflow">
+<code class="sig-name descname">create_workflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_func</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">pipeline_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline_description</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">params_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>kfp.dsl._pipeline_param.PipelineParam<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">kfp.dsl._pipeline.PipelineConf</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><a class="reference internal" href="../_modules/kfp/compiler/compiler.html#Compiler.create_workflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.Compiler.create_workflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create workflow spec from pipeline function and specified pipeline
+params/metadata. Currently, the pipeline params are either specified in
+the signature of the pipeline function or by passing a list of
+dsl.PipelineParam. Conflict will cause ValueError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_func</strong> – pipeline function where ContainerOps are invoked.</p></li>
+<li><p><strong>pipeline_name</strong> – </p></li>
+<li><p><strong>pipeline_description</strong> – </p></li>
+<li><p><strong>params_list</strong> – list of pipeline params to append to the pipeline.</p></li>
+<li><p><strong>pipeline_conf</strong> – PipelineConf instance. Can specify op transforms, image pull secrets and other pipeline-level configuration options. Overrides any configuration that may be set by the pipeline.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>workflow dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.compiler.Compiler.get_arguments_for_sub_group">
+<code class="sig-name descname">get_arguments_for_sub_group</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sub_group</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>kfp.dsl._ops_group.OpsGroup<span class="p">, </span>kfp.dsl._container_op.BaseOp<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">is_recursive_subgroup</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>bool<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">inputs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Tuple<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/compiler/compiler.html#Compiler.get_arguments_for_sub_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.Compiler.get_arguments_for_sub_group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="kfp.compiler.VersionedDependency">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.compiler.</code><code class="sig-name descname">VersionedDependency</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_version</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/containers/_component_builder.html#VersionedDependency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.VersionedDependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DependencyVersion specifies the versions</p>
+<dl class="py method">
+<dt id="kfp.compiler.VersionedDependency.has_max_version">
+<code class="sig-name descname">has_max_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/containers/_component_builder.html#VersionedDependency.has_max_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.VersionedDependency.has_max_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.compiler.VersionedDependency.has_min_version">
+<code class="sig-name descname">has_min_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/containers/_component_builder.html#VersionedDependency.has_min_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.VersionedDependency.has_min_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.compiler.VersionedDependency.has_versions">
+<code class="sig-name descname">has_versions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/containers/_component_builder.html#VersionedDependency.has_versions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.VersionedDependency.has_versions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.compiler.VersionedDependency.max_version">
+<em class="property">property </em><code class="sig-name descname">max_version</code><a class="headerlink" href="#kfp.compiler.VersionedDependency.max_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.compiler.VersionedDependency.min_version">
+<em class="property">property </em><code class="sig-name descname">min_version</code><a class="headerlink" href="#kfp.compiler.VersionedDependency.min_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.compiler.VersionedDependency.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#kfp.compiler.VersionedDependency.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.compiler.build_docker_image">
+<code class="sig-prename descclassname">kfp.compiler.</code><code class="sig-name descname">build_docker_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">staging_gcs_path</span></em>, <em class="sig-param"><span class="n">target_image</span></em>, <em class="sig-param"><span class="n">dockerfile_path</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">600</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/containers/_component_builder.html#build_docker_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.build_docker_image" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>build_docker_image automatically builds a container image based on the specification in the dockerfile and</dt><dd><p>pushes to the target_image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>staging_gcs_path (str): GCS blob that can store temporary build files
+target_image (str): gcr path to push the final image
+dockerfile_path (str): local path to the dockerfile
+timeout (int): the timeout for the image build(in secs), default is 600 seconds
+namespace (str): the namespace within which to run the kubernetes kaniko job. Default is None. If the
+job is running on GKE and value is None the underlying functions will use the default namespace from GKE.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.1.32: </span><cite>build_docker_image</cite> is deprecated. Use
+<cite>kfp.containers.build_image_from_working_dir</cite> instead.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.compiler.build_python_component">
+<code class="sig-prename descclassname">kfp.compiler.</code><code class="sig-name descname">build_python_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">component_func</span></em>, <em class="sig-param"><span class="n">target_image</span></em>, <em class="sig-param"><span class="n">base_image</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dependency</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">staging_gcs_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">600</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_component_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">python_version</span><span class="o">=</span><span class="default_value">'python3'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/containers/_component_builder.html#build_python_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.compiler.build_python_component" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>build_component automatically builds a container image for the component_func</dt><dd><p>based on the base_image and pushes to the target_image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>component_func (python function): The python function to build components upon
+base_image (str): Docker image to use as a base image
+target_image (str): Full URI to push the target image
+staging_gcs_path (str): GCS blob that can store temporary build files
+target_image (str): target image path
+timeout (int): the timeout for the image build(in secs), default is 600 seconds
+namespace (str): the namespace within which to run the kubernetes kaniko job. If the
+job is running on GKE and value is None the underlying functions will use the default namespace from GKE.  .
+dependency (list): a list of VersionedDependency, which includes the package name and versions, default is empty
+python_version (str): choose python2 or python3, default is python3</p>
+</dd>
+<dt>Raises:</dt><dd><p>ValueError: The function is not decorated with python_component decorator or the python_version is neither python2 nor python3</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.1.32: </span><cite>build_python_component</cite> is deprecated. Use
+<cite>kfp.containers.build_image_from_working_dir</cite> +
+<cite>kfp.components.func_to_container_op</cite> instead.</p>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.components.html" class="btn btn-neutral float-right" title="kfp.components package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kfp.html" class="btn btn-neutral float-left" title="kfp package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,1569 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.Client class &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.notebook package" href="kfp.notebook.html" />
+    <link rel="prev" title="kfp.dsl.types module" href="kfp.dsl.types.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html">kfp.components package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kfp.Client class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-client-api-models-struct">kfp.Client.api_models Struct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-client-experiments-struct">kfp.Client.experiments Struct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-client-jobs-struct">kfp.Client.jobs Struct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-client-pipeline-uploads-struct">kfp.Client.pipeline_uploads Struct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-client-pipelines-struct">kfp.Client.pipelines Struct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kfp-client-runs-struct">kfp.Client.runs Struct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+      <li>kfp.Client class</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.client.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kfp-client-class">
+<h1>kfp.Client class<a class="headerlink" href="#kfp-client-class" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="kfp.Client">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.</code><code class="sig-name descname">Client</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">client_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">'kubeflow'</span></em>, <em class="sig-param"><span class="n">other_client_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">other_client_secret</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">existing_token</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>API Client for KubeFlow Pipeline.</p>
+<dl class="py attribute">
+<dt id="kfp.Client.IN_CLUSTER_DNS_NAME">
+<code class="sig-name descname">IN_CLUSTER_DNS_NAME</code><em class="property"> = 'ml-pipeline.{}.svc.cluster.local:8888'</em><a class="headerlink" href="#kfp.Client.IN_CLUSTER_DNS_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.Client.KUBE_PROXY_PATH">
+<code class="sig-name descname">KUBE_PROXY_PATH</code><em class="property"> = 'api/v1/namespaces/{}/services/ml-pipeline:http/proxy/'</em><a class="headerlink" href="#kfp.Client.KUBE_PROXY_PATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.Client.LOCAL_KFP_CONTEXT">
+<code class="sig-name descname">LOCAL_KFP_CONTEXT</code><em class="property"> = '/Users/jeffreymclarty/.config/kfp/context.json'</em><a class="headerlink" href="#kfp.Client.LOCAL_KFP_CONTEXT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.Client.api_models">
+<code class="sig-name descname">api_models</code><em class="property"> = &lt;kfp._client.Struct object&gt;</em><a class="headerlink" href="#kfp.Client.api_models" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.create_experiment">
+<code class="sig-name descname">create_experiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.create_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.create_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new experiment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – the name of the experiment.</p></li>
+<li><p><strong>description</strong> – description of the experiment.</p></li>
+<li><p><strong>namespace</strong> – <p>kubernetes namespace where the experiment should be created.</p>
+<p>For single user deployment, leave it as None;</p>
+<p>For multi user, input a namespace where the user is authorized.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An Experiment object. Most important field is id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.create_recurring_run">
+<code class="sig-name descname">create_recurring_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">experiment_id</span></em>, <em class="sig-param"><span class="n">job_name</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">start_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">interval_second</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cron_expression</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_concurrency</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">no_catchup</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">pipeline_package_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">version_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">enabled</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.create_recurring_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.create_recurring_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a recurring run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experiment_id</strong> – The string id of an experiment.</p></li>
+<li><p><strong>job_name</strong> – name of the job.</p></li>
+<li><p><strong>description</strong> – An optional job description.</p></li>
+<li><p><strong>start_time</strong> – The RFC3339 time string of the time when to start the job.</p></li>
+<li><p><strong>end_time</strong> – The RFC3339 time string of the time when to end the job.</p></li>
+<li><p><strong>interval_second</strong> – Integer indicating the seconds between two recurring runs in for a periodic schedule.</p></li>
+<li><p><strong>cron_expression</strong> – A cron expression representing a set of times, using 5 space-separated fields, e.g. “0 0 9 ? * 2-6”.</p></li>
+<li><p><strong>max_concurrency</strong> – Integer indicating how many jobs can be run in parallel.</p></li>
+<li><p><strong>no_catchup</strong> – Whether the recurring run should catch up if behind schedule.
+For example, if the recurring run is paused for a while and re-enabled
+afterwards. If no_catchup=False, the scheduler will catch up on (backfill) each
+missed interval. Otherwise, it only schedules the latest interval if more than one interval
+is ready to be scheduled.
+Usually, if your pipeline handles backfill internally, you should turn catchup
+off to avoid duplicate backfill. (default: {False})</p></li>
+<li><p><strong>pipeline_package_path</strong> – Local path of the pipeline package(the filename should end with one of the following .tar.gz, .tgz, .zip, .yaml, .yml).</p></li>
+<li><p><strong>params</strong> – A dictionary with key (string) as param name and value (string) as param value.</p></li>
+<li><p><strong>pipeline_id</strong> – The string ID of a pipeline.</p></li>
+<li><p><strong>version_id</strong> – The string ID of a pipeline version.
+If both pipeline_id and version_id are specified, pipeline_id will take precendence
+This will change in a future version, so it is recommended to use version_id by itself.</p></li>
+<li><p><strong>enabled</strong> – A bool indicating whether the recurring run is enabled or disabled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Job object. Most important field is id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.create_run_from_pipeline_func">
+<code class="sig-name descname">create_run_from_pipeline_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_func</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">arguments</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">experiment_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">kfp.dsl._pipeline.PipelineConf</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.create_run_from_pipeline_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.create_run_from_pipeline_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs pipeline on KFP-enabled Kubernetes cluster.
+This command compiles the pipeline function, creates or gets an experiment and submits the pipeline for execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_func</strong> – A function that describes a pipeline by calling components and composing them into execution graph.</p></li>
+<li><p><strong>arguments</strong> – Arguments to the pipeline function provided as a dict.</p></li>
+<li><p><strong>run_name</strong> – Optional. Name of the run to be shown in the UI.</p></li>
+<li><p><strong>experiment_name</strong> – Optional. Name of the experiment to add the run to.</p></li>
+<li><p><strong>namespace</strong> – kubernetes namespace where the pipeline runs are created.
+For single user deployment, leave it as None;
+For multi user, input a namespace where the user is authorized</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.create_run_from_pipeline_package">
+<code class="sig-name descname">create_run_from_pipeline_package</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_file</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">arguments</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">experiment_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.create_run_from_pipeline_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.create_run_from_pipeline_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs pipeline on KFP-enabled Kubernetes cluster.
+This command compiles the pipeline function, creates or gets an experiment and submits the pipeline for execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_file</strong> – A compiled pipeline package file.</p></li>
+<li><p><strong>arguments</strong> – Arguments to the pipeline function provided as a dict.</p></li>
+<li><p><strong>run_name</strong> – Optional. Name of the run to be shown in the UI.</p></li>
+<li><p><strong>experiment_name</strong> – Optional. Name of the experiment to add the run to.</p></li>
+<li><p><strong>namespace</strong> – kubernetes namespace where the pipeline runs are created.
+For single user deployment, leave it as None;
+For multi user, input a namespace where the user is authorized</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.delete_pipeline">
+<code class="sig-name descname">delete_pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.delete_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.delete_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete pipeline.
+:param id of the pipeline.:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Object. If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Throws:</dt><dd><p>Exception if pipeline is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.Client.experiments">
+<code class="sig-name descname">experiments</code><em class="property"> = &lt;kfp._client.Struct object&gt;</em><a class="headerlink" href="#kfp.Client.experiments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.get_experiment">
+<code class="sig-name descname">get_experiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">experiment_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">experiment_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.get_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.get_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get details of an experiment
+Either experiment_id or experiment_name is required
+:param experiment_id: id of the experiment. (Optional)
+:param experiment_name: name of the experiment. (Optional)
+:param namespace: kubernetes namespace where the experiment was created.</p>
+<blockquote>
+<div><p>For single user deployment, leave it as None;
+For multi user, input the namespace where the user is authorized.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A response object including details of a experiment.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Throws:</dt><dd><p>Exception if experiment is not found or None of the arguments is provided</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.get_pipeline">
+<code class="sig-name descname">get_pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.get_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.get_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get pipeline details.
+:param id of the pipeline.:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A response object including details of a pipeline.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Throws:</dt><dd><p>Exception if pipeline is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.get_recurring_run">
+<code class="sig-name descname">get_recurring_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">job_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.get_recurring_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.get_recurring_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get recurring_run details.
+:param id of the recurring_run.:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A response object including details of a recurring_run.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Throws:</dt><dd><p>Exception if recurring_run is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.get_run">
+<code class="sig-name descname">get_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.get_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.get_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get run details.
+:param id of the run.:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A response object including details of a run.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Throws:</dt><dd><p>Exception if run is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.get_user_namespace">
+<code class="sig-name descname">get_user_namespace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.get_user_namespace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.get_user_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get user namespace in context config.
+:returns: kubernetes namespace from the local context file or empty if it wasn’t set.
+:rtype: namespace</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.Client.jobs">
+<code class="sig-name descname">jobs</code><em class="property"> = &lt;kfp._client.Struct object&gt;</em><a class="headerlink" href="#kfp.Client.jobs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.list_experiments">
+<code class="sig-name descname">list_experiments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">page_token</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">page_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">sort_by</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.list_experiments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.list_experiments" title="Permalink to this definition">¶</a></dt>
+<dd><p>List experiments.
+:param page_token: token for starting of the page.
+:param page_size: size of the page.
+:param sort_by: can be ‘[field_name]’, ‘[field_name] des’. For example, ‘name des’.
+:param namespace: kubernetes namespace where the experiment was created.</p>
+<blockquote>
+<div><p>For single user deployment, leave it as None;
+For multi user, input a namespace where the user is authorized.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A response object including a list of experiments and next page token.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.list_pipelines">
+<code class="sig-name descname">list_pipelines</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">page_token</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">page_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">sort_by</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.list_pipelines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.list_pipelines" title="Permalink to this definition">¶</a></dt>
+<dd><p>List pipelines.
+:param page_token: token for starting of the page.
+:param page_size: size of the page.
+:param sort_by: one of ‘field_name’, ‘field_name des’. For example, ‘name des’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A response object including a list of pipelines and next page token.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.list_recurring_runs">
+<code class="sig-name descname">list_recurring_runs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">page_token</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">page_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">sort_by</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">experiment_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.list_recurring_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.list_recurring_runs" title="Permalink to this definition">¶</a></dt>
+<dd><p>List recurring runs.
+:param page_token: token for starting of the page.
+:param page_size: size of the page.
+:param sort_by: one of ‘field_name’, ‘field_name des’. For example, ‘name des’.
+:param experiment_id: experiment id to filter upon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A response object including a list of recurring_runs and next page token.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.list_runs">
+<code class="sig-name descname">list_runs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">page_token</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">page_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">sort_by</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">experiment_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.list_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.list_runs" title="Permalink to this definition">¶</a></dt>
+<dd><p>List runs.
+:param page_token: token for starting of the page.
+:param page_size: size of the page.
+:param sort_by: one of ‘field_name’, ‘field_name des’. For example, ‘name des’.
+:param experiment_id: experiment id to filter upon
+:param namespace: kubernetes namespace to filter upon.</p>
+<blockquote>
+<div><p>For single user deployment, leave it as None;
+For multi user, input a namespace where the user is authorized.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A response object including a list of experiments and next page token.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.Client.pipeline_uploads">
+<code class="sig-name descname">pipeline_uploads</code><em class="property"> = &lt;kfp._client.Struct object&gt;</em><a class="headerlink" href="#kfp.Client.pipeline_uploads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.Client.pipelines">
+<code class="sig-name descname">pipelines</code><em class="property"> = &lt;kfp._client.Struct object&gt;</em><a class="headerlink" href="#kfp.Client.pipelines" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.run_pipeline">
+<code class="sig-name descname">run_pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">experiment_id</span></em>, <em class="sig-param"><span class="n">job_name</span></em>, <em class="sig-param"><span class="n">pipeline_package_path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">pipeline_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">version_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.run_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.run_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a specified pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experiment_id</strong> – The string id of an experiment.</p></li>
+<li><p><strong>job_name</strong> – name of the job.</p></li>
+<li><p><strong>pipeline_package_path</strong> – local path of the pipeline package(the filename should end with one of the following .tar.gz, .tgz, .zip, .yaml, .yml).</p></li>
+<li><p><strong>params</strong> – a dictionary with key (string) as param name and value (string) as as param value.</p></li>
+<li><p><strong>pipeline_id</strong> – the string ID of a pipeline.</p></li>
+<li><p><strong>version_id</strong> – the string ID of a pipeline version.
+If both pipeline_id and version_id are specified, version_id will take precendence.
+If only pipeline_id is specified, the default version of this pipeline is used to create the run.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A run object. Most important field is id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="kfp.Client.runs">
+<code class="sig-name descname">runs</code><em class="property"> = &lt;kfp._client.Struct object&gt;</em><a class="headerlink" href="#kfp.Client.runs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.set_user_namespace">
+<code class="sig-name descname">set_user_namespace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">namespace</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.set_user_namespace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.set_user_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set user namespace into local context setting file.</dt><dd><p>This function should only be used when Kubeflow Pipelines is in the multi-user mode.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>namespace</strong> – kubernetes namespace the user has access to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.upload_pipeline">
+<code class="sig-name descname">upload_pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_package_path</span></em>, <em class="sig-param"><span class="n">pipeline_name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.upload_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.upload_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads the pipeline to the Kubeflow Pipelines cluster.
+:param pipeline_package_path: Local path to the pipeline package.
+:param pipeline_name: Optional. Name of the pipeline to be shown in the UI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Server response object containing pipleine id and other information.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.wait_for_run_completion">
+<code class="sig-name descname">wait_for_run_completion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_id</span></em>, <em class="sig-param"><span class="n">timeout</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_client.html#Client.wait_for_run_completion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.Client.wait_for_run_completion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for a run to complete.
+:param run_id: run id, returned from run_pipeline.
+:param timeout: timeout in seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Most important fields are run and pipeline_runtime</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>A run detail object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="kfp-client-api-models-struct">
+<h2>kfp.Client.api_models Struct<a class="headerlink" href="#kfp-client-api-models-struct" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="py method">
+<dt id="kfp.Client.api_models.ApiCronSchedule">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiCronSchedule</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">end_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cron</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiCronSchedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiExperiment">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiExperiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_at</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resource_references</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiExperiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiGetTemplateResponse">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiGetTemplateResponse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiGetTemplateResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiJob">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiJob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline_spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resource_references</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_concurrency</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trigger</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_at</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">updated_at</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">error</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">enabled</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">no_catchup</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiListExperimentsResponse">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiListExperimentsResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">next_page_token</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiListExperimentsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiListJobsResponse">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiListJobsResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">next_page_token</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiListJobsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiListPipelineVersionsResponse">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiListPipelineVersionsResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">next_page_token</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">total_size</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiListPipelineVersionsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiListPipelinesResponse">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiListPipelinesResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">next_page_token</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiListPipelinesResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiListRunsResponse">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiListRunsResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">total_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">next_page_token</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiListRunsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiParameter">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiParameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiPeriodicSchedule">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiPeriodicSchedule</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">end_time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">interval_second</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiPeriodicSchedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiPipeline">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiPipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">error</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default_version</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiPipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiPipelineRuntime">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiPipelineRuntime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">workflow_manifest</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiPipelineRuntime" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiPipelineSpec">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiPipelineSpec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">workflow_manifest</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline_manifest</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameters</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiPipelineSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiPipelineVersion">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiPipelineVersion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_at</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">code_source_url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">package_url</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resource_references</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiPipelineVersion" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiReadArtifactResponse">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiReadArtifactResponse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiReadArtifactResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiRelationship">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiRelationship</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiRelationship" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiReportRunMetricsRequest">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiReportRunMetricsRequest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">metrics</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiReportRunMetricsRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiReportRunMetricsResponse">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiReportRunMetricsResponse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiReportRunMetricsResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiResourceKey">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiResourceKey</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiResourceKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiResourceReference">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiResourceReference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">relationship</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiResourceReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiResourceType">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiResourceType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiResourceType" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiRun">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiRun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">storage_state</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline_spec</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resource_references</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">created_at</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scheduled_at</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">finished_at</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">error</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metrics</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiRun" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiRunDetail">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiRunDetail</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_runtime</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiRunDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiRunMetric">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiRunMetric</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">number_value</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiRunMetric" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiStatus">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiStatus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">details</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiTrigger">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiTrigger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">periodic_schedule</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiTrigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ApiUrl">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ApiUrl</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ApiUrl" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.JobMode">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">JobMode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.JobMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ProtobufAny">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ProtobufAny</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ProtobufAny" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ReportRunMetricsResponseReportRunMetricResult">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ReportRunMetricsResponseReportRunMetricResult</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">metric_node_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ReportRunMetricsResponseReportRunMetricResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.ReportRunMetricsResponseReportRunMetricResultStatus">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">ReportRunMetricsResponseReportRunMetricResultStatus</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.ReportRunMetricsResponseReportRunMetricResultStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.RunMetricFormat">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">RunMetricFormat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.RunMetricFormat" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.api_models.RunStorageState">
+<code class="sig-prename descclassname">api_models.</code><code class="sig-name descname">RunStorageState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.api_models.RunStorageState" title="Permalink to this definition">¶</a></dt>
+<dd><p>NOTE: This class is auto generated by the swagger code generator program.</p>
+<p>Do not edit the class manually.</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="kfp-client-experiments-struct">
+<h2>kfp.Client.experiments Struct<a class="headerlink" href="#kfp-client-experiments-struct" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="py method">
+<dt id="kfp.Client.experiments.api_client">
+<code class="sig-prename descclassname">experiments.</code><code class="sig-name descname">api_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.experiments.api_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic API client for Swagger client library builds.</p>
+<p>Swagger generic API client. This client handles the client-
+server communication, and is invariant across implementations. Specifics of
+the methods and models for each application are generated from the Swagger
+templates.</p>
+<p>NOTE: This class is auto generated by the swagger code generator program.
+Ref: <a class="reference external" href="https://github.com/swagger-api/swagger-codegen">https://github.com/swagger-api/swagger-codegen</a>
+Do not edit the class manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> – .Configuration object for this client</p></li>
+<li><p><strong>header_name</strong> – a header to pass when making calls to the API.</p></li>
+<li><p><strong>header_value</strong> – a header value to pass when making calls to
+the API.</p></li>
+<li><p><strong>cookie</strong> – a cookie to include in the header when making calls
+to the API</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.experiments.create_experiment">
+<code class="sig-prename descclassname">experiments.</code><code class="sig-name descname">create_experiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.experiments.create_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new experiment.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.create_experiment(body, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param ApiExperiment body: The experiment to be created. (required)
+:return: ApiExperiment</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.experiments.delete_experiment">
+<code class="sig-prename descclassname">experiments.</code><code class="sig-name descname">delete_experiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.experiments.delete_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an experiment.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_experiment(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: The ID of the experiment to be deleted. (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.experiments.get_experiment">
+<code class="sig-prename descclassname">experiments.</code><code class="sig-name descname">get_experiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.experiments.get_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a specific experiment by ID.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_experiment(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: The ID of the experiment to be retrieved. (required)
+:return: ApiExperiment</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.experiments.list_experiment">
+<code class="sig-prename descclassname">experiments.</code><code class="sig-name descname">list_experiment</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.experiments.list_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all experiments.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.list_experiment(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str page_token:
+:param int page_size:
+:param str sort_by: Can be format of “field_name”, “field_name asc” or “field_name des” Ascending by default.
+:param str filter: A url-encoded, JSON-serialized Filter protocol buffer (see [filter.proto](<a class="reference external" href="https://github.com/kubeflow/pipelines/">https://github.com/kubeflow/pipelines/</a> blob/master/backend/api/filter.proto)).
+:param str resource_reference_key_type: The type of the resource that referred to.
+:param str resource_reference_key_id: The ID of the resource that referred to.
+:return: ApiListExperimentsResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="kfp-client-jobs-struct">
+<h2>kfp.Client.jobs Struct<a class="headerlink" href="#kfp-client-jobs-struct" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="py method">
+<dt id="kfp.Client.jobs.api_client">
+<code class="sig-prename descclassname">jobs.</code><code class="sig-name descname">api_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.jobs.api_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic API client for Swagger client library builds.</p>
+<p>Swagger generic API client. This client handles the client-
+server communication, and is invariant across implementations. Specifics of
+the methods and models for each application are generated from the Swagger
+templates.</p>
+<p>NOTE: This class is auto generated by the swagger code generator program.
+Ref: <a class="reference external" href="https://github.com/swagger-api/swagger-codegen">https://github.com/swagger-api/swagger-codegen</a>
+Do not edit the class manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> – .Configuration object for this client</p></li>
+<li><p><strong>header_name</strong> – a header to pass when making calls to the API.</p></li>
+<li><p><strong>header_value</strong> – a header value to pass when making calls to
+the API.</p></li>
+<li><p><strong>cookie</strong> – a cookie to include in the header when making calls
+to the API</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.jobs.create_job">
+<code class="sig-prename descclassname">jobs.</code><code class="sig-name descname">create_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.jobs.create_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new job.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.create_job(body, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param ApiJob body: The job to be created (required)
+:return: ApiJob</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.jobs.delete_job">
+<code class="sig-prename descclassname">jobs.</code><code class="sig-name descname">delete_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.jobs.delete_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a job.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_job(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: The ID of the job to be deleted (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.jobs.disable_job">
+<code class="sig-prename descclassname">jobs.</code><code class="sig-name descname">disable_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.jobs.disable_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops a job and all its associated runs. The job is not deleted.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.disable_job(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: The ID of the job to be disabled (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.jobs.enable_job">
+<code class="sig-prename descclassname">jobs.</code><code class="sig-name descname">enable_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.jobs.enable_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restarts a job that was previously stopped. All runs associated with the job will continue.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.enable_job(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: The ID of the job to be enabled (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.jobs.get_job">
+<code class="sig-prename descclassname">jobs.</code><code class="sig-name descname">get_job</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.jobs.get_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a specific job by ID.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_job(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: The ID of the job to be retrieved (required)
+:return: ApiJob</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.jobs.list_jobs">
+<code class="sig-prename descclassname">jobs.</code><code class="sig-name descname">list_jobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.jobs.list_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all jobs.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.list_jobs(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str page_token:
+:param int page_size:
+:param str sort_by: Can be format of “field_name”, “field_name asc” or “field_name des”. Ascending by default.
+:param str resource_reference_key_type: The type of the resource that referred to.
+:param str resource_reference_key_id: The ID of the resource that referred to.
+:param str filter: A url-encoded, JSON-serialized Filter protocol buffer (see [filter.proto](<a class="reference external" href="https://github.com/kubeflow/pipelines/">https://github.com/kubeflow/pipelines/</a> blob/master/backend/api/filter.proto)).
+:return: ApiListJobsResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="kfp-client-pipeline-uploads-struct">
+<h2>kfp.Client.pipeline_uploads Struct<a class="headerlink" href="#kfp-client-pipeline-uploads-struct" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="py method">
+<dt id="kfp.Client.pipeline_uploads.api_client">
+<code class="sig-prename descclassname">pipeline_uploads.</code><code class="sig-name descname">api_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipeline_uploads.api_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic API client for Swagger client library builds.</p>
+<p>Swagger generic API client. This client handles the client-
+server communication, and is invariant across implementations. Specifics of
+the methods and models for each application are generated from the Swagger
+templates.</p>
+<p>NOTE: This class is auto generated by the swagger code generator program.
+Ref: <a class="reference external" href="https://github.com/swagger-api/swagger-codegen">https://github.com/swagger-api/swagger-codegen</a>
+Do not edit the class manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> – .Configuration object for this client</p></li>
+<li><p><strong>header_name</strong> – a header to pass when making calls to the API.</p></li>
+<li><p><strong>header_value</strong> – a header value to pass when making calls to
+the API.</p></li>
+<li><p><strong>cookie</strong> – a cookie to include in the header when making calls
+to the API</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipeline_uploads.upload_pipeline">
+<code class="sig-prename descclassname">pipeline_uploads.</code><code class="sig-name descname">upload_pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uploadfile</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipeline_uploads.upload_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>upload_pipeline  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.upload_pipeline(uploadfile, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param file uploadfile: The pipeline to upload. Maximum size of 32MB is supported. (required)
+:param str name:
+:return: ApiPipeline</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipeline_uploads.upload_pipeline_version">
+<code class="sig-prename descclassname">pipeline_uploads.</code><code class="sig-name descname">upload_pipeline_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uploadfile</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipeline_uploads.upload_pipeline_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>upload_pipeline_version  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.upload_pipeline_version(uploadfile, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param file uploadfile: The pipeline to upload. Maximum size of 32MB is supported. (required)
+:param str name:
+:param str pipelineid:
+:return: ApiPipelineVersion</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="kfp-client-pipelines-struct">
+<h2>kfp.Client.pipelines Struct<a class="headerlink" href="#kfp-client-pipelines-struct" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="py method">
+<dt id="kfp.Client.pipelines.api_client">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">api_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.api_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic API client for Swagger client library builds.</p>
+<p>Swagger generic API client. This client handles the client-
+server communication, and is invariant across implementations. Specifics of
+the methods and models for each application are generated from the Swagger
+templates.</p>
+<p>NOTE: This class is auto generated by the swagger code generator program.
+Ref: <a class="reference external" href="https://github.com/swagger-api/swagger-codegen">https://github.com/swagger-api/swagger-codegen</a>
+Do not edit the class manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> – .Configuration object for this client</p></li>
+<li><p><strong>header_name</strong> – a header to pass when making calls to the API.</p></li>
+<li><p><strong>header_value</strong> – a header value to pass when making calls to
+the API.</p></li>
+<li><p><strong>cookie</strong> – a cookie to include in the header when making calls
+to the API</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.create_pipeline">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">create_pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.create_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a pipeline.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.create_pipeline(body, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param ApiPipeline body: (required)
+:return: ApiPipeline</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.create_pipeline_version">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">create_pipeline_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.create_pipeline_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>create_pipeline_version  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.create_pipeline_version(body, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param ApiPipelineVersion body: ResourceReference inside PipelineVersion specifies the pipeline that this version belongs to. (required)
+:return: ApiPipelineVersion</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.delete_pipeline">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">delete_pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.delete_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a pipeline.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_pipeline(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.delete_pipeline_version">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">delete_pipeline_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">version_id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.delete_pipeline_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_pipeline_version  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_pipeline_version(version_id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str version_id: (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.get_pipeline">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">get_pipeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.get_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a specific pipeline by ID.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_pipeline(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: (required)
+:return: ApiPipeline</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.get_pipeline_version">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">get_pipeline_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">version_id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.get_pipeline_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_pipeline_version  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_pipeline_version(version_id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str version_id: (required)
+:return: ApiPipelineVersion</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.get_pipeline_version_template">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">get_pipeline_version_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">version_id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.get_pipeline_version_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_pipeline_version_template  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_pipeline_version_template(version_id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str version_id: (required)
+:return: ApiGetTemplateResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.get_template">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">get_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.get_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a single YAML template that contains the description, parameters, and metadata associated with the pipeline provided.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_template(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: (required)
+:return: ApiGetTemplateResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.list_pipeline_versions">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">list_pipeline_versions</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.list_pipeline_versions" title="Permalink to this definition">¶</a></dt>
+<dd><p>list_pipeline_versions  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.list_pipeline_versions(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str resource_key_type: The type of the resource that referred to.
+:param str resource_key_id: The ID of the resource that referred to.
+:param int page_size:
+:param str page_token:
+:param str sort_by: Can be format of “field_name”, “field_name asc” or “field_name des” Ascending by default.
+:param str filter: A base-64 encoded, JSON-serialized Filter protocol buffer (see filter.proto).
+:return: ApiListPipelineVersionsResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.pipelines.list_pipelines">
+<code class="sig-prename descclassname">pipelines.</code><code class="sig-name descname">list_pipelines</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.pipelines.list_pipelines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all pipelines.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.list_pipelines(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str page_token:
+:param int page_size:
+:param str sort_by: Can be format of “field_name”, “field_name asc” or “field_name des” Ascending by default.
+:param str filter: A url-encoded, JSON-serialized Filter protocol buffer (see [filter.proto](<a class="reference external" href="https://github.com/kubeflow/pipelines/">https://github.com/kubeflow/pipelines/</a> blob/master/backend/api/filter.proto)).
+:return: ApiListPipelinesResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="kfp-client-runs-struct">
+<h2>kfp.Client.runs Struct<a class="headerlink" href="#kfp-client-runs-struct" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="py method">
+<dt id="kfp.Client.runs.api_client">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">api_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.api_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic API client for Swagger client library builds.</p>
+<p>Swagger generic API client. This client handles the client-
+server communication, and is invariant across implementations. Specifics of
+the methods and models for each application are generated from the Swagger
+templates.</p>
+<p>NOTE: This class is auto generated by the swagger code generator program.
+Ref: <a class="reference external" href="https://github.com/swagger-api/swagger-codegen">https://github.com/swagger-api/swagger-codegen</a>
+Do not edit the class manually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> – .Configuration object for this client</p></li>
+<li><p><strong>header_name</strong> – a header to pass when making calls to the API.</p></li>
+<li><p><strong>header_value</strong> – a header value to pass when making calls to
+the API.</p></li>
+<li><p><strong>cookie</strong> – a cookie to include in the header when making calls
+to the API</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.archive_run">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">archive_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.archive_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Archive a run.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.archive_run(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.create_run">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">create_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">body</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.create_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new run.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.create_run(body, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param ApiRun body: (required)
+:return: ApiRunDetail</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.delete_run">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">delete_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.delete_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a run.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_run(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.get_run">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">get_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.get_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a specific run by ID.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_run(run_id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str run_id: (required)
+:return: ApiRunDetail</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.list_runs">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">list_runs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.list_runs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all runs.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.list_runs(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str page_token:
+:param int page_size:
+:param str sort_by: Can be format of “field_name”, “field_name asc” or “field_name des” (Example, “name asc” or “id des”). Ascending by default.
+:param str resource_reference_key_type: The type of the resource that referred to.
+:param str resource_reference_key_id: The ID of the resource that referred to.
+:param str filter: A url-encoded, JSON-serialized Filter protocol buffer (see [filter.proto](<a class="reference external" href="https://github.com/kubeflow/pipelines/">https://github.com/kubeflow/pipelines/</a> blob/master/backend/api/filter.proto)).
+:return: ApiListRunsResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.read_artifact">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">read_artifact</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_id</span></em>, <em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">artifact_name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.read_artifact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a run’s artifact data.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.read_artifact(run_id, node_id, artifact_name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str run_id: The ID of the run. (required)
+:param str node_id: The ID of the running node. (required)
+:param str artifact_name: The name of the artifact. (required)
+:return: ApiReadArtifactResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.report_run_metrics">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">report_run_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_id</span></em>, <em class="sig-param"><span class="n">body</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.report_run_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReportRunMetrics reports metrics of a run. Each metric is reported in its own transaction, so this API accepts partial failures. Metric can be uniquely identified by (run_id, node_id, name). Duplicate reporting will be ignored by the API. First reporting wins.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.report_run_metrics(run_id, body, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str run_id: Required. The parent run ID of the metric. (required)
+:param ApiReportRunMetricsRequest body: (required)
+:return: ApiReportRunMetricsResponse</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.retry_run">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">retry_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.retry_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-initiate a failed or terminated run.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.retry_run(run_id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str run_id: (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.terminate_run">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">terminate_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.terminate_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Terminate an active run.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.terminate_run(run_id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str run_id: (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="kfp.Client.runs.unarchive_run">
+<code class="sig-prename descclassname">runs.</code><code class="sig-name descname">unarchive_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#kfp.Client.runs.unarchive_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restore an archived run.  # noqa: E501</p>
+<p>This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.unarchive_run(id, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<p>:param async_req bool
+:param str id: (required)
+:return: object</p>
+<blockquote>
+<div><p>If the method is called asynchronously,
+returns the request thread.</p>
+</div></blockquote>
+</dd></dl>
+
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.notebook.html" class="btn btn-neutral float-right" title="kfp.notebook package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kfp.dsl.types.html" class="btn btn-neutral float-left" title="kfp.dsl.types module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

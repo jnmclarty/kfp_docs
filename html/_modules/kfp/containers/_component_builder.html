@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.containers._component_builder &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.containers._component_builder</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.containers._component_builder</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
+
+<span class="kn">from</span> <span class="nn">..components._components</span> <span class="kn">import</span> <span class="n">_create_task_factory_from_component_spec</span>
+<span class="kn">from</span> <span class="nn">..components._python_op</span> <span class="kn">import</span> <span class="n">_func_to_component_spec</span>
+<span class="kn">from</span> <span class="nn">._container_builder</span> <span class="kn">import</span> <span class="n">ContainerBuilder</span>
+
+<div class="viewcode-block" id="VersionedDependency"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.VersionedDependency">[docs]</a><span class="k">class</span> <span class="nc">VersionedDependency</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; DependencyVersion specifies the versions &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; if version is specified, no need for min_version or max_version;</span>
+<span class="sd">     if both are specified, version is adopted &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_min_version</span> <span class="o">=</span> <span class="n">version</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_max_version</span> <span class="o">=</span> <span class="n">version</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_min_version</span> <span class="o">=</span> <span class="n">min_version</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_max_version</span> <span class="o">=</span> <span class="n">max_version</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">min_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_version</span>
+
+  <span class="nd">@min_version</span><span class="o">.</span><span class="n">setter</span>
+  <span class="k">def</span> <span class="nf">min_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_version</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_min_version</span> <span class="o">=</span> <span class="n">min_version</span>
+
+<div class="viewcode-block" id="VersionedDependency.has_min_version"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.VersionedDependency.has_min_version">[docs]</a>  <span class="k">def</span> <span class="nf">has_min_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_version</span> <span class="o">!=</span> <span class="kc">None</span></div>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">max_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_version</span>
+
+  <span class="nd">@max_version</span><span class="o">.</span><span class="n">setter</span>
+  <span class="k">def</span> <span class="nf">max_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_version</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_max_version</span> <span class="o">=</span> <span class="n">max_version</span>
+
+<div class="viewcode-block" id="VersionedDependency.has_max_version"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.VersionedDependency.has_max_version">[docs]</a>  <span class="k">def</span> <span class="nf">has_max_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_version</span> <span class="o">!=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="VersionedDependency.has_versions"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.VersionedDependency.has_versions">[docs]</a>  <span class="k">def</span> <span class="nf">has_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">has_min_version</span><span class="p">())</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">has_max_version</span><span class="p">())</span></div></div>
+
+<span class="k">class</span> <span class="nc">DependencyHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; DependencyHelper manages software dependency information &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_PYTHON_PACKAGE</span> <span class="o">=</span> <span class="s1">&#39;PYTHON_PACKAGE&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_dependency</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_PYTHON_PACKAGE</span><span class="p">:</span><span class="n">OrderedDict</span><span class="p">()}</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">python_packages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dependency</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_PYTHON_PACKAGE</span><span class="p">]</span>
+
+  <span class="k">def</span> <span class="nf">add_python_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependency</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; add_single_python_package adds a dependency for the python package</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      name: package name</span>
+<span class="sd">      version: it could be a specific version(1.10.0), or a range(&gt;=1.0,&lt;=2.0)</span>
+<span class="sd">        if not specified, the default is resolved automatically by the pip system.</span>
+<span class="sd">      override: whether to override the version if already existing in the dependency.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dependency</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_packages</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">override</span><span class="p">:</span>
+      <span class="k">return</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">python_packages</span><span class="p">[</span><span class="n">dependency</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">dependency</span>
+
+  <span class="k">def</span> <span class="nf">generate_pip_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; write the python packages to a requirement file</span>
+<span class="sd">    the generated file follows the order of which the packages are added &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_packages</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_packages</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">version_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">has_min_version</span><span class="p">():</span>
+          <span class="n">version_str</span> <span class="o">+=</span> <span class="s1">&#39; &gt;= &#39;</span> <span class="o">+</span> <span class="n">version</span><span class="o">.</span><span class="n">min_version</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+        <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">has_max_version</span><span class="p">():</span>
+          <span class="n">version_str</span> <span class="o">+=</span> <span class="s1">&#39; &lt;= &#39;</span> <span class="o">+</span> <span class="n">version</span><span class="o">.</span><span class="n">max_version</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="n">version_str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_dependency_to_requirements</span><span class="p">(</span><span class="n">dependency</span><span class="o">=</span><span class="p">[],</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;requirements.txt&#39;</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a requirement file based on the dependency</span>
+<span class="sd">    Args:</span>
+<span class="sd">      dependency (list): a list of VersionedDependency, which includes the package name and versions</span>
+<span class="sd">      filename (str): requirement file name, default as requirements.txt</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">dependency_helper</span> <span class="o">=</span> <span class="n">DependencyHelper</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">version</span> <span class="ow">in</span> <span class="n">dependency</span><span class="p">:</span>
+    <span class="n">dependency_helper</span><span class="o">.</span><span class="n">add_python_package</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+  <span class="n">dependency_helper</span><span class="o">.</span><span class="n">generate_pip_requirements</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_generate_dockerfile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">base_image</span><span class="p">,</span> <span class="n">python_version</span><span class="p">,</span> <span class="n">requirement_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_files</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    generates dockerfiles</span>
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str): target file name for the dockerfile.</span>
+<span class="sd">      base_image (str): the base image name.</span>
+<span class="sd">      python_version (str): choose python2 or python3</span>
+<span class="sd">      requirement_filename (str): requirement file name</span>
+<span class="sd">      add_files (Dict[str, str]): Map containing the files thats should be added to the container. add_files maps the build context relative source paths to the container destination paths.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="n">python_version</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;python2&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">]:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;python_version has to be either python2 or python3&#39;</span><span class="p">)</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;FROM &#39;</span> <span class="o">+</span> <span class="n">base_image</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">python_version</span> <span class="o">==</span> <span class="s1">&#39;python3&#39;</span><span class="p">:</span>
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;RUN apt-get update -y &amp;&amp; apt-get install --no-install-recommends -y -q python3 python3-pip python3-setuptools</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;RUN apt-get update -y &amp;&amp; apt-get install --no-install-recommends -y -q python python-pip python-setuptools</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">requirement_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ADD &#39;</span> <span class="o">+</span> <span class="n">requirement_filename</span> <span class="o">+</span> <span class="s1">&#39; /ml/requirements.txt</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">python_version</span> <span class="o">==</span> <span class="s1">&#39;python3&#39;</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;RUN python3 -m pip install -r /ml/requirements.txt</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;RUN python -m pip install -r /ml/requirements.txt</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">src_path</span><span class="p">,</span> <span class="n">dst_path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">add_files</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>     
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ADD &#39;</span> <span class="o">+</span> <span class="n">src_path</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">dst_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_configure_logger</span><span class="p">(</span><span class="n">logger</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; _configure_logger configures the logger such that the info level logs</span>
+<span class="sd">  go to the stdout and the error(or above) level logs go to the stderr.</span>
+<span class="sd">  It is important for the Jupyter notebook log rendering &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_configure_logger</span><span class="p">,</span> <span class="s1">&#39;configured&#39;</span><span class="p">):</span>
+    <span class="c1"># Skip the logger configuration the second time this function</span>
+    <span class="c1"># is called to avoid multiple streamhandlers bound to the logger.</span>
+    <span class="k">return</span>
+  <span class="nb">setattr</span><span class="p">(</span><span class="n">_configure_logger</span><span class="p">,</span> <span class="s1">&#39;configured&#39;</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">)</span>
+  <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+  <span class="n">info_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+  <span class="n">info_handler</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&lt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+  <span class="n">info_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1">:</span><span class="si">%(levelname)s</span><span class="s1">:</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">))</span>
+  <span class="n">error_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+  <span class="n">error_handler</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+  <span class="n">error_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1">:</span><span class="si">%(levelname)s</span><span class="s1">:</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">))</span>
+  <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">info_handler</span><span class="p">)</span>
+  <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">error_handler</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="build_python_component"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.build_python_component">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.32&#39;</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;`build_python_component` is deprecated. Use `kfp.containers.build_image_from_working_dir` + `kfp.components.func_to_container_op` instead.&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">build_python_component</span><span class="p">(</span><span class="n">component_func</span><span class="p">,</span> <span class="n">target_image</span><span class="p">,</span> <span class="n">base_image</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dependency</span><span class="o">=</span><span class="p">[],</span> <span class="n">staging_gcs_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_component_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">python_version</span><span class="o">=</span><span class="s1">&#39;python3&#39;</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; build_component automatically builds a container image for the component_func</span>
+<span class="sd">  based on the base_image and pushes to the target_image.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">    component_func (python function): The python function to build components upon</span>
+<span class="sd">    base_image (str): Docker image to use as a base image</span>
+<span class="sd">    target_image (str): Full URI to push the target image</span>
+<span class="sd">    staging_gcs_path (str): GCS blob that can store temporary build files</span>
+<span class="sd">    target_image (str): target image path</span>
+<span class="sd">    timeout (int): the timeout for the image build(in secs), default is 600 seconds</span>
+<span class="sd">    namespace (str): the namespace within which to run the kubernetes kaniko job. If the</span>
+<span class="sd">    job is running on GKE and value is None the underlying functions will use the default namespace from GKE.  .</span>
+<span class="sd">    dependency (list): a list of VersionedDependency, which includes the package name and versions, default is empty</span>
+<span class="sd">    python_version (str): choose python2 or python3, default is python3</span>
+<span class="sd">  Raises:</span>
+<span class="sd">    ValueError: The function is not decorated with python_component decorator or the python_version is neither python2 nor python3</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">_configure_logger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
+
+  <span class="k">if</span> <span class="n">component_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;component_func must not be None&#39;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">target_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;target_image must not be None&#39;</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">python_version</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;python2&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">]:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;python_version has to be either python2 or python3&#39;</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">staging_gcs_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;staging_gcs_path must not be None&#39;</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">base_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">base_image</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">component_func</span><span class="p">,</span> <span class="s1">&#39;_component_base_image&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">base_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">..components._python_op</span> <span class="kn">import</span> <span class="n">get_default_base_image</span>
+    <span class="n">base_image</span> <span class="o">=</span> <span class="n">get_default_base_image</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_image</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+      <span class="n">base_image</span> <span class="o">=</span> <span class="n">base_image</span><span class="p">()</span>
+
+  <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Build an image that is based on &#39;</span> <span class="o">+</span>
+                                  <span class="n">base_image</span> <span class="o">+</span>
+                                  <span class="s1">&#39; and push the image to &#39;</span> <span class="o">+</span>
+                                  <span class="n">target_image</span><span class="p">)</span>
+
+  <span class="n">component_spec</span> <span class="o">=</span> <span class="n">_func_to_component_spec</span><span class="p">(</span><span class="n">component_func</span><span class="p">,</span> <span class="n">base_image</span><span class="o">=</span><span class="n">base_image</span><span class="p">)</span>
+  <span class="n">command_line_args</span> <span class="o">=</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">implementation</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">command</span>
+
+  <span class="n">dash_c_index</span> <span class="o">=</span> <span class="n">command_line_args</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">)</span>
+  <span class="n">program_code_index</span> <span class="o">=</span> <span class="n">dash_c_index</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="n">program_code</span> <span class="o">=</span> <span class="n">command_line_args</span><span class="p">[</span><span class="n">program_code_index</span><span class="p">]</span>
+  <span class="n">program_rel_path</span> <span class="o">=</span> <span class="s1">&#39;ml/main.py&#39;</span>
+  <span class="n">program_container_path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">program_rel_path</span>
+
+  <span class="c1"># Replacing the inline code with calling a local program</span>
+  <span class="c1"># Before: python3 -u -c &#39;import sys ...&#39; --param1 ...</span>
+  <span class="c1"># After:  python3 -u main.py --param1 ...</span>
+  <span class="n">command_line_args</span><span class="p">[</span><span class="n">program_code_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">program_container_path</span>
+  <span class="n">command_line_args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">dash_c_index</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="n">python_version</span> <span class="o">==</span> <span class="s1">&#39;python2&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">warnings</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Python2 is not longer supported&#39;</span><span class="p">)</span>
+    <span class="c1"># Replacing the python interpreter</span>
+    <span class="n">python_interpreter_index</span> <span class="o">=</span> <span class="n">command_line_args</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;python3&#39;</span><span class="p">)</span>
+    <span class="n">command_line_args</span><span class="p">[</span><span class="n">python_interpreter_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">python_version</span>
+
+  <span class="n">arc_docker_filename</span> <span class="o">=</span> <span class="s1">&#39;Dockerfile&#39;</span>
+  <span class="n">arc_requirement_filename</span> <span class="o">=</span> <span class="s1">&#39;requirements.txt&#39;</span>
+
+  <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">local_build_dir</span><span class="p">:</span>
+    <span class="c1"># Write the program code to a file in the context directory</span>
+    <span class="n">local_python_filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_build_dir</span><span class="p">,</span> <span class="n">program_rel_path</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">local_python_filepath</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">local_python_filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">program_code</span><span class="p">)</span>
+
+    <span class="c1"># Generate the python package requirements file in the context directory</span>
+    <span class="n">local_requirement_filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_build_dir</span><span class="p">,</span> <span class="n">arc_requirement_filename</span><span class="p">)</span>
+    <span class="n">_dependency_to_requirements</span><span class="p">(</span><span class="n">dependency</span><span class="p">,</span> <span class="n">local_requirement_filepath</span><span class="p">)</span>
+
+    <span class="c1"># Generate Dockerfile in the context directory</span>
+    <span class="n">local_docker_filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_build_dir</span><span class="p">,</span> <span class="n">arc_docker_filename</span><span class="p">)</span>
+    <span class="n">_generate_dockerfile</span><span class="p">(</span><span class="n">local_docker_filepath</span><span class="p">,</span> <span class="n">base_image</span><span class="p">,</span> <span class="n">python_version</span><span class="p">,</span> <span class="n">arc_requirement_filename</span><span class="p">,</span> <span class="n">add_files</span><span class="o">=</span><span class="p">{</span><span class="n">program_rel_path</span><span class="p">:</span> <span class="n">program_container_path</span><span class="p">})</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Building and pushing container image.&#39;</span><span class="p">)</span>
+    <span class="n">container_builder</span> <span class="o">=</span> <span class="n">ContainerBuilder</span><span class="p">(</span><span class="n">staging_gcs_path</span><span class="p">,</span> <span class="n">target_image</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
+    <span class="n">image_name_with_digest</span> <span class="o">=</span> <span class="n">container_builder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">local_build_dir</span><span class="p">,</span> <span class="n">arc_docker_filename</span><span class="p">,</span> <span class="n">target_image</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+
+  <span class="n">component_spec</span><span class="o">.</span><span class="n">implementation</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image_name_with_digest</span>
+
+  <span class="c1"># Optionally writing the component definition to a local file for sharing</span>
+  <span class="n">target_component_file</span> <span class="o">=</span> <span class="n">target_component_file</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">component_func</span><span class="p">,</span> <span class="s1">&#39;_component_target_component_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">target_component_file</span><span class="p">:</span>
+    <span class="n">component_spec</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">target_component_file</span><span class="p">)</span>
+
+  <span class="n">task_factory_function</span> <span class="o">=</span> <span class="n">_create_task_factory_from_component_spec</span><span class="p">(</span><span class="n">component_spec</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">task_factory_function</span></div>
+
+
+<div class="viewcode-block" id="build_docker_image"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.build_docker_image">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.32&#39;</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;`build_docker_image` is deprecated. Use `kfp.containers.build_image_from_working_dir` instead.&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">build_docker_image</span><span class="p">(</span><span class="n">staging_gcs_path</span><span class="p">,</span> <span class="n">target_image</span><span class="p">,</span> <span class="n">dockerfile_path</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; build_docker_image automatically builds a container image based on the specification in the dockerfile and</span>
+<span class="sd">  pushes to the target_image.</span>
+
+<span class="sd">  Args:</span>
+<span class="sd">    staging_gcs_path (str): GCS blob that can store temporary build files</span>
+<span class="sd">    target_image (str): gcr path to push the final image</span>
+<span class="sd">    dockerfile_path (str): local path to the dockerfile</span>
+<span class="sd">    timeout (int): the timeout for the image build(in secs), default is 600 seconds</span>
+<span class="sd">    namespace (str): the namespace within which to run the kubernetes kaniko job. Default is None. If the</span>
+<span class="sd">    job is running on GKE and value is None the underlying functions will use the default namespace from GKE.  </span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">_configure_logger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
+
+  <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">local_build_dir</span><span class="p">:</span>
+    <span class="n">dockerfile_rel_path</span> <span class="o">=</span> <span class="s1">&#39;Dockerfile&#39;</span>
+    <span class="n">dst_dockerfile_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_build_dir</span><span class="p">,</span> <span class="n">dockerfile_rel_path</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">dockerfile_path</span><span class="p">,</span> <span class="n">dst_dockerfile_path</span><span class="p">)</span>
+
+    <span class="n">container_builder</span> <span class="o">=</span> <span class="n">ContainerBuilder</span><span class="p">(</span><span class="n">staging_gcs_path</span><span class="p">,</span> <span class="n">target_image</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="n">namespace</span><span class="p">)</span>
+    <span class="n">image_name_with_digest</span> <span class="o">=</span> <span class="n">container_builder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">local_build_dir</span><span class="p">,</span> <span class="n">dockerfile_rel_path</span><span class="p">,</span> <span class="n">target_image</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+
+  <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Build image complete.&#39;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">image_name_with_digest</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

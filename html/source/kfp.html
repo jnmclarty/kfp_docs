@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp package &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.compiler package" href="kfp.compiler.html" />
+    <link rel="prev" title="Welcome to Kubeflow Pipelines SDK API reference" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">kfp package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html">kfp.components package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>kfp package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kfp-package">
+<span id="kfp-ref"></span><h1>kfp package<a class="headerlink" href="#kfp-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kfp.components.html">kfp.components package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html#kfp-components-structures-subpackage">kfp.components.structures subpackage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.types.html">kfp.dsl.types module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kfp.client.html">kfp.Client class</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html#kfp-client-api-models-struct">kfp.Client.api_models Struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html#kfp-client-experiments-struct">kfp.Client.experiments Struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html#kfp-client-jobs-struct">kfp.Client.jobs Struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html#kfp-client-pipeline-uploads-struct">kfp.Client.pipeline_uploads Struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html#kfp-client-pipelines-struct">kfp.Client.pipelines Struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html#kfp-client-runs-struct">kfp.Client.runs Struct</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html#module-kfp.onprem">kfp.onprem module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html#module-kfp.gcp">kfp.gcp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html#module-kfp.aws">kfp.aws module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html#module-kfp.azure">kfp.azure module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html#kfp-cli-pipeline-command">kfp.cli.pipeline Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html#kfp-cli-run-command">kfp.cli.run Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html#kfp-cli-diagnose-me-command">kfp.cli.diagnose_me Command</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<span class="target" id="module-kfp"></span><dl class="py function">
+<dt id="kfp.run_pipeline_func_on_cluster">
+<code class="sig-prename descclassname">kfp.</code><code class="sig-name descname">run_pipeline_func_on_cluster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline_func</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">arguments</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">experiment_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kfp_client</span><span class="p">:</span> <span class="n">kfp._client.Client</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">kfp.dsl._pipeline.PipelineConf</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/_runners.html#run_pipeline_func_on_cluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.run_pipeline_func_on_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs pipeline on KFP-enabled Kubernetes cluster.
+This command compiles the pipeline function, creates or gets an experiment and submits the pipeline for execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_func</strong> – A function that describes a pipeline by calling components and composing them into execution graph.</p></li>
+<li><p><strong>arguments</strong> – Arguments to the pipeline function provided as a dict.</p></li>
+<li><p><strong>run_name</strong> – Optional. Name of the run to be shown in the UI.</p></li>
+<li><p><strong>experiment_name</strong> – Optional. Name of the experiment to add the run to.</p></li>
+<li><p><strong>kfp_client</strong> – Optional. An instance of kfp.Client configured for the desired KFP cluster.</p></li>
+<li><p><strong>pipeline_conf</strong> – Optional. kfp.dsl.PipelineConf instance. Can specify op transforms, image pull secrets and other pipeline-level configuration options.ta</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.compiler.html" class="btn btn-neutral float-right" title="kfp.compiler package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Kubeflow Pipelines SDK API reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

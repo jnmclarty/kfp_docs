@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.containers._build_image_api &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.containers._build_image_api</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.containers._build_image_api</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2019 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the speci</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;build_image_from_working_dir&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;default_image_builder&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">from</span> <span class="nn">._cache</span> <span class="kn">import</span> <span class="n">calculate_recursive_dir_hash</span><span class="p">,</span> <span class="n">try_read_value_from_cache</span><span class="p">,</span> <span class="n">write_value_to_cache</span>
+<span class="kn">from</span> <span class="nn">._container_builder</span> <span class="kn">import</span> <span class="n">ContainerBuilder</span>
+
+
+<span class="n">default_base_image</span> <span class="o">=</span> <span class="s1">&#39;gcr.io/deeplearning-platform-release/tf-cpu.1-14&#39;</span>
+
+
+<span class="n">_container_work_dir</span> <span class="o">=</span> <span class="s1">&#39;/python_env&#39;</span>
+
+
+<span class="n">default_image_builder</span> <span class="o">=</span> <span class="n">ContainerBuilder</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_generate_dockerfile_text</span><span class="p">(</span><span class="n">context_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dockerfile_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="c1"># Generating the Dockerfile</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Generating the Dockerfile&#39;</span><span class="p">)</span>
+
+    <span class="n">requirements_rel_path</span> <span class="o">=</span> <span class="s1">&#39;requirements.txt&#39;</span>
+    <span class="n">requirements_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">context_dir</span><span class="p">,</span> <span class="n">requirements_rel_path</span><span class="p">)</span>
+    <span class="n">requirements_file_exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">requirements_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">base_image</span><span class="p">:</span>
+        <span class="n">base_image</span> <span class="o">=</span> <span class="n">default_base_image</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">base_image</span><span class="p">):</span>
+        <span class="n">base_image</span> <span class="o">=</span> <span class="n">base_image</span><span class="p">()</span>
+
+    <span class="n">dockerfile_lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dockerfile_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;FROM </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base_image</span><span class="p">))</span>
+    <span class="n">dockerfile_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;WORKDIR </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_container_work_dir</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">requirements_file_exists</span><span class="p">:</span>
+        <span class="n">dockerfile_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;COPY </span><span class="si">{}</span><span class="s1"> .&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requirements_rel_path</span><span class="p">))</span>
+        <span class="n">dockerfile_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;RUN python3 -m pip install -r </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requirements_rel_path</span><span class="p">))</span>
+    <span class="n">dockerfile_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;COPY . .&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dockerfile_lines</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="build_image_from_working_dir"><a class="viewcode-back" href="../../../source/kfp.containers.html#kfp.containers.build_image_from_working_dir">[docs]</a><span class="k">def</span> <span class="nf">build_image_from_working_dir</span><span class="p">(</span><span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">working_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">file_filter_re</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;.*\.py&#39;</span><span class="p">,</span>  <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">ContainerBuilder</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;build_image_from_working_dir builds and pushes a new container image that captures the current python working directory.</span>
+
+<span class="sd">    This function recursively scans the working directory and captures the following files in the container image context:</span>
+<span class="sd">    * requirements.txt files</span>
+<span class="sd">    * all python files (can be overridden by passing a different `file_filter_re` argument)</span>
+
+<span class="sd">    The function generates Dockerfile that starts from a python container image, install packages from requirements.txt (if present) and copies all the captured python files to the container image.</span>
+<span class="sd">    The Dockerfile can be overridden by placing a custom Dockerfile in the root of the working directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image_name: Optional. The image repo name where the new container image will be pushed. The name will be generated if not not set.</span>
+<span class="sd">        working_dir: Optional. The directory that will be captured. The current directory will be used if omitted.</span>
+<span class="sd">        file_filter_re: Optional. A regular expression that will be used to decide which files to include in the container building context.</span>
+<span class="sd">        timeout: Optional. The image building timeout in seconds.</span>
+<span class="sd">        base_image: Optional. The container image to use as the base for the new image. If not set, the Google Deep Learning Tensorflow CPU image will be used.</span>
+<span class="sd">        builder: Optional. An instance of ContainerBuilder or compatible class that will be used to build the image.</span>
+<span class="sd">          The default builder uses &quot;kubeflow-pipelines-container-builder&quot; service account in &quot;kubeflow&quot; namespace. It works with Kubeflow Pipelines clusters installed in &quot;kubeflow&quot; namespace using Google Cloud Marketplace or Standalone with version &gt; 0.4.0.</span>
+<span class="sd">          If your Kubeflow Pipelines is installed in a different namespace, you should use ContainerBuilder(namespace=&#39;&lt;your-kfp-namespace&gt;&#39;, ...).</span>
+<span class="sd">          Depending on how you installed Kubeflow Pipelines, you need to configure your ContainerBuilder instance&#39;s namespace and service_account:</span>
+<span class="sd">          For clusters installed with Kubeflow &gt;= 0.7, use ContainerBuidler(namespace=&#39;&lt;your-user-namespace&gt;&#39;, service_account=&#39;default-editor&#39;, ...). You can omit the namespace if you use kfp sdk from in-cluster notebook, it uses notebook namespace by default.</span>
+<span class="sd">          For clusters installed with Kubeflow &lt; 0.7, use ContainerBuilder(service_account=&#39;default&#39;, ...).</span>
+<span class="sd">          For clusters installed using Google Cloud Marketplace or Standalone with version &lt;= 0.4.0, use ContainerBuilder(namespace=&#39;&lt;your-kfp-namespace&gt;&#39; service_account=&#39;default&#39;)</span>
+<span class="sd">          You may refer to https://www.kubeflow.org/docs/pipelines/installation/overview/ for more details about different installation options.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The full name of the container image including the hash digest. E.g. gcr.io/my-org/my-image@sha256:86c1...793c.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">current_dir</span> <span class="o">=</span> <span class="n">working_dir</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">context_dir</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating the build context directory: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">context_dir</span><span class="p">))</span>
+
+        <span class="c1"># Copying all *.py and requirements.txt files</span>
+        <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">current_dir</span><span class="p">):</span>
+            <span class="n">dst_dirpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">context_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">current_dir</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dst_dirpath</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">file_filter_re</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span> <span class="ow">or</span> <span class="n">file_name</span> <span class="o">==</span> <span class="s1">&#39;requirements.txt&#39;</span><span class="p">:</span>
+                    <span class="n">src_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+                    <span class="n">dst_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dst_dirpath</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">dst_path</span><span class="p">)</span>
+
+        <span class="n">src_dockerfile_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;Dockerfile&#39;</span><span class="p">)</span>
+        <span class="n">dst_dockerfile_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">context_dir</span><span class="p">,</span> <span class="s1">&#39;Dockerfile&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">src_dockerfile_path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">base_image</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot specify base_image when using custom Dockerfile (which already specifies the base image).&#39;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src_dockerfile_path</span><span class="p">,</span> <span class="n">dst_dockerfile_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dockerfile_text</span> <span class="o">=</span> <span class="n">_generate_dockerfile_text</span><span class="p">(</span><span class="n">context_dir</span><span class="p">,</span> <span class="n">dst_dockerfile_path</span><span class="p">,</span> <span class="n">base_image</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dst_dockerfile_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dockerfile_text</span><span class="p">)</span>
+        
+        <span class="n">cache_name</span> <span class="o">=</span> <span class="s1">&#39;build_image_from_working_dir&#39;</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="n">calculate_recursive_dir_hash</span><span class="p">(</span><span class="n">context_dir</span><span class="p">)</span>
+        <span class="n">cached_image_name</span> <span class="o">=</span> <span class="n">try_read_value_from_cache</span><span class="p">(</span><span class="n">cache_name</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached_image_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cached_image_name</span>
+
+        <span class="k">if</span> <span class="n">builder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">default_image_builder</span>
+        <span class="n">image_name</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
+            <span class="n">local_dir</span><span class="o">=</span><span class="n">context_dir</span><span class="p">,</span>
+            <span class="n">target_image</span><span class="o">=</span><span class="n">image_name</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">image_name</span><span class="p">:</span>
+            <span class="n">write_value_to_cache</span><span class="p">(</span><span class="n">cache_name</span><span class="p">,</span> <span class="n">cache_key</span><span class="p">,</span> <span class="n">image_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">image_name</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

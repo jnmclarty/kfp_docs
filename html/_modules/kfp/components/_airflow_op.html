@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.components._airflow_op &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.components._airflow_op</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.components._airflow_op</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2019 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;create_component_from_airflow_op&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">._python_op</span> <span class="kn">import</span> <span class="n">_func_to_component_spec</span><span class="p">,</span> <span class="n">_create_task_factory_from_component_spec</span>
+
+
+<span class="n">_default_airflow_base_image</span> <span class="o">=</span> <span class="s1">&#39;apache/airflow:master-python3.6-ci&#39;</span> <span class="c1">#TODO: Update a production release image once they become available: https://cwiki.apache.org/confluence/display/AIRFLOW/AIP-10+Multi-layered+and+multi-stage+official+Airflow+CI+image#AIP-10Multi-layeredandmulti-stageofficialAirflowCIimage-ProposedsetupoftheDockerHubandTravisCI . See https://issues.apache.org/jira/browse/AIRFLOW-5093</span>
+
+
+<div class="viewcode-block" id="create_component_from_airflow_op"><a class="viewcode-back" href="../../../source/kfp.components.html#kfp.components.create_component_from_airflow_op">[docs]</a><span class="k">def</span> <span class="nf">create_component_from_airflow_op</span><span class="p">(</span>
+    <span class="n">op_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+    <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">_default_airflow_base_image</span><span class="p">,</span>
+    <span class="n">variable_output_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">xcom_output_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates component function from an Airflow operator class.</span>
+<span class="sd">    The inputs of the component are the same as the operator constructor parameters.</span>
+<span class="sd">    By default the component has the following outputs: &quot;Result&quot;, &quot;Variables&quot; and &quot;XComs&quot;. &quot;Variables&quot; and &quot;XComs&quot; are serialized JSON maps of all variables and xcoms produced by the operator during the execution.</span>
+<span class="sd">    Use the variable_output_names and xcom_output_names parameters to output individual variables/xcoms as separate outputs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        op_class: Reference to the Airflow operator class (e.g. EmailOperator or BashOperator) to convert to componenent.</span>
+<span class="sd">        base_image: Optional. The container image to use for the component. Default is apache/airflow. The container image must have the same python version as the environment used to run create_component_from_airflow_op. The image should have python 3.5+ with airflow package installed.</span>
+<span class="sd">        variable_output_names: Optional. A list of Airflow &quot;variables&quot; produced by the operator that should be returned as separate outputs.</span>
+<span class="sd">        xcom_output_names: Optional. A list of Airflow &quot;XComs&quot; produced by the operator that should be returned as separate outputs.</span>
+<span class="sd">        modules_to_capture: Optional. A list of names of additional modules that the operator depends on. By default only the module containing the operator class is captured. If the operator class uses the code from another module, the name of that module can be specified in this list.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">component_spec</span> <span class="o">=</span> <span class="n">_create_component_spec_from_airflow_op</span><span class="p">(</span>
+        <span class="n">op_class</span><span class="o">=</span><span class="n">op_class</span><span class="p">,</span>
+        <span class="n">base_image</span><span class="o">=</span><span class="n">base_image</span><span class="p">,</span>
+        <span class="n">variables_to_output</span><span class="o">=</span><span class="n">variable_output_names</span><span class="p">,</span>
+        <span class="n">xcoms_to_output</span><span class="o">=</span><span class="n">xcom_output_names</span><span class="p">,</span>
+        <span class="n">modules_to_capture</span><span class="o">=</span><span class="n">modules_to_capture</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">task_factory</span> <span class="o">=</span> <span class="n">_create_task_factory_from_component_spec</span><span class="p">(</span><span class="n">component_spec</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">task_factory</span></div>
+
+
+<span class="k">def</span> <span class="nf">_create_component_spec_from_airflow_op</span><span class="p">(</span>
+    <span class="n">op_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span>
+    <span class="n">base_image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">_default_airflow_base_image</span><span class="p">,</span>
+    <span class="n">result_output_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Result&#39;</span><span class="p">,</span>
+    <span class="n">variables_dict_output_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Variables&#39;</span><span class="p">,</span>
+    <span class="n">xcoms_dict_output_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;XComs&#39;</span><span class="p">,</span>
+    <span class="n">variables_to_output</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">xcoms_to_output</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">modules_to_capture</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">variables_output_names</span> <span class="o">=</span> <span class="n">variables_to_output</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">xcoms_output_names</span> <span class="o">=</span> <span class="n">xcoms_to_output</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">modules_to_capture</span> <span class="o">=</span> <span class="n">modules_to_capture</span> <span class="ow">or</span> <span class="p">[</span><span class="n">op_class</span><span class="o">.</span><span class="vm">__module__</span><span class="p">]</span>
+    <span class="n">modules_to_capture</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_run_airflow_op</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span>
+
+    <span class="n">output_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">result_output_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_output_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">variables_dict_output_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variables_dict_output_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xcoms_dict_output_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xcoms_dict_output_name</span><span class="p">)</span>
+    <span class="n">output_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">variables_output_names</span><span class="p">)</span>
+    <span class="n">output_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">xcoms_output_names</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+    <span class="n">returnType</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;AirflowOpOutputs&#39;</span><span class="p">,</span> <span class="n">output_names</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run_airflow_op_closure</span><span class="p">(</span><span class="o">*</span><span class="n">op_args</span><span class="p">,</span> <span class="o">**</span><span class="n">op_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">returnType</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">xcoms</span><span class="p">)</span> <span class="o">=</span> <span class="n">_run_airflow_op</span><span class="p">(</span><span class="n">op_class</span><span class="p">,</span> <span class="o">*</span><span class="n">op_args</span><span class="p">,</span> <span class="o">**</span><span class="n">op_kwargs</span><span class="p">)</span>
+
+        <span class="n">output_values</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">if</span> <span class="n">result_output_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_values</span><span class="p">[</span><span class="n">result_output_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">variables_dict_output_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_values</span><span class="p">[</span><span class="n">variables_dict_output_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xcoms_dict_output_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_values</span><span class="p">[</span><span class="n">xcoms_dict_output_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">xcoms</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">variables_output_names</span><span class="p">:</span>
+            <span class="n">output_values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">variables</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">xcoms_output_names</span><span class="p">:</span>
+            <span class="n">output_values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">xcoms</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">returnType</span><span class="p">(</span><span class="o">**</span><span class="n">output_values</span><span class="p">)</span>
+
+    <span class="c1"># Hacking the function signature so that correct component interface is generated</span>
+    <span class="kn">import</span> <span class="nn">inspect</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">op_class</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="c1">#Filtering out `*args` and `**kwargs` parameters that some operators have</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span> <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span><span class="p">]</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Signature</span><span class="p">(</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+        <span class="n">return_annotation</span><span class="o">=</span><span class="n">returnType</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">_run_airflow_op_closure</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">sig</span>
+    <span class="n">_run_airflow_op_closure</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">op_class</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">return</span> <span class="n">_func_to_component_spec</span><span class="p">(</span><span class="n">_run_airflow_op_closure</span><span class="p">,</span> <span class="n">base_image</span><span class="o">=</span><span class="n">base_image</span><span class="p">,</span> <span class="n">use_code_pickling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">modules_to_capture</span><span class="o">=</span><span class="n">modules_to_capture</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_run_airflow_op</span><span class="p">(</span><span class="n">Op</span><span class="p">,</span> <span class="o">*</span><span class="n">op_args</span><span class="p">,</span> <span class="o">**</span><span class="n">op_kwargs</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">airflow.utils</span> <span class="kn">import</span> <span class="n">db</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">initdb</span><span class="p">()</span>
+
+    <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+    <span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">settings</span>
+    <span class="kn">from</span> <span class="nn">airflow.models</span> <span class="kn">import</span> <span class="n">TaskInstance</span><span class="p">,</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">XCom</span>
+
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s1">&#39;anydag&#39;</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">Op</span><span class="p">(</span><span class="o">*</span><span class="n">op_args</span><span class="p">,</span> <span class="o">**</span><span class="n">op_kwargs</span><span class="p">,</span> <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">task_id</span><span class="o">=</span><span class="s1">&#39;anytask&#39;</span><span class="p">)</span>
+    <span class="n">ti</span> <span class="o">=</span> <span class="n">TaskInstance</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span> <span class="n">execution_date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">ti</span><span class="o">.</span><span class="n">get_template_context</span><span class="p">())</span>
+
+    <span class="n">variables</span> <span class="o">=</span> <span class="p">{</span><span class="n">var</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">var</span><span class="o">.</span><span class="n">val</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Variable</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()}</span>
+    <span class="n">xcoms</span> <span class="o">=</span> <span class="p">{</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">XCom</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">xcoms</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

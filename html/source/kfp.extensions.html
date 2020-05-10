@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>KFP extension modules &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.cli interface" href="kfp.cli.html" />
+    <link rel="prev" title="kfp.notebook package" href="kfp.notebook.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html">kfp.components package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.containers.html">kfp.containers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">KFP extension modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-kfp.onprem">kfp.onprem module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-kfp.gcp">kfp.gcp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-kfp.aws">kfp.aws module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-kfp.azure">kfp.azure module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+      <li>KFP extension modules</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.extensions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kfp-extension-modules">
+<h1>KFP extension modules<a class="headerlink" href="#kfp-extension-modules" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-kfp.onprem">
+<span id="kfp-onprem-module"></span><h2>kfp.onprem module<a class="headerlink" href="#module-kfp.onprem" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="kfp.onprem.mount_pvc">
+<code class="sig-prename descclassname">kfp.onprem.</code><code class="sig-name descname">mount_pvc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pvc_name</span><span class="o">=</span><span class="default_value">'pipeline-claim'</span></em>, <em class="sig-param"><span class="n">volume_name</span><span class="o">=</span><span class="default_value">'pipeline'</span></em>, <em class="sig-param"><span class="n">volume_mount_path</span><span class="o">=</span><span class="default_value">'/mnt/pipeline'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/onprem.html#mount_pvc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.onprem.mount_pvc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modifier function to apply to a Container Op to simplify volume, volume mount addition and
+enable better reuse of volumes, volume claims across container ops.
+Usage:</p>
+<blockquote>
+<div><p>train = train_op(…)
+train.apply(mount_pvc(‘claim-name’, ‘pipeline’, ‘/mnt/pipeline’))</p>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kfp.gcp">
+<span id="kfp-gcp-module"></span><h2>kfp.gcp module<a class="headerlink" href="#module-kfp.gcp" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="kfp.gcp.add_gpu_toleration">
+<code class="sig-prename descclassname">kfp.gcp.</code><code class="sig-name descname">add_gpu_toleration</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">toleration</span><span class="p">:</span> <span class="n">kubernetes.client.models.v1_toleration.V1Toleration</span> <span class="o">=</span> <span class="default_value">{'effect': 'NoSchedule', 'key': 'nvidia.com/gpu', 'operator': 'Equal', 'toleration_seconds': None, 'value': 'true'}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/gcp.html#add_gpu_toleration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.gcp.add_gpu_toleration" title="Permalink to this definition">¶</a></dt>
+<dd><p>An operator that configures the GKE GPU nodes in a container op.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>{V1Toleration} -- toleration to pods</strong><strong>, </strong><strong>default is the nvidia.com/gpu label.</strong> (<em>toleration</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.gcp.use_gcp_secret">
+<code class="sig-prename descclassname">kfp.gcp.</code><code class="sig-name descname">use_gcp_secret</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">secret_name</span><span class="o">=</span><span class="default_value">'user-gcp-sa'</span></em>, <em class="sig-param"><span class="n">secret_file_path_in_volume</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">volume_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">secret_volume_mount_path</span><span class="o">=</span><span class="default_value">'/secret/gcp-credentials'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/gcp.html#use_gcp_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.gcp.use_gcp_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>An operator that configures the container to use GCP service account by service account key
+stored in a Kubernetes secret.</p>
+<p>For cluster setup and alternatives to using service account key, check <a class="reference external" href="https://www.kubeflow.org/docs/gke/authentication-pipelines/">https://www.kubeflow.org/docs/gke/authentication-pipelines/</a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.gcp.use_preemptible_nodepool">
+<code class="sig-prename descclassname">kfp.gcp.</code><code class="sig-name descname">use_preemptible_nodepool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">toleration</span><span class="p">:</span> <span class="n">kubernetes.client.models.v1_toleration.V1Toleration</span> <span class="o">=</span> <span class="default_value">{'effect': 'NoSchedule', 'key': 'preemptible', 'operator': 'Equal', 'toleration_seconds': None, 'value': 'true'}</span></em>, <em class="sig-param"><span class="n">hard_constraint</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/gcp.html#use_preemptible_nodepool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.gcp.use_preemptible_nodepool" title="Permalink to this definition">¶</a></dt>
+<dd><p>An operator that configures the GKE preemptible in a container op.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>toleration</strong> (<em>V1Toleration</em>) – toleration to pods, default is the preemptible label.</p></li>
+<li><p><strong>hard_constraint</strong> (<em>bool</em>) – the constraint of scheduling the pods on preemptible nodepools is</p></li>
+<li><p><strong>(</strong><strong>Default</strong> (<em>hard.</em>) – False)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.gcp.use_tpu">
+<code class="sig-prename descclassname">kfp.gcp.</code><code class="sig-name descname">use_tpu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tpu_cores</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">tpu_resource</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">tf_version</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/gcp.html#use_tpu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.gcp.use_tpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>An operator that configures GCP TPU spec in a container op.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tpu_cores</strong> – Required. The number of cores of TPU resource.
+For example, the value can be ‘8’, ‘32’, ‘128’, etc.
+Check more details at: <a class="reference external" href="https://cloud.google.com/tpu/docs/kubernetes-engine-setup#pod-spec">https://cloud.google.com/tpu/docs/kubernetes-engine-setup#pod-spec</a>.</p></li>
+<li><p><strong>tpu_resource</strong> – Required. The resource name of the TPU resource.
+For example, the value can be ‘v2’, ‘preemptible-v1’, ‘v3’ or ‘preemptible-v3’.
+Check more details at: <a class="reference external" href="https://cloud.google.com/tpu/docs/kubernetes-engine-setup#pod-spec">https://cloud.google.com/tpu/docs/kubernetes-engine-setup#pod-spec</a>.</p></li>
+<li><p><strong>tf_version</strong> – Required. The TensorFlow version that the TPU nodes use.
+For example, the value can be ‘1.12’, ‘1.11’, ‘1.9’ or ‘1.8’.
+Check more details at: <a class="reference external" href="https://cloud.google.com/tpu/docs/supported-versions">https://cloud.google.com/tpu/docs/supported-versions</a>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kfp.aws">
+<span id="kfp-aws-module"></span><h2>kfp.aws module<a class="headerlink" href="#module-kfp.aws" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="kfp.aws.use_aws_secret">
+<code class="sig-prename descclassname">kfp.aws.</code><code class="sig-name descname">use_aws_secret</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">secret_name</span><span class="o">=</span><span class="default_value">'aws-secret'</span></em>, <em class="sig-param"><span class="n">aws_access_key_id_name</span><span class="o">=</span><span class="default_value">'AWS_ACCESS_KEY_ID'</span></em>, <em class="sig-param"><span class="n">aws_secret_access_key_name</span><span class="o">=</span><span class="default_value">'AWS_SECRET_ACCESS_KEY'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/aws.html#use_aws_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.aws.use_aws_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>An operator that configures the container to use AWS credentials.</p>
+<p>AWS doesn’t create secret along with kubeflow deployment and it requires users
+to manually create credential secret with proper permissions.
+—
+apiVersion: v1
+kind: Secret
+metadata:</p>
+<blockquote>
+<div><p>name: aws-secret</p>
+</div></blockquote>
+<p>type: Opaque
+data:</p>
+<blockquote>
+<div><p>AWS_ACCESS_KEY_ID: BASE64_YOUR_AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY: BASE64_YOUR_AWS_SECRET_ACCESS_KEY</p>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kfp.azure">
+<span id="kfp-azure-module"></span><h2>kfp.azure module<a class="headerlink" href="#module-kfp.azure" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="kfp.azure.use_azure_secret">
+<code class="sig-prename descclassname">kfp.azure.</code><code class="sig-name descname">use_azure_secret</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">secret_name</span><span class="o">=</span><span class="default_value">'azcreds'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/azure.html#use_azure_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.azure.use_azure_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>An operator that configures the container to use Azure user credentials.</p>
+<p>The azcreds secret is created as part of the kubeflow deployment that
+stores the client ID and secrets for the kubeflow azure service principal.</p>
+<p>With this service principal, the container has a range of Azure APIs to
+access to.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.cli.html" class="btn btn-neutral float-right" title="kfp.cli interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kfp.notebook.html" class="btn btn-neutral float-left" title="kfp.notebook package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

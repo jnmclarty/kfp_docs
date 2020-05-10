@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.containers package &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kfp.dsl package" href="kfp.dsl.html" />
+    <link rel="prev" title="kfp.components.structures.kubernetes package" href="kfp.components.structures.kubernetes.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kfp.html">kfp package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kfp.compiler.html">kfp.compiler package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.components.html">kfp.components package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kfp.containers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.dsl.html">kfp.dsl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.client.html">kfp.Client class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.notebook.html">kfp.notebook package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.extensions.html">KFP extension modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kfp.cli.html">kfp.cli interface</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="kfp.html">kfp package</a> &raquo;</li>
+        
+      <li>kfp.containers package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/kfp.containers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-kfp.containers">
+<span id="kfp-containers-package"></span><h1>kfp.containers package<a class="headerlink" href="#module-kfp.containers" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="kfp.containers.ContainerBuilder">
+<em class="property">class </em><code class="sig-prename descclassname">kfp.containers.</code><code class="sig-name descname">ContainerBuilder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gcs_staging</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default_image_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">namespace</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">service_account</span><span class="o">=</span><span class="default_value">'kubeflow-pipelines-container-builder'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/containers/_container_builder.html#ContainerBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.containers.ContainerBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ContainerBuilder helps build a container image</p>
+<dl class="py method">
+<dt id="kfp.containers.ContainerBuilder.build">
+<code class="sig-name descname">build</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_dir</span></em>, <em class="sig-param"><span class="n">docker_filename</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'Dockerfile'</span></em>, <em class="sig-param"><span class="n">target_image</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">1000</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kfp/containers/_container_builder.html#ContainerBuilder.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.containers.ContainerBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_dir</strong> (<em>str</em>) – local directory that stores all the necessary build files</p></li>
+<li><p><strong>docker_filename</strong> (<em>str</em>) – the path of the Dockerfile relative to the local_dir</p></li>
+<li><p><strong>target_image</strong> (<em>str</em>) – The container image name where the data will be pushed. Can include tag. If not specified, the function will use the default_image_name specified when creating ContainerBuilder.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – time out in seconds. Default: 1000</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="kfp.containers.build_image_from_working_dir">
+<code class="sig-prename descclassname">kfp.containers.</code><code class="sig-name descname">build_image_from_working_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">working_dir</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file_filter_re</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'.*\\.py'</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">base_image</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">builder</span><span class="p">:</span> <span class="n">kfp.containers._container_builder.ContainerBuilder</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/kfp/containers/_build_image_api.html#build_image_from_working_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kfp.containers.build_image_from_working_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>build_image_from_working_dir builds and pushes a new container image that captures the current python working directory.</p>
+<p>This function recursively scans the working directory and captures the following files in the container image context:
+* requirements.txt files
+* all python files (can be overridden by passing a different <cite>file_filter_re</cite> argument)</p>
+<p>The function generates Dockerfile that starts from a python container image, install packages from requirements.txt (if present) and copies all the captured python files to the container image.
+The Dockerfile can be overridden by placing a custom Dockerfile in the root of the working directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_name</strong> – Optional. The image repo name where the new container image will be pushed. The name will be generated if not not set.</p></li>
+<li><p><strong>working_dir</strong> – Optional. The directory that will be captured. The current directory will be used if omitted.</p></li>
+<li><p><strong>file_filter_re</strong> – Optional. A regular expression that will be used to decide which files to include in the container building context.</p></li>
+<li><p><strong>timeout</strong> – Optional. The image building timeout in seconds.</p></li>
+<li><p><strong>base_image</strong> – Optional. The container image to use as the base for the new image. If not set, the Google Deep Learning Tensorflow CPU image will be used.</p></li>
+<li><p><strong>builder</strong> – Optional. An instance of ContainerBuilder or compatible class that will be used to build the image.
+The default builder uses “kubeflow-pipelines-container-builder” service account in “kubeflow” namespace. It works with Kubeflow Pipelines clusters installed in “kubeflow” namespace using Google Cloud Marketplace or Standalone with version &gt; 0.4.0.
+If your Kubeflow Pipelines is installed in a different namespace, you should use ContainerBuilder(namespace=’&lt;your-kfp-namespace&gt;’, …).
+Depending on how you installed Kubeflow Pipelines, you need to configure your ContainerBuilder instance’s namespace and service_account:
+For clusters installed with Kubeflow &gt;= 0.7, use ContainerBuidler(namespace=’&lt;your-user-namespace&gt;’, service_account=’default-editor’, …). You can omit the namespace if you use kfp sdk from in-cluster notebook, it uses notebook namespace by default.
+For clusters installed with Kubeflow &lt; 0.7, use ContainerBuilder(service_account=’default’, …).
+For clusters installed using Google Cloud Marketplace or Standalone with version &lt;= 0.4.0, use ContainerBuilder(namespace=’&lt;your-kfp-namespace&gt;’ service_account=’default’)
+You may refer to <a class="reference external" href="https://www.kubeflow.org/docs/pipelines/installation/overview/">https://www.kubeflow.org/docs/pipelines/installation/overview/</a> for more details about different installation options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>86c1…793c.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>The full name of the container image including the hash digest. E.g. <a class="reference external" href="mailto:gcr&#46;io/my-org/my-image&#37;&#52;&#48;sha256">gcr<span>&#46;</span>io/my-org/my-image<span>&#64;</span>sha256</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="kfp.dsl.html" class="btn btn-neutral float-right" title="kfp.dsl package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="kfp.components.structures.kubernetes.html" class="btn btn-neutral float-left" title="kfp.components.structures.kubernetes package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

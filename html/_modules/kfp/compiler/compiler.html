@@ -1,0 +1,1200 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.compiler.compiler &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.compiler.compiler</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.compiler.compiler</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2018-2019 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">deprecated</span> <span class="kn">import</span> <span class="n">deprecated</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">kfp</span>
+<span class="kn">from</span> <span class="nn">kfp.dsl</span> <span class="kn">import</span> <span class="n">_for_loop</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">dsl</span>
+<span class="kn">from</span> <span class="nn">._k8s_helper</span> <span class="kn">import</span> <span class="n">convert_k8s_obj_to_json</span><span class="p">,</span> <span class="n">sanitize_k8s_name</span>
+<span class="kn">from</span> <span class="nn">._op_to_template</span> <span class="kn">import</span> <span class="n">_op_to_template</span>
+<span class="kn">from</span> <span class="nn">._default_transformers</span> <span class="kn">import</span> <span class="n">add_pod_env</span><span class="p">,</span> <span class="n">add_pod_labels</span><span class="p">,</span> <span class="n">get_default_telemetry_labels</span>
+
+<span class="kn">from</span> <span class="nn">..components.structures</span> <span class="kn">import</span> <span class="n">InputSpec</span>
+<span class="kn">from</span> <span class="nn">..components._yaml_utils</span> <span class="kn">import</span> <span class="n">dump_yaml</span>
+<span class="kn">from</span> <span class="nn">..dsl._metadata</span> <span class="kn">import</span> <span class="n">_extract_pipeline_metadata</span>
+<span class="kn">from</span> <span class="nn">..dsl._ops_group</span> <span class="kn">import</span> <span class="n">OpsGroup</span>
+
+
+<div class="viewcode-block" id="Compiler"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.Compiler">[docs]</a><span class="k">class</span> <span class="nc">Compiler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;DSL Compiler.</span>
+
+<span class="sd">  It compiles DSL pipeline functions into workflow yaml. Example usage:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">     @dsl.pipeline(name=&#39;name&#39;, description=&#39;description&#39;)</span>
+<span class="sd">     def my_pipeline(a: int = 1, b: str = &quot;default value&quot;):</span>
+<span class="sd">        ...</span>
+
+<span class="sd">     Compiler().compile(my_pipeline, &#39;path/to/workflow.yaml&#39;)</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">_pipelineparam_full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;_pipelineparam_full_name converts the names of pipeline parameters</span>
+<span class="sd">      to unique names in the argo yaml</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      param(PipelineParam): pipeline parameter</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">param</span><span class="o">.</span><span class="n">op_name</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">return</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span>
+
+  <span class="k">def</span> <span class="nf">_get_groups_for_ops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function to get belonging groups for each op.</span>
+
+<span class="sd">    Each pipeline has a root group. Each group has a list of operators (leaf) and groups.</span>
+<span class="sd">    This function traverse the tree and get all ancestor groups for all operators.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      A dict. Key is the operator&#39;s name. Value is a list of ancestor groups including the</span>
+<span class="sd">              op itself. The list of a given operator is sorted in a way that the farthest</span>
+<span class="sd">              group is the first and operator itself is the last.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_get_op_groups_helper</span><span class="p">(</span><span class="n">current_groups</span><span class="p">,</span> <span class="n">ops_to_groups</span><span class="p">):</span>
+      <span class="n">root_group</span> <span class="o">=</span> <span class="n">current_groups</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+      <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">root_group</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+        <span class="c1"># Add recursive opsgroup in the ops_to_groups</span>
+        <span class="c1"># such that the i/o dependency can be propagated to the ancester opsgroups</span>
+        <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">:</span>
+          <span class="n">ops_to_groups</span><span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">current_groups</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+          <span class="k">continue</span>
+        <span class="n">current_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="n">_get_op_groups_helper</span><span class="p">(</span><span class="n">current_groups</span><span class="p">,</span> <span class="n">ops_to_groups</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">current_groups</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+      <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">root_group</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+        <span class="n">ops_to_groups</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">current_groups</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="n">ops_to_groups</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">current_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">root_group</span><span class="p">]</span>
+    <span class="n">_get_op_groups_helper</span><span class="p">(</span><span class="n">current_groups</span><span class="p">,</span> <span class="n">ops_to_groups</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ops_to_groups</span>
+
+  <span class="c1">#TODO: combine with the _get_groups_for_ops</span>
+  <span class="k">def</span> <span class="nf">_get_groups_for_opsgroups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function to get belonging groups for each opsgroup.</span>
+
+<span class="sd">    Each pipeline has a root group. Each group has a list of operators (leaf) and groups.</span>
+<span class="sd">    This function traverse the tree and get all ancestor groups for all opsgroups.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      A dict. Key is the opsgroup&#39;s name. Value is a list of ancestor groups including the</span>
+<span class="sd">              opsgroup itself. The list of a given opsgroup is sorted in a way that the farthest</span>
+<span class="sd">              group is the first and opsgroup itself is the last.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_get_opsgroup_groups_helper</span><span class="p">(</span><span class="n">current_groups</span><span class="p">,</span> <span class="n">opsgroups_to_groups</span><span class="p">):</span>
+      <span class="n">root_group</span> <span class="o">=</span> <span class="n">current_groups</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+      <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">root_group</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+        <span class="c1"># Add recursive opsgroup in the ops_to_groups</span>
+        <span class="c1"># such that the i/o dependency can be propagated to the ancester opsgroups</span>
+        <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">:</span>
+          <span class="k">continue</span>
+        <span class="n">opsgroups_to_groups</span><span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">current_groups</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">current_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="n">_get_opsgroup_groups_helper</span><span class="p">(</span><span class="n">current_groups</span><span class="p">,</span> <span class="n">opsgroups_to_groups</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">current_groups</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">opsgroups_to_groups</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">current_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">root_group</span><span class="p">]</span>
+    <span class="n">_get_opsgroup_groups_helper</span><span class="p">(</span><span class="n">current_groups</span><span class="p">,</span> <span class="n">opsgroups_to_groups</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">opsgroups_to_groups</span>
+
+  <span class="k">def</span> <span class="nf">_get_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function to get all groups (not including ops) in a pipeline.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_get_groups_helper</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+      <span class="n">groups</span> <span class="o">=</span> <span class="p">{</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">group</span><span class="p">}</span>
+      <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+        <span class="c1"># Skip the recursive opsgroup because no templates</span>
+        <span class="c1"># need to be generated for the recursive opsgroups.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">g</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">:</span>
+          <span class="n">groups</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_get_groups_helper</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
+      <span class="k">return</span> <span class="n">groups</span>
+
+    <span class="k">return</span> <span class="n">_get_groups_helper</span><span class="p">(</span><span class="n">root_group</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">_get_uncommon_ancestors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op_groups</span><span class="p">,</span> <span class="n">opsgroup_groups</span><span class="p">,</span> <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function to get unique ancestors between two ops.</span>
+
+<span class="sd">    For example, op1&#39;s ancestor groups are [root, G1, G2, G3, op1], op2&#39;s ancestor groups are</span>
+<span class="sd">    [root, G1, G4, op2], then it returns a tuple ([G2, G3, op1], [G4, op2]).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#TODO: extract a function for the following two code module</span>
+    <span class="k">if</span> <span class="n">op1</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">op_groups</span><span class="p">:</span>
+      <span class="n">op1_groups</span> <span class="o">=</span> <span class="n">op_groups</span><span class="p">[</span><span class="n">op1</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">op1</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">opsgroup_groups</span><span class="p">:</span>
+      <span class="n">op1_groups</span> <span class="o">=</span> <span class="n">opsgroup_groups</span><span class="p">[</span><span class="n">op1</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">op1</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; does not exist.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">op2</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">op_groups</span><span class="p">:</span>
+      <span class="n">op2_groups</span> <span class="o">=</span> <span class="n">op_groups</span><span class="p">[</span><span class="n">op2</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">op2</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">opsgroup_groups</span><span class="p">:</span>
+      <span class="n">op2_groups</span> <span class="o">=</span> <span class="n">opsgroup_groups</span><span class="p">[</span><span class="n">op2</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">op1</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; does not exist.&#39;</span><span class="p">)</span>
+
+    <span class="n">both_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">op1_groups</span><span class="p">,</span> <span class="n">op2_groups</span><span class="p">]</span>
+    <span class="n">common_groups_len</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">both_groups</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">==</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">group1</span> <span class="o">=</span> <span class="n">op1_groups</span><span class="p">[</span><span class="n">common_groups_len</span><span class="p">:]</span>
+    <span class="n">group2</span> <span class="o">=</span> <span class="n">op2_groups</span><span class="p">[</span><span class="n">common_groups_len</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">group1</span><span class="p">,</span> <span class="n">group2</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">_get_condition_params_for_ops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get parameters referenced in conditions of ops.&quot;&quot;&quot;</span>
+    <span class="n">conditions</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_condition_params_for_ops_helper</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">current_conditions_params</span><span class="p">):</span>
+      <span class="n">new_current_conditions_params</span> <span class="o">=</span> <span class="n">current_conditions_params</span>
+      <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;condition&#39;</span><span class="p">:</span>
+        <span class="n">new_current_conditions_params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">current_conditions_params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">operand1</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">):</span>
+          <span class="n">new_current_conditions_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">operand1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">operand2</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">):</span>
+          <span class="n">new_current_conditions_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">operand2</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">new_current_conditions_params</span><span class="p">:</span>
+          <span class="n">conditions</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+        <span class="c1"># If the subgroup is a recursive opsgroup, propagate the pipelineparams</span>
+        <span class="c1"># in the condition expression, similar to the ops.</span>
+        <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">:</span>
+          <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">new_current_conditions_params</span><span class="p">:</span>
+            <span class="n">conditions</span><span class="p">[</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">_get_condition_params_for_ops_helper</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">new_current_conditions_params</span><span class="p">)</span>
+    <span class="n">_get_condition_params_for_ops_helper</span><span class="p">(</span><span class="n">root_group</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="k">return</span> <span class="n">conditions</span>
+
+  <span class="k">def</span> <span class="nf">_get_next_group_or_op</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">to_visit</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">already_visited</span><span class="p">:</span> <span class="n">Set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get next group or op to visit.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_visit</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">return</span> <span class="kc">None</span>
+    <span class="nb">next</span> <span class="o">=</span> <span class="n">to_visit</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">while</span> <span class="nb">next</span> <span class="ow">in</span> <span class="n">already_visited</span><span class="p">:</span>
+      <span class="nb">next</span> <span class="o">=</span> <span class="n">to_visit</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">already_visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">next</span>
+
+  <span class="k">def</span> <span class="nf">_get_for_loop_ops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_root</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ParallelFor</span><span class="p">]:</span>
+    <span class="n">to_visit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_all_subgroups_and_ops</span><span class="p">(</span><span class="n">new_root</span><span class="p">)</span>
+    <span class="n">op_name_to_op</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">already_visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_visit</span><span class="p">):</span>
+      <span class="n">next_op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_group_or_op</span><span class="p">(</span><span class="n">to_visit</span><span class="p">,</span> <span class="n">already_visited</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">next_op</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">break</span>
+      <span class="n">to_visit</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_all_subgroups_and_ops</span><span class="p">(</span><span class="n">next_op</span><span class="p">))</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">next_op</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ParallelFor</span><span class="p">):</span>
+        <span class="n">op_name_to_op</span><span class="p">[</span><span class="n">next_op</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_op</span>
+
+    <span class="k">return</span> <span class="n">op_name_to_op</span>
+
+  <span class="k">def</span> <span class="nf">_get_all_subgroups_and_ops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get all ops and groups contained within this group.&quot;&quot;&quot;</span>
+    <span class="n">subgroups</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="s1">&#39;ops&#39;</span><span class="p">):</span>
+      <span class="n">subgroups</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">ops</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="s1">&#39;groups&#39;</span><span class="p">):</span>
+      <span class="n">subgroups</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">subgroups</span>
+
+  <span class="k">def</span> <span class="nf">_get_inputs_outputs</span><span class="p">(</span>
+          <span class="bp">self</span><span class="p">,</span>
+          <span class="n">pipeline</span><span class="p">,</span>
+          <span class="n">root_group</span><span class="p">,</span>
+          <span class="n">op_groups</span><span class="p">,</span>
+          <span class="n">opsgroup_groups</span><span class="p">,</span>
+          <span class="n">condition_params</span><span class="p">,</span>
+          <span class="n">op_name_to_for_loop_op</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ParallelFor</span><span class="p">],</span>
+  <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get inputs and outputs of each group and op.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      A tuple (inputs, outputs).</span>
+<span class="sd">      inputs and outputs are dicts with key being the group/op names and values being list of</span>
+<span class="sd">      tuples (param_name, producing_op_name). producing_op_name is the name of the op that</span>
+<span class="sd">      produces the param. If the param is a pipeline param (no producer op), then</span>
+<span class="sd">      producing_op_name is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="c1"># op&#39;s inputs and all params used in conditions for that op are both considered.</span>
+      <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">inputs</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">condition_params</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">]):</span>
+        <span class="c1"># if the value is already provided (immediate value), then no need to expose</span>
+        <span class="c1"># it as input for its parent groups.</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+          <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">:</span>
+          <span class="n">upstream_op</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">]</span>
+          <span class="n">upstream_groups</span><span class="p">,</span> <span class="n">downstream_groups</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_uncommon_ancestors</span><span class="p">(</span><span class="n">op_groups</span><span class="p">,</span> <span class="n">opsgroup_groups</span><span class="p">,</span> <span class="n">upstream_op</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+          <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">downstream_groups</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+              <span class="c1"># If it is the first uncommon downstream group, then the input comes from</span>
+              <span class="c1"># the first uncommon upstream group.</span>
+              <span class="n">inputs</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">param</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="n">upstream_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+              <span class="c1"># If not the first downstream group, then the input is passed down from</span>
+              <span class="c1"># its ancestor groups so the upstream group is None.</span>
+              <span class="n">inputs</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">param</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+          <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">upstream_groups</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">upstream_groups</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+              <span class="c1"># If last upstream group, it is an operator and output comes from container.</span>
+              <span class="n">outputs</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">param</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+              <span class="c1"># If not last upstream group, output value comes from one of its child.</span>
+              <span class="n">outputs</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">param</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="n">upstream_groups</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">is_exit_handler</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="n">op_groups</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+              <span class="c1"># if group is for loop group and param is that loop&#39;s param, then the param</span>
+              <span class="c1"># is created by that for loop ops_group and it shouldn&#39;t be an input to</span>
+              <span class="c1"># any of its parent groups.</span>
+              <span class="n">inputs</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">param</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+              <span class="k">if</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="n">op_name_to_for_loop_op</span><span class="p">:</span>
+                <span class="c1"># for example:</span>
+                <span class="c1">#   loop_group.loop_args.name = &#39;loop-item-param-99ca152e&#39;</span>
+                <span class="c1">#   param.name =                &#39;loop-item-param-99ca152e--a&#39;</span>
+                <span class="n">loop_group</span> <span class="o">=</span> <span class="n">op_name_to_for_loop_op</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">loop_group</span><span class="o">.</span><span class="n">loop_args</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                  <span class="k">break</span>
+
+
+    <span class="c1"># Generate the input/output for recursive opsgroups</span>
+    <span class="c1"># It propagates the recursive opsgroups IO to their ancester opsgroups</span>
+    <span class="k">def</span> <span class="nf">_get_inputs_outputs_recursive_opsgroup</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+      <span class="c1">#TODO: refactor the following codes with the above</span>
+      <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[(</span><span class="n">param</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">param</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">condition_params</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">])])</span>
+        <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">is_condition_param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="k">continue</span>
+          <span class="n">full_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipelineparam_full_name</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">:</span>
+            <span class="n">upstream_op</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">]</span>
+            <span class="n">upstream_groups</span><span class="p">,</span> <span class="n">downstream_groups</span> <span class="o">=</span> \
+              <span class="bp">self</span><span class="o">.</span><span class="n">_get_uncommon_ancestors</span><span class="p">(</span><span class="n">op_groups</span><span class="p">,</span> <span class="n">opsgroup_groups</span><span class="p">,</span> <span class="n">upstream_op</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">downstream_groups</span><span class="p">):</span>
+              <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">inputs</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">full_name</span><span class="p">,</span> <span class="n">upstream_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+              <span class="c1"># There is no need to pass the condition param as argument to the downstream ops.</span>
+              <span class="c1">#TODO: this might also apply to ops. add a TODO here and think about it.</span>
+              <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">downstream_groups</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">is_condition_param</span><span class="p">:</span>
+                <span class="k">continue</span>
+              <span class="k">else</span><span class="p">:</span>
+                <span class="n">inputs</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">full_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">upstream_groups</span><span class="p">):</span>
+              <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">upstream_groups</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">outputs</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">full_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+              <span class="k">else</span><span class="p">:</span>
+                <span class="n">outputs</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">full_name</span><span class="p">,</span> <span class="n">upstream_groups</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
+          <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_condition_param</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">op_groups</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">]:</span>
+              <span class="n">inputs</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">full_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+      <span class="k">for</span> <span class="n">subgroup</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+        <span class="n">_get_inputs_outputs_recursive_opsgroup</span><span class="p">(</span><span class="n">subgroup</span><span class="p">)</span>
+
+    <span class="n">_get_inputs_outputs_recursive_opsgroup</span><span class="p">(</span><span class="n">root_group</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span>
+
+  <span class="k">def</span> <span class="nf">_get_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">root_group</span><span class="p">,</span> <span class="n">op_groups</span><span class="p">,</span> <span class="n">opsgroups_groups</span><span class="p">,</span> <span class="n">opsgroups</span><span class="p">,</span> <span class="n">condition_params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get dependent groups and ops for all ops and groups.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      A dict. Key is group/op name, value is a list of dependent groups/ops.</span>
+<span class="sd">      The dependencies are calculated in the following way: if op2 depends on op1,</span>
+<span class="sd">      and their ancestors are [root, G1, G2, op1] and [root, G1, G3, G4, op2],</span>
+<span class="sd">      then G3 is dependent on G2. Basically dependency only exists in the first uncommon</span>
+<span class="sd">      ancesters in their ancesters chain. Only sibling groups/ops can have dependencies.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="n">upstream_op_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">inputs</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">condition_params</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">:</span>
+          <span class="n">upstream_op_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">)</span>
+      <span class="n">upstream_op_names</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dependent_names</span><span class="p">)</span>
+
+      <span class="k">for</span> <span class="n">upstream_op_name</span> <span class="ow">in</span> <span class="n">upstream_op_names</span><span class="p">:</span>
+        <span class="c1"># the dependent op could be either a BaseOp or an opsgroup</span>
+        <span class="k">if</span> <span class="n">upstream_op_name</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+          <span class="n">upstream_op</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="n">upstream_op_name</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">upstream_op_name</span> <span class="ow">in</span> <span class="n">opsgroups</span><span class="p">:</span>
+          <span class="n">upstream_op</span> <span class="o">=</span> <span class="n">opsgroups</span><span class="p">[</span><span class="n">upstream_op_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;compiler cannot find the &#39;</span> <span class="o">+</span> <span class="n">upstream_op_name</span><span class="p">)</span>
+
+        <span class="n">upstream_groups</span><span class="p">,</span> <span class="n">downstream_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_uncommon_ancestors</span><span class="p">(</span><span class="n">op_groups</span><span class="p">,</span> <span class="n">opsgroups_groups</span><span class="p">,</span> <span class="n">upstream_op</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+        <span class="n">dependencies</span><span class="p">[</span><span class="n">downstream_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">upstream_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Generate dependencies based on the recursive opsgroups</span>
+    <span class="c1">#TODO: refactor the following codes with the above</span>
+    <span class="k">def</span> <span class="nf">_get_dependency_opsgroup</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">):</span>
+      <span class="n">upstream_op_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">dependency</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">dependency</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">dependencies</span><span class="p">])</span>
+      <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">inputs</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">condition_params</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">]):</span>
+          <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">:</span>
+            <span class="n">upstream_op_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">)</span>
+
+      <span class="k">for</span> <span class="n">op_name</span> <span class="ow">in</span> <span class="n">upstream_op_names</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">op_name</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+          <span class="n">upstream_op</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="n">op_name</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">op_name</span> <span class="ow">in</span> <span class="n">opsgroups_groups</span><span class="p">:</span>
+          <span class="n">upstream_op</span> <span class="o">=</span> <span class="n">opsgroups_groups</span><span class="p">[</span><span class="n">op_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;compiler cannot find the &#39;</span> <span class="o">+</span> <span class="n">op_name</span><span class="p">)</span>
+        <span class="n">upstream_groups</span><span class="p">,</span> <span class="n">downstream_groups</span> <span class="o">=</span> \
+          <span class="bp">self</span><span class="o">.</span><span class="n">_get_uncommon_ancestors</span><span class="p">(</span><span class="n">op_groups</span><span class="p">,</span> <span class="n">opsgroups_groups</span><span class="p">,</span> <span class="n">upstream_op</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+        <span class="n">dependencies</span><span class="p">[</span><span class="n">downstream_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">upstream_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+      <span class="k">for</span> <span class="n">subgroup</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+        <span class="n">_get_dependency_opsgroup</span><span class="p">(</span><span class="n">subgroup</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">)</span>
+
+    <span class="n">_get_dependency_opsgroup</span><span class="p">(</span><span class="n">root_group</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dependencies</span>
+
+  <span class="k">def</span> <span class="nf">_resolve_value_or_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_or_reference</span><span class="p">,</span> <span class="n">potential_references</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;_resolve_value_or_reference resolves values and PipelineParams, which could be task parameters or input parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      value_or_reference: value or reference to be resolved. It could be basic python types or PipelineParam</span>
+<span class="sd">      potential_references(dict{str-&gt;str}): a dictionary of parameter names to task names</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_or_reference</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">):</span>
+      <span class="n">parameter_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipelineparam_full_name</span><span class="p">(</span><span class="n">value_or_reference</span><span class="p">)</span>
+      <span class="n">task_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">task_name</span> <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">task_name</span> <span class="ow">in</span> <span class="n">potential_references</span> <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="n">parameter_name</span><span class="p">]</span>
+      <span class="k">if</span> <span class="n">task_names</span><span class="p">:</span>
+        <span class="n">task_name</span> <span class="o">=</span> <span class="n">task_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># When the task_name is None, the parameter comes directly from ancient ancesters</span>
+        <span class="c1"># instead of parents. Thus, it is resolved as the input parameter in the current group.</span>
+        <span class="k">if</span> <span class="n">task_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">return</span> <span class="s1">&#39;{{inputs.parameters.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="n">parameter_name</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">return</span> <span class="s1">&#39;{{tasks.</span><span class="si">%s</span><span class="s1">.outputs.parameters.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">task_name</span><span class="p">,</span> <span class="n">parameter_name</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;{{inputs.parameters.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="n">parameter_name</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value_or_reference</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">_group_to_dag_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate template given an OpsGroup.</span>
+
+<span class="sd">    inputs, outputs, dependencies are all helper dicts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+
+    <span class="c1"># Generate inputs section.</span>
+    <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+      <span class="n">template_inputs</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">]]</span>
+      <span class="n">template_inputs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+      <span class="n">template</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">template_inputs</span>
+      <span class="p">}</span>
+
+    <span class="c1"># Generate outputs section.</span>
+    <span class="k">if</span> <span class="n">outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+      <span class="n">template_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">dependent_name</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">]:</span>
+        <span class="n">template_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">param_name</span><span class="p">,</span>
+          <span class="s1">&#39;valueFrom&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;parameter&#39;</span><span class="p">:</span> <span class="s1">&#39;{{tasks.</span><span class="si">%s</span><span class="s1">.outputs.parameters.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dependent_name</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+          <span class="p">}</span>
+        <span class="p">})</span>
+      <span class="n">template_outputs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+      <span class="n">template</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">template_outputs</span><span class="p">}</span>
+
+    <span class="c1"># Generate tasks section.</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sub_group</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">groups</span> <span class="o">+</span> <span class="n">group</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+      <span class="n">is_recursive_subgroup</span> <span class="o">=</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_group</span><span class="p">,</span> <span class="n">OpsGroup</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">recursive_ref</span><span class="p">)</span>
+      <span class="c1"># Special handling for recursive subgroup: use the existing opsgroup name</span>
+      <span class="k">if</span> <span class="n">is_recursive_subgroup</span><span class="p">:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">recursive_ref</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;template&#39;</span><span class="p">:</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">recursive_ref</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="p">}</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+          <span class="s1">&#39;template&#39;</span><span class="p">:</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="p">}</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_group</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">OpsGroup</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;condition&#39;</span><span class="p">:</span>
+        <span class="n">subgroup_inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">condition</span>
+        <span class="n">operand1_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_value_or_reference</span><span class="p">(</span><span class="n">condition</span><span class="o">.</span><span class="n">operand1</span><span class="p">,</span> <span class="n">subgroup_inputs</span><span class="p">)</span>
+        <span class="n">operand2_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_value_or_reference</span><span class="p">(</span><span class="n">condition</span><span class="o">.</span><span class="n">operand2</span><span class="p">,</span> <span class="n">subgroup_inputs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">condition</span><span class="o">.</span><span class="n">operator</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;==&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">]:</span>
+          <span class="n">operand1_value</span> <span class="o">=</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="n">operand1_value</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+          <span class="n">operand2_value</span> <span class="o">=</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="n">operand2_value</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+        <span class="n">task</span><span class="p">[</span><span class="s1">&#39;when&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operand1_value</span><span class="p">,</span> <span class="n">condition</span><span class="o">.</span><span class="n">operator</span><span class="p">,</span> <span class="n">operand2_value</span><span class="p">)</span>
+
+      <span class="c1"># Generate dependencies section for this task.</span>
+      <span class="k">if</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">group_dependencies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dependencies</span><span class="p">[</span><span class="n">sub_group</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+        <span class="n">group_dependencies</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">task</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_dependencies</span>
+
+      <span class="c1"># Generate arguments section for this task.</span>
+      <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sub_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">task</span><span class="p">[</span><span class="s1">&#39;arguments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_arguments_for_sub_group</span><span class="p">(</span><span class="n">sub_group</span><span class="p">,</span> <span class="n">is_recursive_subgroup</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)}</span>
+
+      <span class="c1"># additional task modifications for withItems and withParam</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_group</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ParallelFor</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">items_is_pipeline_param</span><span class="p">:</span>
+          <span class="c1"># these loop args are a &#39;withParam&#39; rather than &#39;withItems&#39;.</span>
+          <span class="c1"># i.e., rather than a static list, they are either the output of another task or were input</span>
+          <span class="c1"># as global pipeline parameters</span>
+
+          <span class="n">pipeline_param</span> <span class="o">=</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">loop_args</span><span class="o">.</span><span class="n">items_or_pipeline_param</span>
+          <span class="k">if</span> <span class="n">pipeline_param</span><span class="o">.</span><span class="n">op_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">withparam_value</span> <span class="o">=</span> <span class="s1">&#39;{{workflow.parameters.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="n">pipeline_param</span><span class="o">.</span><span class="n">name</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">param_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+              <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">pipeline_param</span><span class="o">.</span><span class="n">op_name</span><span class="p">),</span> <span class="n">pipeline_param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">withparam_value</span> <span class="o">=</span> <span class="s1">&#39;{{tasks.</span><span class="si">%s</span><span class="s1">.outputs.parameters.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">pipeline_param</span><span class="o">.</span><span class="n">op_name</span><span class="p">),</span>
+                <span class="n">param_name</span><span class="p">)</span>
+
+            <span class="c1"># these loop args are the output of another task</span>
+            <span class="k">if</span> <span class="s1">&#39;dependencies&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">task</span> <span class="ow">or</span> <span class="n">task</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+              <span class="n">task</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span>
+                <span class="n">pipeline_param</span><span class="o">.</span><span class="n">op_name</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">task</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]:</span>
+              <span class="n">task</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                  <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">pipeline_param</span><span class="o">.</span><span class="n">op_name</span><span class="p">))</span>
+
+          <span class="n">task</span><span class="p">[</span><span class="s1">&#39;withParam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">withparam_value</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="c1"># Need to sanitize the dict keys for consistency.</span>
+          <span class="n">loop_tasks</span> <span class="o">=</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">loop_args</span><span class="o">.</span><span class="n">to_list_for_task_yaml</span><span class="p">()</span>
+          <span class="n">sanitized_tasks</span> <span class="o">=</span> <span class="p">[]</span>
+          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loop_tasks</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">argument_set</span> <span class="ow">in</span> <span class="n">loop_tasks</span><span class="p">:</span>
+              <span class="n">c_dict</span> <span class="o">=</span> <span class="p">{}</span>
+              <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">argument_set</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">c_dict</span><span class="p">[</span><span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>
+              <span class="n">sanitized_tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c_dict</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">sanitized_tasks</span> <span class="o">=</span> <span class="n">loop_tasks</span>
+          <span class="n">task</span><span class="p">[</span><span class="s1">&#39;withItems&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sanitized_tasks</span>
+
+      <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+    <span class="n">tasks</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+    <span class="n">template</span><span class="p">[</span><span class="s1">&#39;dag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;tasks&#39;</span><span class="p">:</span> <span class="n">tasks</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">template</span>
+
+<div class="viewcode-block" id="Compiler.get_arguments_for_sub_group"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.Compiler.get_arguments_for_sub_group">[docs]</a>  <span class="k">def</span> <span class="nf">get_arguments_for_sub_group</span><span class="p">(</span>
+          <span class="bp">self</span><span class="p">,</span>
+          <span class="n">sub_group</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OpsGroup</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">_container_op</span><span class="o">.</span><span class="n">BaseOp</span><span class="p">],</span>
+          <span class="n">is_recursive_subgroup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
+          <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Text</span><span class="p">]],</span>
+  <span class="p">):</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">dependent_name</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">[</span><span class="n">sub_group</span><span class="o">.</span><span class="n">name</span><span class="p">]:</span>
+      <span class="k">if</span> <span class="n">is_recursive_subgroup</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="nb">input</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sub_group</span><span class="o">.</span><span class="n">inputs</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipelineparam_full_name</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+            <span class="k">break</span>
+        <span class="n">referenced_input</span> <span class="o">=</span> <span class="n">sub_group</span><span class="o">.</span><span class="n">recursive_ref</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">argument_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipelineparam_full_name</span><span class="p">(</span><span class="n">referenced_input</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">argument_name</span> <span class="o">=</span> <span class="n">param_name</span>
+
+      <span class="c1"># Preparing argument. It can be pipeline input reference, task output reference or loop item (or loop item attribute</span>
+      <span class="n">sanitized_loop_arg_full_name</span> <span class="o">=</span> <span class="s1">&#39;---&#39;</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_group</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ParallelFor</span><span class="p">):</span>
+        <span class="n">sanitized_loop_arg_full_name</span> <span class="o">=</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipelineparam_full_name</span><span class="p">(</span><span class="n">sub_group</span><span class="o">.</span><span class="n">loop_args</span><span class="p">))</span>
+      <span class="n">arg_ref_full_name</span> <span class="o">=</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+      <span class="c1"># We only care about the reference to the current loop item, not the outer loops</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_group</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ParallelFor</span><span class="p">)</span> <span class="ow">and</span> <span class="n">arg_ref_full_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">sanitized_loop_arg_full_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">arg_ref_full_name</span> <span class="o">==</span> <span class="n">sanitized_loop_arg_full_name</span><span class="p">:</span>
+          <span class="n">argument_value</span> <span class="o">=</span> <span class="s1">&#39;{{item}}&#39;</span>
+        <span class="k">elif</span> <span class="n">_for_loop</span><span class="o">.</span><span class="n">LoopArgumentVariable</span><span class="o">.</span><span class="n">name_is_loop_arguments_variable</span><span class="p">(</span><span class="n">param_name</span><span class="p">):</span>
+          <span class="n">subvar_name</span> <span class="o">=</span> <span class="n">_for_loop</span><span class="o">.</span><span class="n">LoopArgumentVariable</span><span class="o">.</span><span class="n">get_subvar_name</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+          <span class="n">argument_value</span> <span class="o">=</span> <span class="s1">&#39;{{item.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="n">subvar_name</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Argument seems to reference the loop item, but not the item itself and not some attribute of the item. param_name: </span><span class="si">{}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param_name</span><span class="p">))</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dependent_name</span><span class="p">:</span>
+          <span class="n">argument_value</span> <span class="o">=</span> <span class="s1">&#39;{{tasks.</span><span class="si">%s</span><span class="s1">.outputs.parameters.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dependent_name</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">argument_value</span> <span class="o">=</span> <span class="s1">&#39;{{inputs.parameters.</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="n">param_name</span>
+
+      <span class="n">arguments</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">argument_name</span><span class="p">,</span>
+        <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">argument_value</span><span class="p">,</span>
+      <span class="p">})</span>
+
+    <span class="n">arguments</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">arguments</span></div>
+
+  <span class="k">def</span> <span class="nf">_create_dag_templates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">op_transformers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">op_to_templates_handler</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create all groups and ops templates in the pipeline.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      pipeline: Pipeline context object to get all the pipeline data from.</span>
+<span class="sd">      op_transformers: A list of functions that are applied to all ContainerOp instances that are being processed.</span>
+<span class="sd">      op_to_templates_handler: Handler which converts a base op into a list of argo templates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">op_to_templates_handler</span> <span class="o">=</span> <span class="n">op_to_templates_handler</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">op</span> <span class="p">:</span> <span class="p">[</span><span class="n">_op_to_template</span><span class="p">(</span><span class="n">op</span><span class="p">)])</span>
+    <span class="n">root_group</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Call the transformation functions before determining the inputs/outputs, otherwise</span>
+    <span class="c1"># the user would not be able to use pipeline parameters in the container definition</span>
+    <span class="c1"># (for example as pod labels) - the generated template is invalid.</span>
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="k">for</span> <span class="n">transformer</span> <span class="ow">in</span> <span class="n">op_transformers</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="n">transformer</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+
+    <span class="c1"># Generate core data structures to prepare for argo yaml generation</span>
+    <span class="c1">#   op_name_to_parent_groups: op name -&gt; list of ancestor groups including the current op</span>
+    <span class="c1">#   opsgroups: a dictionary of ospgroup.name -&gt; opsgroup</span>
+    <span class="c1">#   inputs, outputs: group/op names -&gt; list of tuples (full_param_name, producing_op_name)</span>
+    <span class="c1">#   condition_params: recursive_group/op names -&gt; list of pipelineparam</span>
+    <span class="c1">#   dependencies: group/op name -&gt; list of dependent groups/ops.</span>
+    <span class="c1"># Special Handling for the recursive opsgroup</span>
+    <span class="c1">#   op_name_to_parent_groups also contains the recursive opsgroups</span>
+    <span class="c1">#   condition_params from _get_condition_params_for_ops also contains the recursive opsgroups</span>
+    <span class="c1">#   groups does not include the recursive opsgroups</span>
+    <span class="n">opsgroups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_groups</span><span class="p">(</span><span class="n">root_group</span><span class="p">)</span>
+    <span class="n">op_name_to_parent_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_groups_for_ops</span><span class="p">(</span><span class="n">root_group</span><span class="p">)</span>
+    <span class="n">opgroup_name_to_parent_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_groups_for_opsgroups</span><span class="p">(</span><span class="n">root_group</span><span class="p">)</span>
+    <span class="n">condition_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_condition_params_for_ops</span><span class="p">(</span><span class="n">root_group</span><span class="p">)</span>
+    <span class="n">op_name_to_for_loop_op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_for_loop_ops</span><span class="p">(</span><span class="n">root_group</span><span class="p">)</span>
+    <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inputs_outputs</span><span class="p">(</span>
+      <span class="n">pipeline</span><span class="p">,</span>
+      <span class="n">root_group</span><span class="p">,</span>
+      <span class="n">op_name_to_parent_groups</span><span class="p">,</span>
+      <span class="n">opgroup_name_to_parent_groups</span><span class="p">,</span>
+      <span class="n">condition_params</span><span class="p">,</span>
+      <span class="n">op_name_to_for_loop_op</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dependencies</span><span class="p">(</span>
+      <span class="n">pipeline</span><span class="p">,</span>
+      <span class="n">root_group</span><span class="p">,</span>
+      <span class="n">op_name_to_parent_groups</span><span class="p">,</span>
+      <span class="n">opgroup_name_to_parent_groups</span><span class="p">,</span>
+      <span class="n">opsgroups</span><span class="p">,</span>
+      <span class="n">condition_params</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">templates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">opsgroup</span> <span class="ow">in</span> <span class="n">opsgroups</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+      <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_group_to_dag_template</span><span class="p">(</span><span class="n">opsgroups</span><span class="p">[</span><span class="n">opsgroup</span><span class="p">],</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">dependencies</span><span class="p">)</span>
+      <span class="n">templates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="n">templates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">op_to_templates_handler</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">templates</span>
+
+  <span class="k">def</span> <span class="nf">_create_pipeline_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">op_transformers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create workflow for the pipeline.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Input Parameters</span>
+    <span class="n">input_params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+      <span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+      <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+          <span class="n">param</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">param</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="n">input_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+    <span class="c1"># Making the pipeline group name unique to prevent name clashes with templates</span>
+    <span class="n">pipeline_group</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">temp_pipeline_group_name</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+    <span class="n">pipeline_group</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">temp_pipeline_group_name</span>
+
+    <span class="c1"># Templates</span>
+    <span class="n">templates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dag_templates</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">op_transformers</span><span class="p">)</span>
+
+    <span class="c1"># Exit Handler</span>
+    <span class="n">exit_handler</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+      <span class="n">first_group</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="k">if</span> <span class="n">first_group</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;exit_handler&#39;</span><span class="p">:</span>
+        <span class="n">exit_handler</span> <span class="o">=</span> <span class="n">first_group</span><span class="o">.</span><span class="n">exit_op</span>
+
+    <span class="c1"># The whole pipeline workflow</span>
+    <span class="n">pipeline_name</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;Pipeline&#39;</span>
+
+    <span class="c1"># Workaround for pipeline name clashing with container template names</span>
+    <span class="c1"># TODO: Make sure template names cannot clash at all (container, DAG, workflow)</span>
+    <span class="n">template_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">template</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">template</span>  <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">templates</span><span class="p">}</span>
+    <span class="kn">from</span> <span class="nn">..components._naming</span> <span class="kn">import</span> <span class="n">_make_name_unique_by_adding_index</span>
+    <span class="n">pipeline_template_name</span> <span class="o">=</span> <span class="n">_make_name_unique_by_adding_index</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">,</span> <span class="n">template_map</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Restoring the name of the pipeline template</span>
+    <span class="n">pipeline_template</span> <span class="o">=</span> <span class="n">template_map</span><span class="p">[</span><span class="n">temp_pipeline_group_name</span><span class="p">]</span>
+    <span class="n">pipeline_template</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline_template_name</span>
+
+    <span class="n">templates</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;apiVersion&#39;</span><span class="p">:</span> <span class="s1">&#39;argoproj.io/v1alpha1&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s1">&#39;Workflow&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;generateName&#39;</span><span class="p">:</span> <span class="n">pipeline_template_name</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="p">},</span>
+      <span class="s1">&#39;spec&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;entrypoint&#39;</span><span class="p">:</span> <span class="n">pipeline_template_name</span><span class="p">,</span>
+        <span class="s1">&#39;templates&#39;</span><span class="p">:</span> <span class="n">templates</span><span class="p">,</span>
+        <span class="s1">&#39;arguments&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">input_params</span><span class="p">},</span>
+        <span class="s1">&#39;serviceAccountName&#39;</span><span class="p">:</span> <span class="s1">&#39;pipeline-runner&#39;</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1"># set parallelism limits at pipeline level</span>
+    <span class="k">if</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">parallelism</span><span class="p">:</span>
+      <span class="n">workflow</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">][</span><span class="s1">&#39;parallelism&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">parallelism</span>
+
+    <span class="c1"># set ttl after workflow finishes</span>
+    <span class="k">if</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">ttl_seconds_after_finished</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">workflow</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">][</span><span class="s1">&#39;ttlSecondsAfterFinished&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">ttl_seconds_after_finished</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pipeline_conf</span><span class="o">.</span><span class="n">image_pull_secrets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">image_pull_secrets</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">for</span> <span class="n">image_pull_secret</span> <span class="ow">in</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">image_pull_secrets</span><span class="p">:</span>
+        <span class="n">image_pull_secrets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">convert_k8s_obj_to_json</span><span class="p">(</span><span class="n">image_pull_secret</span><span class="p">))</span>
+      <span class="n">workflow</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">][</span><span class="s1">&#39;imagePullSecrets&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image_pull_secrets</span>
+
+    <span class="k">if</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
+      <span class="n">workflow</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">][</span><span class="s1">&#39;activeDeadlineSeconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">timeout</span>
+
+    <span class="k">if</span> <span class="n">exit_handler</span><span class="p">:</span>
+      <span class="n">workflow</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">][</span><span class="s1">&#39;onExit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exit_handler</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="c1"># This can be overwritten by the task specific </span>
+    <span class="c1"># nodeselection, specified in the template.</span>
+    <span class="k">if</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">default_pod_node_selector</span><span class="p">:</span>
+      <span class="n">workflow</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">][</span><span class="s1">&#39;nodeSelector&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">default_pod_node_selector</span>
+
+    <span class="k">if</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">image_pull_policy</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">image_pull_policy</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Always&quot;</span><span class="p">,</span> <span class="s2">&quot;Never&quot;</span><span class="p">,</span> <span class="s2">&quot;IfNotPresent&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">workflow</span><span class="p">[</span><span class="s2">&quot;spec&quot;</span><span class="p">][</span><span class="s2">&quot;templates&quot;</span><span class="p">]:</span>
+          <span class="n">container</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">container</span> <span class="ow">and</span> <span class="s2">&quot;imagePullPolicy&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">container</span><span class="p">:</span>
+            <span class="n">container</span><span class="p">[</span><span class="s2">&quot;imagePullPolicy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pipeline_conf</span><span class="o">.</span><span class="n">image_pull_policy</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                  <span class="s1">&#39;Invalid imagePullPolicy. Must be one of `Always`, `Never`, `IfNotPresent`.&#39;</span>
+              <span class="p">)</span>
+    <span class="k">return</span> <span class="n">workflow</span>
+
+  <span class="k">def</span> <span class="nf">_validate_exit_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Makes sure there is only one global exit handler.</span>
+
+<span class="sd">    Note this is a temporary workaround until argo supports local exit handler.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_validate_exit_handler_helper</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">exiting_op_names</span><span class="p">,</span> <span class="n">handler_exists</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;exit_handler&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">handler_exists</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">exiting_op_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only one global exit_handler is allowed and all ops need to be included.&#39;</span><span class="p">)</span>
+        <span class="n">handler_exists</span> <span class="o">=</span> <span class="kc">True</span>
+
+      <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">ops</span><span class="p">:</span>
+        <span class="n">exiting_op_names</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">ops</span><span class="p">])</span>
+
+      <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+        <span class="n">_validate_exit_handler_helper</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">exiting_op_names</span><span class="p">,</span> <span class="n">handler_exists</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_validate_exit_handler_helper</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[],</span> <span class="kc">False</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">_sanitize_and_inject_artifact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">:</span> <span class="n">dsl</span><span class="o">.</span><span class="n">Pipeline</span><span class="p">,</span> <span class="n">pipeline_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sanitize operator/param names and inject pipeline artifact location.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Sanitize operator names and param names</span>
+    <span class="n">sanitized_ops</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="n">sanitized_name</span> <span class="o">=</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+      <span class="n">op</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">sanitized_name</span>
+      <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">:</span>
+          <span class="n">param</span><span class="o">.</span><span class="n">op_name</span> <span class="o">=</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">op_name</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">_container_op</span><span class="o">.</span><span class="n">_MultipleOutputsError</span><span class="p">):</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">op_name</span> <span class="o">=</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">op_name</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">dependent_names</span><span class="p">:</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">dependent_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">dependent_names</span><span class="p">]</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ContainerOp</span><span class="p">)</span> <span class="ow">and</span> <span class="n">op</span><span class="o">.</span><span class="n">file_outputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sanitized_file_outputs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">file_outputs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+          <span class="n">sanitized_file_outputs</span><span class="p">[</span><span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">file_outputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">file_outputs</span> <span class="o">=</span> <span class="n">sanitized_file_outputs</span>
+      <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">ResourceOp</span><span class="p">)</span> <span class="ow">and</span> <span class="n">op</span><span class="o">.</span><span class="n">attribute_outputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sanitized_attribute_outputs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">attribute_outputs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+          <span class="n">sanitized_attribute_outputs</span><span class="p">[</span><span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]</span> <span class="o">=</span> \
+            <span class="n">op</span><span class="o">.</span><span class="n">attribute_outputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">attribute_outputs</span> <span class="o">=</span> <span class="n">sanitized_attribute_outputs</span>
+      <span class="n">sanitized_ops</span><span class="p">[</span><span class="n">sanitized_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">op</span>
+    <span class="n">pipeline</span><span class="o">.</span><span class="n">ops</span> <span class="o">=</span> <span class="n">sanitized_ops</span>
+
+  <span class="k">def</span> <span class="nf">_create_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+      <span class="n">pipeline_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+      <span class="n">pipeline_name</span><span class="p">:</span> <span class="n">Text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">pipeline_description</span><span class="p">:</span> <span class="n">Text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">params_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineConf</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+      <span class="n">allow_telemetry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot; Internal implementation of create_workflow.&quot;&quot;&quot;</span>
+    <span class="n">params_list</span> <span class="o">=</span> <span class="n">params_list</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">argspec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">pipeline_func</span><span class="p">)</span>
+
+    <span class="c1"># Create the arg list with no default values and call pipeline function.</span>
+    <span class="c1"># Assign type information to the PipelineParam</span>
+    <span class="n">pipeline_meta</span> <span class="o">=</span> <span class="n">_extract_pipeline_metadata</span><span class="p">(</span><span class="n">pipeline_func</span><span class="p">)</span>
+    <span class="n">pipeline_meta</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">pipeline_name</span> <span class="ow">or</span> <span class="n">pipeline_meta</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">pipeline_meta</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">pipeline_description</span> <span class="ow">or</span> <span class="n">pipeline_meta</span><span class="o">.</span><span class="n">description</span>
+    <span class="n">pipeline_name</span> <span class="o">=</span> <span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">pipeline_meta</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Need to first clear the default value of dsl.PipelineParams. Otherwise, it</span>
+    <span class="c1"># will be resolved immediately in place when being to each component.</span>
+    <span class="n">default_param_values</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">:</span>
+      <span class="n">default_param_values</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">value</span>
+      <span class="n">param</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Currently only allow specifying pipeline params at one place.</span>
+    <span class="k">if</span> <span class="n">params_list</span> <span class="ow">and</span> <span class="n">pipeline_meta</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Either specify pipeline params in the pipeline function, or in &quot;params_list&quot;, but not both.&#39;</span><span class="p">)</span>
+
+
+    <span class="n">args_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">arg_name</span> <span class="ow">in</span> <span class="n">argspec</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+      <span class="n">arg_type</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">pipeline_meta</span><span class="o">.</span><span class="n">inputs</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="k">if</span> <span class="n">arg_name</span> <span class="o">==</span> <span class="nb">input</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+          <span class="n">arg_type</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">type</span>
+          <span class="k">break</span>
+      <span class="n">args_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">(</span><span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">arg_name</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">param_type</span><span class="o">=</span><span class="n">arg_type</span><span class="p">))</span>
+
+    <span class="k">with</span> <span class="n">dsl</span><span class="o">.</span><span class="n">Pipeline</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsl_pipeline</span><span class="p">:</span>
+      <span class="n">pipeline_func</span><span class="p">(</span><span class="o">*</span><span class="n">args_list</span><span class="p">)</span>
+
+    <span class="n">pipeline_conf</span> <span class="o">=</span> <span class="n">pipeline_conf</span> <span class="ow">or</span> <span class="n">dsl_pipeline</span><span class="o">.</span><span class="n">conf</span> <span class="c1"># Configuration passed to the compiler is overriding. Unfortunately, it&#39;s not trivial to detect whether the dsl_pipeline.conf was ever modified.</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate_exit_handler</span><span class="p">(</span><span class="n">dsl_pipeline</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_sanitize_and_inject_artifact</span><span class="p">(</span><span class="n">dsl_pipeline</span><span class="p">,</span> <span class="n">pipeline_conf</span><span class="p">)</span>
+
+    <span class="c1"># Fill in the default values.</span>
+    <span class="n">args_list_with_defaults</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">pipeline_meta</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+      <span class="n">args_list_with_defaults</span> <span class="o">=</span> <span class="p">[</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">(</span><span class="n">sanitize_k8s_name</span><span class="p">(</span><span class="n">arg_name</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+                                 <span class="k">for</span> <span class="n">arg_name</span> <span class="ow">in</span> <span class="n">argspec</span><span class="o">.</span><span class="n">args</span><span class="p">]</span>
+      <span class="k">if</span> <span class="n">argspec</span><span class="o">.</span><span class="n">defaults</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">default</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">args_list_with_defaults</span><span class="p">),</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">argspec</span><span class="o">.</span><span class="n">defaults</span><span class="p">)):</span>
+          <span class="n">arg</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">default</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">)</span> <span class="k">else</span> <span class="n">default</span>
+    <span class="k">elif</span> <span class="n">params_list</span><span class="p">:</span>
+      <span class="c1"># Or, if args are provided by params_list, fill in pipeline_meta.</span>
+      <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">:</span>
+        <span class="n">param</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">default_param_values</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+      <span class="n">args_list_with_defaults</span> <span class="o">=</span> <span class="n">params_list</span>
+      <span class="n">pipeline_meta</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">InputSpec</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">param_type</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="n">param</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params_list</span><span class="p">]</span>
+
+    <span class="n">op_transformers</span> <span class="o">=</span> <span class="p">[</span><span class="n">add_pod_env</span><span class="p">]</span>
+    <span class="c1"># By default adds telemetry instruments. Users can opt out toggling</span>
+    <span class="c1"># allow_telemetry.</span>
+    <span class="c1"># Also, TFX pipelines will be bypassed for pipeline compiled by tfx&gt;0.21.4.</span>
+    <span class="k">if</span> <span class="n">allow_telemetry</span><span class="p">:</span>
+      <span class="n">pod_labels</span> <span class="o">=</span> <span class="n">get_default_telemetry_labels</span><span class="p">()</span>
+      <span class="n">op_transformers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_pod_labels</span><span class="p">(</span><span class="n">pod_labels</span><span class="p">))</span>
+
+    <span class="n">op_transformers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pipeline_conf</span><span class="o">.</span><span class="n">op_transformers</span><span class="p">)</span>
+
+    <span class="n">workflow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_pipeline_workflow</span><span class="p">(</span>
+        <span class="n">args_list_with_defaults</span><span class="p">,</span>
+        <span class="n">dsl_pipeline</span><span class="p">,</span>
+        <span class="n">op_transformers</span><span class="p">,</span>
+        <span class="n">pipeline_conf</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">._data_passing_rewriter</span> <span class="kn">import</span> <span class="n">fix_big_data_passing</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="n">fix_big_data_passing</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">annotations</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;annotations&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="n">annotations</span><span class="p">[</span><span class="s1">&#39;pipelines.kubeflow.org/kfp_sdk_version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kfp</span><span class="o">.</span><span class="n">__version__</span>
+    <span class="n">annotations</span><span class="p">[</span><span class="s1">&#39;pipelines.kubeflow.org/pipeline_compilation_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="n">annotations</span><span class="p">[</span><span class="s1">&#39;pipelines.kubeflow.org/pipeline_spec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">pipeline_meta</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Labels might be logged better than annotations so adding some information here as well</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">labels</span><span class="p">[</span><span class="s1">&#39;pipelines.kubeflow.org/kfp_sdk_version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kfp</span><span class="o">.</span><span class="n">__version__</span>
+
+    <span class="k">return</span> <span class="n">workflow</span>
+
+  <span class="c1"># For now (0.1.31) this function is only used by TFX&#39;s KubeflowDagRunner.</span>
+  <span class="c1"># See https://github.com/tensorflow/tfx/blob/811e4c1cc0f7903d73d151b9d4f21f79f6013d4a/tfx/orchestration/kubeflow/kubeflow_dag_runner.py#L238</span>
+<div class="viewcode-block" id="Compiler.create_workflow"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.Compiler.create_workflow">[docs]</a>  <span class="nd">@deprecated</span><span class="p">(</span>
+      <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.32&#39;</span><span class="p">,</span>
+      <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Workflow spec is not intended to be handled by user, please &#39;</span>
+             <span class="s1">&#39;switch to _create_workflow&#39;</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">create_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">pipeline_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+                      <span class="n">pipeline_name</span><span class="p">:</span> <span class="n">Text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">pipeline_description</span><span class="p">:</span> <span class="n">Text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">params_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineConf</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot; Create workflow spec from pipeline function and specified pipeline</span>
+<span class="sd">    params/metadata. Currently, the pipeline params are either specified in</span>
+<span class="sd">    the signature of the pipeline function or by passing a list of</span>
+<span class="sd">    dsl.PipelineParam. Conflict will cause ValueError.</span>
+
+<span class="sd">    :param pipeline_func: pipeline function where ContainerOps are invoked.</span>
+<span class="sd">    :param pipeline_name:</span>
+<span class="sd">    :param pipeline_description:</span>
+<span class="sd">    :param params_list: list of pipeline params to append to the pipeline.</span>
+<span class="sd">    :param pipeline_conf: PipelineConf instance. Can specify op transforms, image pull secrets and other pipeline-level configuration options. Overrides any configuration that may be set by the pipeline.</span>
+<span class="sd">    :return: workflow dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_workflow</span><span class="p">(</span><span class="n">pipeline_func</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="p">,</span> <span class="n">pipeline_description</span><span class="p">,</span> <span class="n">params_list</span><span class="p">,</span> <span class="n">pipeline_conf</span><span class="p">)</span></div>
+
+  <span class="nd">@deprecated</span><span class="p">(</span>
+      <span class="n">version</span><span class="o">=</span><span class="s1">&#39;0.1.32&#39;</span><span class="p">,</span>
+      <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Switch to _create_workflow.&#39;</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">_compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_func</span><span class="p">,</span> <span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineConf</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compile the given pipeline function into workflow.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_workflow</span><span class="p">(</span><span class="n">pipeline_func</span><span class="o">=</span><span class="n">pipeline_func</span><span class="p">,</span> <span class="n">pipeline_conf</span><span class="o">=</span><span class="n">pipeline_conf</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Compiler.compile"><a class="viewcode-back" href="../../../source/kfp.compiler.html#kfp.compiler.Compiler.compile">[docs]</a>  <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span>
+      <span class="bp">self</span><span class="p">,</span>
+      <span class="n">pipeline_func</span><span class="p">,</span>
+      <span class="n">package_path</span><span class="p">,</span>
+      <span class="n">type_check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+      <span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineConf</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+      <span class="n">allow_telemetry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+  <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compile the given pipeline function into workflow yaml.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      pipeline_func: pipeline functions with @dsl.pipeline decorator.</span>
+<span class="sd">      package_path: the output workflow tar.gz file path. for example, &quot;~/a.tar.gz&quot;</span>
+<span class="sd">      type_check: whether to enable the type check or not, default: False.</span>
+<span class="sd">      pipeline_conf: PipelineConf instance. Can specify op transforms, image pull secrets and other pipeline-level configuration options. Overrides any configuration that may be set by the pipeline.</span>
+<span class="sd">      allow_telemetry: If set to true, two pod labels will be attached to k8s</span>
+<span class="sd">        pods spawned by this pipeline: 1) pipeline SDK style, 2) pipeline random</span>
+<span class="sd">        ID.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">kfp</span>
+    <span class="n">type_check_old_value</span> <span class="o">=</span> <span class="n">kfp</span><span class="o">.</span><span class="n">TYPE_CHECK</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">kfp</span><span class="o">.</span><span class="n">TYPE_CHECK</span> <span class="o">=</span> <span class="n">type_check</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_create_and_write_workflow</span><span class="p">(</span>
+          <span class="n">pipeline_func</span><span class="o">=</span><span class="n">pipeline_func</span><span class="p">,</span>
+          <span class="n">pipeline_conf</span><span class="o">=</span><span class="n">pipeline_conf</span><span class="p">,</span>
+          <span class="n">package_path</span><span class="o">=</span><span class="n">package_path</span><span class="p">,</span>
+          <span class="n">allow_telemetry</span><span class="o">=</span><span class="n">allow_telemetry</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+      <span class="n">kfp</span><span class="o">.</span><span class="n">TYPE_CHECK</span> <span class="o">=</span> <span class="n">type_check_old_value</span></div>
+
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">_write_workflow</span><span class="p">(</span><span class="n">workflow</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Text</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">package_path</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dump pipeline workflow into yaml spec and write out in the format specified by the user.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      workflow: Workflow spec of the pipline, dict.</span>
+<span class="sd">      package_path: file path to be written. If not specified, a yaml_text string</span>
+<span class="sd">        will be returned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">yaml_text</span> <span class="o">=</span> <span class="n">dump_yaml</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">package_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">yaml_text</span>
+
+    <span class="k">if</span> <span class="n">package_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.tar.gz&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">package_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.tgz&#39;</span><span class="p">):</span>
+      <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">closing</span>
+      <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+      <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">package_path</span><span class="p">,</span> <span class="s2">&quot;w:gz&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+          <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">yaml_text</span><span class="o">.</span><span class="n">encode</span><span class="p">()))</span> <span class="k">as</span> <span class="n">yaml_file</span><span class="p">:</span>
+            <span class="n">tarinfo</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">TarInfo</span><span class="p">(</span><span class="s1">&#39;pipeline.yaml&#39;</span><span class="p">)</span>
+            <span class="n">tarinfo</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yaml_file</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+            <span class="n">tar</span><span class="o">.</span><span class="n">addfile</span><span class="p">(</span><span class="n">tarinfo</span><span class="p">,</span> <span class="n">fileobj</span><span class="o">=</span><span class="n">yaml_file</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">package_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">):</span>
+      <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">package_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">zip</span><span class="p">:</span>
+        <span class="n">zipinfo</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipInfo</span><span class="p">(</span><span class="s1">&#39;pipeline.yaml&#39;</span><span class="p">)</span>
+        <span class="n">zipinfo</span><span class="o">.</span><span class="n">compress_type</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP_DEFLATED</span>
+        <span class="nb">zip</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="n">zipinfo</span><span class="p">,</span> <span class="n">yaml_text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">package_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.yaml&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">package_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.yml&#39;</span><span class="p">):</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">package_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yaml_file</span><span class="p">:</span>
+        <span class="n">yaml_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+          <span class="s1">&#39;The output path &#39;</span><span class="o">+</span> <span class="n">package_path</span> <span class="o">+</span>
+          <span class="s1">&#39; should ends with one of the following formats: &#39;</span>
+          <span class="s1">&#39;[.tar.gz, .tgz, .zip, .yaml, .yml]&#39;</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">_create_and_write_workflow</span><span class="p">(</span>
+      <span class="bp">self</span><span class="p">,</span>
+      <span class="n">pipeline_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+      <span class="n">pipeline_name</span><span class="p">:</span> <span class="n">Text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">pipeline_description</span><span class="p">:</span> <span class="n">Text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">params_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">dsl</span><span class="o">.</span><span class="n">PipelineParam</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">pipeline_conf</span><span class="p">:</span> <span class="n">dsl</span><span class="o">.</span><span class="n">PipelineConf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">package_path</span><span class="p">:</span> <span class="n">Text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+      <span class="n">allow_telemetry</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span>
+  <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Compile the given pipeline function and dump it to specified file format.&quot;&quot;&quot;</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_workflow</span><span class="p">(</span>
+        <span class="n">pipeline_func</span><span class="p">,</span>
+        <span class="n">pipeline_name</span><span class="p">,</span>
+        <span class="n">pipeline_description</span><span class="p">,</span>
+        <span class="n">params_list</span><span class="p">,</span>
+        <span class="n">pipeline_conf</span><span class="p">,</span>
+        <span class="n">allow_telemetry</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_write_workflow</span><span class="p">(</span><span class="n">workflow</span><span class="p">,</span> <span class="n">package_path</span><span class="p">)</span>
+    <span class="n">_validate_workflow</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_validate_workflow</span><span class="p">(</span><span class="n">workflow</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+  <span class="n">workflow</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+  <span class="c1"># Working around Argo lint issue</span>
+  <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">workflow</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;arguments&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+    <span class="k">if</span> <span class="s1">&#39;value&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">argument</span><span class="p">:</span>
+      <span class="n">argument</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+  <span class="n">yaml_text</span> <span class="o">=</span> <span class="n">dump_yaml</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+  <span class="k">if</span> <span class="s1">&#39;{{pipelineparam&#39;</span> <span class="ow">in</span> <span class="n">yaml_text</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="sd">&#39;&#39;&#39;Internal compiler error: Found unresolved PipelineParam.</span>
+<span class="sd">Please create a new issue at https://github.com/kubeflow/pipelines/issues attaching the pipeline code and the pipeline package.&#39;&#39;&#39;</span>
+    <span class="p">)</span>
+
+  <span class="c1"># Running Argo lint if available</span>
+  <span class="kn">import</span> <span class="nn">shutil</span>
+  <span class="kn">import</span> <span class="nn">subprocess</span>
+  <span class="n">argo_path</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;argo&#39;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">argo_path</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">argo_path</span><span class="p">,</span> <span class="s1">&#39;lint&#39;</span><span class="p">,</span> <span class="s1">&#39;/dev/stdin&#39;</span><span class="p">],</span> <span class="nb">input</span><span class="o">=</span><span class="n">yaml_text</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="sd">&#39;&#39;&#39;Internal compiler error: Compiler has produced Argo-incompatible workflow.</span>
+<span class="sd">Please create a new issue at https://github.com/kubeflow/pipelines/issues attaching the pipeline code and the pipeline package.</span>
+<span class="sd">Error: {}&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+      <span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

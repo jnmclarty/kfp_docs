@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>kfp.dsl._pipeline_volume &mdash; Kubeflow Pipelines  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Kubeflow Pipelines
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/kfp.html">kfp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Kubeflow Pipelines</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>kfp.dsl._pipeline_volume</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for kfp.dsl._pipeline_volume</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2019 Google LLC</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+
+
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">kubernetes.client.models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">V1Volume</span><span class="p">,</span> <span class="n">V1PersistentVolumeClaimVolumeSource</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_pipeline</span>
+
+
+<span class="k">def</span> <span class="nf">prune_none_dict_values</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">prune_none_dict_values</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">}</span>
+
+
+<div class="viewcode-block" id="PipelineVolume"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.PipelineVolume">[docs]</a><span class="k">class</span> <span class="nc">PipelineVolume</span><span class="p">(</span><span class="n">V1Volume</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Representing a volume that is passed between pipeline operators and is</span>
+<span class="sd">    to be mounted by a ContainerOp or its inherited type.</span>
+
+<span class="sd">    A PipelineVolume object can be used as an extention of the pipeline</span>
+<span class="sd">    function&#39;s filesystem. It may then be passed between ContainerOps,</span>
+<span class="sd">    exposing dependencies.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">pvc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">volume</span><span class="p">:</span> <span class="n">V1Volume</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new instance of PipelineVolume.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            pvc: The name of an existing PVC</span>
+<span class="sd">            volume: Create a deep copy out of a V1Volume or PipelineVolume</span>
+<span class="sd">                with no deps</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: if volume is not None and kwargs is not None</span>
+<span class="sd">                        if pvc is not None and kwargs.pop(&quot;name&quot;) is not None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">volume</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You can&#39;t pass a volume along with other &quot;</span>
+                             <span class="s2">&quot;kwargs.&quot;</span><span class="p">)</span>
+
+        <span class="n">name_provided</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">init_volume</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">volume</span><span class="p">:</span>
+            <span class="n">init_volume</span> <span class="o">=</span> <span class="p">{</span><span class="n">attr</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+                           <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">63</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PipelineVolume name must be no more than&quot;</span>
+                                     <span class="s2">&quot; 63 characters&quot;</span><span class="p">)</span>
+                <span class="n">init_volume</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">name_provided</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">init_volume</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;pvolume-placeholder&quot;</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">pvc</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You can only pass &#39;name&#39; along with &#39;pvc&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">pvc</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">pvc_volume_source</span> <span class="o">=</span> <span class="n">V1PersistentVolumeClaimVolumeSource</span><span class="p">(</span>
+                    <span class="n">claim_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">pvc</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">init_volume</span><span class="p">[</span><span class="s2">&quot;persistent_volume_claim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pvc_volume_source</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">init_volume</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name_provided</span><span class="p">:</span>
+            <span class="n">volume_dict</span> <span class="o">=</span> <span class="n">prune_none_dict_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+            <span class="n">hash_value</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">volume_dict</span><span class="p">,</span>
+                                                         <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                                              <span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pvolume-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hash_value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">63</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">63</span> <span class="k">else</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dependent_names</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="PipelineVolume.after"><a class="viewcode-back" href="../../../source/kfp.dsl.html#kfp.dsl.PipelineVolume.after">[docs]</a>    <span class="k">def</span> <span class="nf">after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">ops</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a duplicate of self with the required dependecies excluding</span>
+<span class="sd">        the redundant dependenices.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            *ops: Pipeline operators to add as dependencies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">implies</span><span class="p">(</span><span class="n">newdep</span><span class="p">,</span> <span class="n">olddep</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">newdep</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">olddep</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">parentdep_name</span> <span class="ow">in</span> <span class="n">newdep</span><span class="o">.</span><span class="n">dependent_names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">parentdep_name</span> <span class="o">==</span> <span class="n">olddep</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">parentdep</span> <span class="o">=</span> <span class="n">_pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="o">.</span><span class="n">get_default_pipeline</span><span class="p">(</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="n">parentdep_name</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">parentdep</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">implies</span><span class="p">(</span><span class="n">parentdep</span><span class="p">,</span> <span class="n">olddep</span><span class="p">):</span>
+                            <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">dependent_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">ops</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">olddep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dependent_names</span><span class="p">:</span>
+            <span class="n">implied</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">newdep</span> <span class="ow">in</span> <span class="n">ops</span><span class="p">:</span>
+                <span class="n">implied</span> <span class="o">=</span> <span class="n">implies</span><span class="p">(</span><span class="n">newdep</span><span class="p">,</span> <span class="n">olddep</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">implied</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">implied</span><span class="p">:</span>
+                <span class="n">ret</span><span class="o">.</span><span class="n">dependent_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">olddep</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ret</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Google
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
